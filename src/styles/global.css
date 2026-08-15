@@ -3,11 +3,15 @@
 :root {
   --paper: #F7F7F5;
   --paper-raised: #FFFFFF;
+  --paper-tint: #E8EFEA;
   --ink: #161616;
   --ink-soft: #5C5C59;
   --rule: #E0E0DC;
+  --rule-tint: #C5D4CB;
   --accent: #1A3D32;
+  --accent-mid: #2A6B52;
   --accent-warm: #B33A1A;
+  --gold: #8B6914;
   --tag-bg: #EDEDE9;
 
   --font-display: 'Fraunces', Georgia, serif;
@@ -40,6 +44,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
+  font-optical-sizing: auto;
   font-size: 1.0625rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
@@ -54,15 +59,27 @@ body {
   }
 }
 
-a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a {
+  color: var(--accent-mid);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
 a:hover { color: var(--accent-warm); }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 600;
+  font-optical-sizing: auto;
   color: var(--ink);
   line-height: 1.15;
+  letter-spacing: -0.02em;
   margin: 0 0 0.5em;
+}
+
+::selection {
+  background: #c5ddd2;
+  color: var(--ink);
 }
 
 code, pre {
@@ -70,8 +87,8 @@ code, pre {
 }
 
 pre {
-  background: var(--ink);
-  color: var(--paper-raised);
+  background: #12261F;
+  color: #E8EFEA;
   padding: 1.25rem;
   border-radius: 3px;
   overflow-x: auto;
@@ -80,7 +97,8 @@ pre {
 }
 
 code:not(pre code) {
-  background: var(--tag-bg);
+  background: #DCE8E2;
+  color: var(--accent);
   padding: 0.1em 0.4em;
   border-radius: 2px;
   font-size: 0.88em;
@@ -96,10 +114,15 @@ img { max-width: 100%; display: block; }
 blockquote {
   margin: 1.5em 0;
   padding-left: 1.25em;
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--accent-warm);
   font-style: italic;
   color: var(--ink-soft);
 }
+
+.tag[data-tag='observability'] { background: #DCE8E2; color: #1A3D32; }
+.tag[data-tag='systems'] { background: #F0E6D2; color: #8B6914; }
+.tag[data-tag='career'] { background: #F3E0D8; color: #8C2E16; }
+.tag[data-tag='meta'] { background: #E3E0EA; color: #3D3555; }
 
 hr {
   border: none;

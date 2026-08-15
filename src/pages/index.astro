@@ -13,12 +13,14 @@ function formatDate(d: Date) {
 ---
 <BaseLayout title={SITE.title}>
   <section class="hero">
-    <p class="eyebrow">Writing</p>
-    <h1>Notes on systems, networking, and how production actually behaves.</h1>
-    <p class="hero-dek">
-      Observability, distributed systems, and the patterns behind the problems,
-      written down while the details are still sharp.
-    </p>
+    <div class="hero-inner">
+      <p class="eyebrow">Writing</p>
+      <h1>Notes on systems, networking, and how production actually behaves.</h1>
+      <p class="hero-dek">
+        Observability, distributed systems, and the patterns behind the problems,
+        written down while the details are still sharp.
+      </p>
+    </div>
   </section>
 
   <section class="index">
@@ -34,7 +36,7 @@ function formatDate(d: Date) {
             <p class="entry-desc">{post.data.description}</p>
             {post.data.tags.length > 0 && (
               <ul class="entry-tags">
-                {post.data.tags.map((tag) => <li>{tag}</li>)}
+                {post.data.tags.map((tag) => <li class="tag" data-tag={tag}>{tag}</li>)}
               </ul>
             )}
           </a>
@@ -46,28 +48,46 @@ function formatDate(d: Date) {
 
 <style>
   .hero {
+    margin: 0;
+    padding: 4.25rem var(--gutter) 3rem;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-tint);
+  }
+  .hero-inner {
     max-width: 64rem;
     margin: 0 auto;
-    padding: 3.5rem var(--gutter) 2.5rem;
-    border-bottom: 1px solid var(--rule);
   }
   .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
-    margin: 0 0 1rem;
+    margin: 0 0 1.15rem;
+  }
+  .eyebrow::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
   }
   .hero h1 {
-    font-size: clamp(2rem, 5vw, 3.1rem);
-    max-width: 34ch;
+    font-size: clamp(2rem, 5vw, 3.15rem);
+    font-weight: 650;
+    max-width: 22ch;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
   }
   .hero-dek {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+    line-height: 1.55;
     color: var(--ink-soft);
-    max-width: var(--measure);
-    margin-top: 1.25rem;
+    max-width: 38rem;
+    margin-top: 1.35rem;
   }
 
   .index {
@@ -87,23 +107,23 @@ function formatDate(d: Date) {
     display: block;
     text-decoration: none;
     color: inherit;
-    padding: 2rem 0;
-    transition: padding-left 0.15s ease;
-  }
-  .entry-link:hover {
-    padding-left: 0.5rem;
+    padding: 2.1rem 0;
+    border-radius: 2px;
   }
   .entry-date {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--ink-soft);
+    color: var(--accent-warm);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
   .entry-title {
-    font-size: 1.5rem;
-    margin: 0.4rem 0 0.5rem;
+    font-size: 1.55rem;
+    font-weight: 600;
+    margin: 0.45rem 0 0.5rem;
     color: var(--ink);
+    letter-spacing: -0.02em;
+    transition: color 0.15s ease;
   }
   .entry-link:hover .entry-title {
     color: var(--accent-warm);
@@ -150,9 +170,6 @@ function formatDate(d: Date) {
     }
     .entry-link {
       padding: 1.5rem 0;
-    }
-    .entry-link:hover {
-      padding-left: 0;
     }
     .entry-title {
       font-size: 1.3rem;

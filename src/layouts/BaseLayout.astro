@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import Subscribe from '../components/Subscribe.astro';
 import { SITE, SOCIALS } from '../config';
 
 interface Props {
@@ -10,6 +12,9 @@ interface Props {
 }
 
 const { title, description = SITE.description, image = '/og.png' } = Astro.props;
+const path = Astro.url.pathname;
+const onWriting = path === '/' || path.startsWith('/blog');
+const onAbout = path.startsWith('/about');
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 const ogImage = new URL(image, Astro.site ?? SITE.url).href;
 ---
@@ -57,11 +62,10 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     <div class="masthead-inner">
       <a href="/" class="wordmark">
         <span class="wordmark-main">{SITE.title}</span>
-        <span class="wordmark-sub">{SITE.tagline}</span>
       </a>
       <nav class="site-nav" aria-label="Primary">
-        <a href="/">Writing</a>
-        <a href="/about">About</a>
+        <a href="/" aria-current={onWriting ? 'page' : undefined}>Writing</a>
+        <a href="/about" aria-current={onAbout ? 'page' : undefined}>About</a>
         <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
       </nav>
     </div>
@@ -73,15 +77,21 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
 
   <footer class="site-footer">
     <div class="footer-inner">
+      <Subscribe compact />
+      <div class="footer-bottom">
       <p class="footer-line">&copy; {new Date().getFullYear()} {SITE.author}. Written and coded by hand.</p>
       <ul class="social-links" aria-label="Social profiles">
         {SOCIALS.map((social) => (
           <li>
-            <a href={social.href} target="_blank" rel="me noopener noreferrer">{social.label}</a>
+            <a href={social.href} target="_blank" rel="me noopener noreferrer">
+              <SocialIcon name={social.label} />
+              {social.label}
+            </a>
           </li>
         ))}
         <li><a href="/rss.xml">RSS</a></li>
       </ul>
+      </div>
     </div>
   </footer>
 </body>
@@ -104,6 +114,7 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
 
   .masthead {
     border-bottom: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
     background: var(--paper-raised);
     position: relative;
     z-index: 1;
@@ -113,30 +124,22 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     margin: 0 auto;
     padding: 1.5rem var(--gutter) 1.35rem;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
     flex-wrap: wrap;
   }
   .wordmark {
     text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
   }
+  .wordmark:hover .wordmark-main { color: var(--accent); }
   .wordmark-main {
     font-family: var(--font-display);
     font-size: clamp(1.85rem, 3vw, 2.15rem);
     font-weight: 700;
     color: var(--ink);
-    letter-spacing: -0.02em;
-  }
-  .wordmark-sub {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.03em;
-    color: var(--ink-soft);
-    text-transform: lowercase;
+    letter-spacing: -0.025em;
+    transition: color 0.15s ease;
   }
   .site-nav {
     display: flex;
@@ -151,10 +154,12 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     text-decoration: none;
     padding-bottom: 3px;
     border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
   }
-  .site-nav a:hover {
-    color: var(--accent-warm);
-    border-bottom-color: var(--accent-warm);
+  .site-nav a:hover,
+  .site-nav a[aria-current='page'] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   main {
@@ -163,7 +168,8 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
   }
 
   .site-footer {
-    border-top: 1px solid var(--rule);
+    border-top: 1px solid var(--rule-tint);
+    background: var(--paper-tint);
     margin-top: 4rem;
     position: relative;
     z-index: 1;
@@ -172,6 +178,12 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     max-width: 64rem;
     margin: 0 auto;
     padding: 2rem var(--gutter) 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.75rem;
+  }
+  .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -197,13 +209,17 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     letter-spacing: 0.03em;
   }
   .social-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--ink);
     text-decoration: none;
     border-bottom: 1px solid var(--rule);
+    transition: color 0.15s ease, border-color 0.15s ease;
   }
   .social-links a:hover {
-    color: var(--accent-warm);
-    border-bottom-color: var(--accent-warm);
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   @media (max-width: 40rem) {
@@ -213,7 +229,6 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
       gap: 0.85rem;
       padding: 1.1rem var(--gutter) 0.85rem;
     }
-    .wordmark-sub { display: none; }
     .site-nav {
       width: 100%;
       justify-content: space-between;
@@ -226,9 +241,11 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
       align-items: center;
     }
     .footer-inner {
+      padding: 1.75rem var(--gutter) 2.25rem;
+    }
+    .footer-bottom {
       flex-direction: column;
       align-items: flex-start;
-      padding: 1.75rem var(--gutter) 2.25rem;
     }
     .social-links {
       gap: 0.35rem 1rem;
