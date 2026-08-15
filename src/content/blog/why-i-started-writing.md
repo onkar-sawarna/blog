@@ -15,6 +15,11 @@ Four years of production work teaches you a lot, but by osmosis. You learn netwo
 
 Changing teams made the gaps obvious. Not gaps in what I had done, but in what I could explain. There is a specific, uncomfortable feeling in realizing you have used a thing successfully for years and cannot articulate why it works.
 
+<figure>
+  <img src="/blog/write-gap.svg" alt="Two boxes: used it, from incidents in one codebase, and can explain it, a model you can reuse." />
+  <figcaption>The gap is not skill. It is a model you can say out loud.</figcaption>
+</figure>
+
 Writing is the fix. It is much harder to fool yourself in prose than in your own head.
 
 ## What this is going to be

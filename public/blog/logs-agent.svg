@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" role="img" aria-labelledby="t">
+  <title id="t">An agent on a customer host must feed a UI, not a search box</title>
+  <rect width="720" height="260" fill="#F7F7F5"/>
+  <rect x="28" y="70" width="150" height="100" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="103" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="17" fill="#161616">customer host</text>
+  <text x="103" y="138" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">manager + machines</text>
+  <rect x="248" y="70" width="150" height="100" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="323" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="17" fill="#161616">agent</text>
+  <text x="323" y="138" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">not a log shipper</text>
+  <rect x="468" y="28" width="224" height="80" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="580" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="17" fill="#161616">UI</text>
+  <text x="580" y="86" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">which host, since when</text>
+  <rect x="468" y="132" width="224" height="80" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="580" y="166" text-anchor="middle" font-family="Georgia, serif" font-size="17" fill="#B33A1A">search box</text>
+  <text x="580" y="190" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">if you only shipped logs</text>
+  <line x1="178" y1="120" x2="248" y2="120" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="398" y1="100" x2="468" y2="68" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="398" y1="140" x2="468" y2="172" stroke="#B33A1A" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="360" y="236" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">Same host. Two outcomes. Only one is a window.</text>
+</svg>

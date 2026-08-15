@@ -27,6 +27,11 @@ You install an agent on a machine that is not yours (a customer's host), usually
 
 If all the agent did was ship log files off that box, the UI would be a search box. You would still be grepping. You would still not know whether one node is sick or the whole cluster is, whether the cluster manager is lying, or whether the manager is fine and a worker under it is dying quietly.
 
+<figure>
+  <img src="/blog/logs-agent.svg" alt="A customer host feeds an agent. The useful path is a UI that can say which host and since when. The failure path is a search box over shipped logs." />
+  <figcaption>Same host. If the agent only ships logs, the UI is grep with a nicer font.</figcaption>
+</figure>
+
 The useful questions look like this:
 
 - Is this one host or every host?
@@ -53,6 +58,11 @@ Three kinds of signal, three jobs:
 **Traces** tell you where a single request went. Use them when the question is "which hop ate the time."
 
 The fourth thing is not a signal. It is **context**: host, service, cluster, version, tenant, so you can cut the other three without guessing. Without context, a metric is a number and a log is a short story with the names removed. The agent on the customer machine is useless if every line looks the same.
+
+<figure>
+  <img src="/blog/logs-signals.svg" alt="Four boxes: logs for one process once, metrics for shape over time, traces for which hop ate time, and context to cut the other three." />
+  <figcaption>Three signals, three jobs. Context is how you cut. It is not a fourth pile of text.</figcaption>
+</figure>
 
 I still want logs. I want them less often, with more on the line, and I want them after a metric or a host list has pointed at a neighborhood. Opening the raw stream first is walking every street in a city because you do not have a map.
 

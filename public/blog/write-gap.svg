@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-labelledby="t">
+  <title id="t">Using a system is not the same as being able to explain it</title>
+  <rect width="720" height="200" fill="#F7F7F5"/>
+  <rect x="40" y="40" width="280" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="180" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#161616">used it</text>
+  <text x="180" y="104" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">incidents, one codebase</text>
+  <rect x="400" y="40" width="280" height="88" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="540" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#161616">can explain it</text>
+  <text x="540" y="104" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">a model you can reuse</text>
+  <line x1="320" y1="84" x2="400" y2="84" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">Writing is how I notice the gap.</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" role="img" aria-labelledby="t">
+  <title id="t">Wrap, open, verify, then pass or drop</title>
+  <rect width="720" height="240" fill="#F7F7F5"/>
+  <rect x="20" y="70" width="120" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="80" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">wrap</text>
+  <text x="80" y="124" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">IP-in-IP + id</text>
+  <rect x="180" y="70" width="120" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="240" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">open</text>
+  <text x="240" y="124" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">netstack</text>
+  <rect x="340" y="70" width="120" height="72" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="400" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">verify</text>
+  <text x="400" y="124" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">session table</text>
+  <rect x="500" y="28" width="196" height="64" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="598" y="66" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">pass</text>
+  <rect x="500" y="120" width="196" height="64" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="598" y="158" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">drop</text>
+  <line x1="140" y1="106" x2="180" y2="106" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="300" y1="106" x2="340" y2="106" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="460" y1="96" x2="500" y2="60" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="460" y1="116" x2="500" y2="152" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="214" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">A valid outer header is not consent to forward the inner packet.</text>
+</svg>

@@ -36,6 +36,7 @@ On About and in posts, do not name products, internal tools, customers, or cowor
 - Describe the *shape* instead: an agent on a customer host, a cluster manager, a UI that has to show health.
 - Do not name other writers, courses, or companies when explaining an idea. Use original wording. Do not paste slogans (e.g. famous observability one-liners).
 - Do not copy other blogs, docs, or course notes. Ideas are fine; someone else's sentences are not.
+- Media must be copyright-safe. Only original diagrams, photos you took, or files you have a license to use. No screenshots of docs, no logos, no GIFs or clips from the internet, no stock you did not buy. Prefer SVG or PNG you drew. Put files in `public/blog/`.
 
 ## Posts
 

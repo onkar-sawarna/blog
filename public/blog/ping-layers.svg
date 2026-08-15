@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img" aria-labelledby="t">
+  <title id="t">Four reachability checks that fail independently</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <rect x="48" y="28" width="624" height="48" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">request  ·  did the service respond</text>
+  <rect x="48" y="84" width="624" height="48" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="114" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">session  ·  TLS, proxy, tunnel</text>
+  <rect x="48" y="140" width="624" height="48" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="170" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">L4  ·  did this port accept connect()</text>
+  <rect x="48" y="196" width="624" height="48" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="226" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">L3  ·  ping lives here</text>
+</svg>

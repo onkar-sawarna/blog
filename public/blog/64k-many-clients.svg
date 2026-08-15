@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img" aria-labelledby="t2">
+  <title id="t2">Many clients to one listen port: source IPs multiply</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+  <rect x="36" y="36" width="130" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="101" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">phone A</text>
+  <rect x="36" y="122" width="130" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="101" y="156" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">phone B</text>
+  <rect x="36" y="208" width="130" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="101" y="242" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">laptop C</text>
+  <rect x="520" y="108" width="164" height="84" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="602" y="146" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#161616">server</text>
+  <text x="602" y="172" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">listen :443</text>
+  <line x1="176" y1="64" x2="520" y2="140" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="176" y1="150" x2="520" y2="150" stroke="#1A3D32" stroke-width="1.5"/>
+  <line x1="176" y1="236" x2="520" y2="160" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="288" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">Many source IPs. One dest port. Millions of rows.</text>
+</svg>

@@ -125,6 +125,28 @@ function formatDate(d: Date) {
   .post-body :global(li) {
     margin: 0.4em 0;
   }
+  .post-body :global(img),
+  .post-body :global(video) {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+    margin: 1.5rem 0 0.4rem;
+  }
+  .post-body :global(figure) {
+    margin: 1.75rem 0;
+  }
+  .post-body :global(figure img),
+  .post-body :global(figure video) {
+    margin: 0;
+  }
+  .post-body :global(figcaption) {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-top: 0.55rem;
+  }
   .post-subscribe {
     margin-top: 2.75rem;
     padding-top: 2rem;
