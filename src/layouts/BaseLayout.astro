@@ -38,7 +38,7 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
-  <title>{title} · {SITE.title}</title>
+  <title>{title === SITE.title ? SITE.title : `${title} · ${SITE.title}`}</title>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Person',

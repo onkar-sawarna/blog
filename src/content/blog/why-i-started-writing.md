@@ -1,7 +1,7 @@
 ---
 title: "Why I'm starting to write this down"
 description: "Four years at one company, a move to a startup, and the gap between using a system and being able to explain it."
-pubDate: 2026-08-15
+pubDate: 2026-08-14
 tags: ["career", "meta"]
 ---
 
