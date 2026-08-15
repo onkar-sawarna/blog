@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img">
+  <title>Four years in one codebase, then a move. The gap is what you can explain.</title>
+  <rect width="720" height="200" fill="#F7F7F5"/>
+  <rect x="40" y="36" width="240" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="160" y="74" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#161616">one codebase</text>
+  <text x="160" y="100" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">deep, narrow</text>
+  <rect x="440" y="36" width="240" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="560" y="74" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#161616">new team</text>
+  <text x="560" y="100" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">assumptions show</text>
+  <line x1="280" y1="80" x2="440" y2="80" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="164" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">The move did not create the gap. It made it visible.</text>
+</svg>

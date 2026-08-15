@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img">
+  <title>Direct to the server: many source IPs. Through a SNAT load balancer: one source IP, 64k again.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <text x="180" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">phones to server</text>
+  <text x="540" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">phones to LB to server</text>
+  <rect x="40" y="52" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="75" y="75" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">A</text>
+  <rect x="40" y="100" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="75" y="123" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">B</text>
+  <rect x="40" y="148" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="75" y="171" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">C</text>
+  <rect x="230" y="100" width="100" height="56" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="280" y="134" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">server</text>
+  <line x1="110" y1="70" x2="230" y2="118" stroke="#1A3D32" stroke-width="1.2"/>
+  <line x1="110" y1="118" x2="230" y2="128" stroke="#1A3D32" stroke-width="1.2"/>
+  <line x1="110" y1="166" x2="230" y2="138" stroke="#1A3D32" stroke-width="1.2"/>
+  <text x="180" y="230" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">src is a variable</text>
+  <text x="180" y="250" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">2^32 IPv4 addresses</text>
+  <rect x="400" y="52" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="435" y="75" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">A</text>
+  <rect x="400" y="100" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="435" y="123" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">B</text>
+  <rect x="400" y="148" width="70" height="36" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="435" y="171" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">C</text>
+  <rect x="500" y="88" width="70" height="56" rx="4" fill="#F3E0D8" stroke="#B33A1A" stroke-width="2"/>
+  <text x="535" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">LB</text>
+  <rect x="600" y="88" width="80" height="56" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="640" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">server</text>
+  <line x1="470" y1="70" x2="500" y2="106" stroke="#1A3D32" stroke-width="1.2"/>
+  <line x1="470" y1="118" x2="500" y2="116" stroke="#1A3D32" stroke-width="1.2"/>
+  <line x1="470" y1="166" x2="500" y2="126" stroke="#1A3D32" stroke-width="1.2"/>
+  <line x1="570" y1="116" x2="600" y2="116" stroke="#B33A1A" stroke-width="2"/>
+  <text x="540" y="230" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">src is the LB IP</text>
+  <text x="540" y="250" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">64k again</text>
+</svg>

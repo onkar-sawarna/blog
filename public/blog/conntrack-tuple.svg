@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img">
+  <title>conntrack -L prints the 4-tuple, one line per flow</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+  <rect x="28" y="28" width="200" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="128" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#161616">Linux box</text>
+  <text x="128" y="82" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">m1, run conntrack</text>
+  <rect x="28" y="120" width="664" height="148" rx="6" fill="#12261F"/>
+  <text x="48" y="148" font-family="ui-monospace, monospace" font-size="13" fill="#E8EFEA">$ conntrack -L</text>
+  <text x="48" y="176" font-family="ui-monospace, monospace" font-size="12" fill="#E8EFEA">tcp ESTABLISHED src=10.0.0.8 dst=m2 sport=49152 dport=443</text>
+  <text x="48" y="200" font-family="ui-monospace, monospace" font-size="12" fill="#E8EFEA">tcp ESTABLISHED src=10.0.0.8 dst=m2 sport=49153 dport=443</text>
+  <text x="48" y="224" font-family="ui-monospace, monospace" font-size="12" fill="#E8EFEA">tcp TIME_WAIT   src=10.0.0.8 dst=m2 sport=49154 dport=443</text>
+  <text x="48" y="248" font-family="ui-monospace, monospace" font-size="12" fill="#C5D4CB">src, sport, dst, dport  --  the 4-tuple</text>
+</svg>

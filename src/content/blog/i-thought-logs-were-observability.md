@@ -77,6 +77,11 @@ I am in the old model when:
 
 The replacement habit is smaller than it sounds. Write the question down. Then pick the signal that can answer it. If nothing you collect can answer it, that is the gap, not a missing print.
 
+<figure>
+  <img src="/blog/logs-grep.svg" alt="Two boxes: grep first, then invent the question, versus write the question first, then pick the signal." />
+  <figcaption>The old move starts at grep. The new one starts at the question.</figcaption>
+</figure>
+
 On a customer host that means: can the UI tell me the manager is up, the workers are up, and this one disk is the reason a service will not stay running. If I have to SSH to find that out, the agent did not finish the job.
 
 ## What I would still get wrong

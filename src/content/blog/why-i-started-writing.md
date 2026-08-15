@@ -9,6 +9,11 @@ I spent four years at Menlo Security. I joined as an intern and left as a Senior
 
 Then I moved to Acceldata. Different pace, different domain, and a set of assumptions I did not know I was carrying until they stopped being true.
 
+<figure>
+  <img src="/blog/write-teams.svg" alt="One codebase, deep and narrow, then a new team where the old assumptions show." />
+  <figcaption>The move did not create the gap. It made it visible.</figcaption>
+</figure>
+
 ## The thing that pushed me to write
 
 Four years of production work teaches you a lot, but by osmosis. You learn networking because a tunnel misbehaved. You learn observability because something failed and nobody could see why. The knowledge is real, but it is shaped like a list of incidents rather than a set of principles, and you cannot reliably apply it to a problem you have not already been burned by.

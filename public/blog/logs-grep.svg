@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img">
+  <title>Old move: grep first. New move: write the question, then pick the signal.</title>
+  <rect width="720" height="220" fill="#F7F7F5"/>
+  <rect x="36" y="40" width="300" height="100" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="186" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#B33A1A">grep first</text>
+  <text x="186" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">then invent the question</text>
+  <rect x="384" y="40" width="300" height="100" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="534" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#1A3D32">question first</text>
+  <text x="534" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">then pick the signal</text>
+  <text x="360" y="186" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">If nothing you collect can answer it, that is the gap.</text>
+</svg>
