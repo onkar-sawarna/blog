@@ -22,6 +22,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -41,6 +43,15 @@ body {
   font-size: 1.0625rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 40rem) {
+  body {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
 }
 
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }

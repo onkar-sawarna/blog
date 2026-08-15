@@ -114,9 +114,23 @@ import { SITE, SOCIALS } from '../config';
     max-width: 28ch;
   }
   @media (max-width: 40rem) {
+    .about {
+      padding: 2.25rem var(--gutter) 3.5rem;
+    }
     .about-intro {
       flex-direction: column;
       align-items: flex-start;
+      gap: 1.15rem;
+      margin-bottom: 2rem;
+    }
+    .lede { max-width: none; }
+    .elsewhere {
+      gap: 0.6rem;
+      margin-top: 2.25rem;
+    }
+    .elsewhere a {
+      padding: 0.7rem 1rem;
+      min-height: 2.75rem;
     }
   }
   .about-body p {

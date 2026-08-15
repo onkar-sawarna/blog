@@ -115,4 +115,30 @@ function formatDate(d: Date) {
   .post-body :global(li) {
     margin: 0.4em 0;
   }
+
+  @media (max-width: 40rem) {
+    .post {
+      padding: 1.75rem var(--gutter) 3.5rem;
+    }
+    .back-link {
+      padding: 0.55rem 0;
+      min-height: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .post-body {
+      margin-top: 1.75rem;
+      font-size: 1.05rem;
+    }
+    .post-body :global(h2) {
+      font-size: 1.3rem;
+      margin-top: 2rem;
+    }
+    .post-body :global(pre) {
+      margin-left: calc(var(--gutter) * -1);
+      margin-right: calc(var(--gutter) * -1);
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      border-radius: 0;
+    }
+  }
 </style>
