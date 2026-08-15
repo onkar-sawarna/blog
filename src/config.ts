@@ -9,8 +9,8 @@ export const SITE = {
   // Set this to your real domain before deploying — RSS and sitemap use it.
   url: 'https://www.onkarsawarna.dev',
   resume: '/resume.pdf',
-  // Buttondown username. Form posts to their public embed endpoint.
-  newsletter: 'onkarsawarna',
+  // Buttondown username. Empty while the account is disabled.
+  newsletter: '',
 };
 
 // Delete any you don't want; the footer renders whatever is left.
