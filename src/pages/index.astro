@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
+import { readingTime } from '../lib/readingTime';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -28,7 +29,7 @@ function formatDate(d: Date) {
       {posts.map((post) => (
         <li class="entry">
           <a href={`/blog/${post.id}/`} class="entry-link">
-            <span class="entry-date">{formatDate(post.data.pubDate)}</span>
+            <span class="entry-date">{formatDate(post.data.pubDate)} · {readingTime(post.body ?? '')}</span>
             <h2 class="entry-title">{post.data.title}</h2>
             <p class="entry-desc">{post.data.description}</p>
             {post.data.tags.length > 0 && (
