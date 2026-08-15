@@ -17,6 +17,7 @@ Write as a working engineer, not a student and not a literary journal.
 - First person, short paragraphs, complete sentences. Audience is engineers.
 - Normal engineering words are fine: observability, cluster, UI, agent, metrics, traces, host, grep, SSH, DSA. Do not baby-talk ("boss software," "small program," "numbers over time").
 - Keep sentences clear. Do not stack unexplained slang or academic filler. Do not paste famous slogans.
+- Do not use em dashes (—). Use a comma, colon, period, or parentheses.
 - Confident and specific about *ideas*. Broad about *employers*.
 - Job title is **software engineer**, never Platform Engineer.
 - Acceldata: observability. Menlo: intern → Senior Engineer, cybersecurity and networking.

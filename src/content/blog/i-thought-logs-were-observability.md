@@ -1,6 +1,6 @@
 ---
 title: "I thought logs were observability"
-description: "A pile of log lines can feel like seeing the system. It isn't. Observability is whether a UI can tell you what is sick, which machine, and since when — without grepping."
+description: "A pile of log lines can feel like seeing the system. It isn't. Observability is whether a UI can tell you what is sick, which machine, and since when, without grepping."
 pubDate: 2026-08-15
 tags: ["observability", "systems"]
 ---
@@ -23,7 +23,7 @@ That distinction does not matter when the failure is one you have already had. I
 
 The work I do now made this concrete.
 
-You install an agent on a machine that is not yours — a customer's host — usually from the CLI. That agent watches two things. First, the software on their side that runs the cluster: what services it thinks are up, what it just restarted, what it is trying to launch. Second, the machines themselves: CPU, disk, memory, the processes that are actually alive. Then a UI has to turn that into a picture a human can use. Not a dump. A picture. Is the cluster healthy. Which host. Which service. Since when.
+You install an agent on a machine that is not yours (a customer's host), usually from the CLI. That agent watches two things. First, the software on their side that runs the cluster: what services it thinks are up, what it just restarted, what it is trying to launch. Second, the machines themselves: CPU, disk, memory, the processes that are actually alive. Then a UI has to turn that into a picture a human can use. Not a dump. A picture. Is the cluster healthy. Which host. Which service. Since when.
 
 If all the agent did was ship log files off that box, the UI would be a search box. You would still be grepping. You would still not know whether one node is sick or the whole cluster is, whether the cluster manager is lying, or whether the manager is fine and a worker under it is dying quietly.
 
@@ -38,7 +38,7 @@ A log line can tell you that a process exited. It will not tell you whether that
 
 I have sat in front of a perfectly healthy volume of logs and still not been able to answer "is this getting worse." That is the tell. If the UI cannot answer a question you did not plan for last quarter, you do not have a window. You have a diary with a nicer font.
 
-Networking trained me to miss this. Tunnels, sessions, handshakes, firewalls — they all emit a lot of text. Text is comforting. You can have a wall of accept, deny, and timeout and still not know whether identity is wrong, the path is wrong, or the thing on the other side is just slow. A cluster is the same shape. The manager talks. The nodes talk. The UI has to decide which voice to trust.
+Networking trained me to miss this. Tunnels, sessions, handshakes, firewalls: they all emit a lot of text. Text is comforting. You can have a wall of accept, deny, and timeout and still not know whether identity is wrong, the path is wrong, or the thing on the other side is just slow. A cluster is the same shape. The manager talks. The nodes talk. The UI has to decide which voice to trust.
 
 ## The model that stuck
 
@@ -52,7 +52,7 @@ Three kinds of signal, three jobs:
 
 **Traces** tell you where a single request went. Use them when the question is "which hop ate the time."
 
-The fourth thing is not a signal. It is **context** — host, service, cluster, version, tenant — so you can cut the other three without guessing. Without context, a metric is a number and a log is a short story with the names removed. The agent on the customer machine is useless if every line looks the same.
+The fourth thing is not a signal. It is **context**: host, service, cluster, version, tenant, so you can cut the other three without guessing. Without context, a metric is a number and a log is a short story with the names removed. The agent on the customer machine is useless if every line looks the same.
 
 I still want logs. I want them less often, with more on the line, and I want them after a metric or a host list has pointed at a neighborhood. Opening the raw stream first is walking every street in a city because you do not have a map.
 
@@ -65,7 +65,7 @@ I am in the old model when:
 - A new failure means a new log line, shipped in a hurry, as if the next incident will be kind enough to look the same.
 - We can prove a process died and cannot say whether the cluster noticed.
 
-The replacement habit is smaller than it sounds. Write the question down. Then pick the signal that can answer it. If nothing you collect can answer it, that is the gap — not a missing print.
+The replacement habit is smaller than it sounds. Write the question down. Then pick the signal that can answer it. If nothing you collect can answer it, that is the gap, not a missing print.
 
 On a customer host that means: can the UI tell me the manager is up, the workers are up, and this one disk is the reason a service will not stay running. If I have to SSH to find that out, the agent did not finish the job.
 
@@ -79,4 +79,4 @@ Treating a pretty UI as understanding. A graph you cannot use to make a decision
 
 I am not done being wrong about this. I am just done calling a stack of logs a window.
 
-If this is useful, wrong, or incomplete — write to me. I would rather correct the model in public than keep the comfortable one.
+If this is useful, wrong, or incomplete, write to me. I would rather correct the model in public than keep the comfortable one.

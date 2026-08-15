@@ -16,14 +16,14 @@ function formatDate(d: Date) {
     <p class="eyebrow">Writing</p>
     <h1>Notes on systems, networking, and how production actually behaves.</h1>
     <p class="hero-dek">
-      Observability, distributed systems, and the patterns behind the problems —
+      Observability, distributed systems, and the patterns behind the problems,
       written down while the details are still sharp.
     </p>
   </section>
 
   <section class="index">
     {posts.length === 0 && (
-      <p class="empty">Nothing published yet — the first entry is on its way.</p>
+      <p class="empty">Nothing published yet. The first entry is on its way.</p>
     )}
     <ol class="entries">
       {posts.map((post) => (

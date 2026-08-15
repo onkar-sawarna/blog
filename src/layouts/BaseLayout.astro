@@ -73,7 +73,7 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p class="footer-line">&copy; {new Date().getFullYear()} {SITE.author} — written and coded by hand.</p>
+      <p class="footer-line">&copy; {new Date().getFullYear()} {SITE.author}. Written and coded by hand.</p>
       <ul class="social-links" aria-label="Social profiles">
         {SOCIALS.map((social) => (
           <li>
