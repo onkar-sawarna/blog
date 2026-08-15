@@ -17,7 +17,11 @@ function formatDate(d: Date) {
   return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 ---
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={`/og/${post.id}.png`}
+>
   <article class="post">
     <header class="post-header">
       <a href="/" class="back-link">&larr; All writing</a>

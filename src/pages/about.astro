@@ -2,35 +2,63 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, SOCIALS } from '../config';
 ---
-<BaseLayout title="About">
+<BaseLayout
+  title="About"
+  description="Onkar Sawarna — software engineer at Acceldata. Previously Menlo Security. Writing on observability, networking, and distributed systems."
+  image="/og/about.png"
+>
   <section class="about">
-    <p class="eyebrow">About</p>
-    <h1>Hi, I'm {SITE.author}.</h1>
+    <header class="about-intro">
+      <div class="portrait-wrap">
+        <img
+          class="portrait"
+          src="/onkar.jpg"
+          alt="Onkar Sawarna"
+          width="160"
+          height="160"
+        />
+      </div>
+      <div class="about-heading">
+        <h1>Hey, I am {SITE.author.split(' ')[0]}.</h1>
+        <p class="lede">engineering, networking, observability, and distributed systems.</p>
+      </div>
+    </header>
+
     <div class="about-body">
       <p>
-        I'm a software engineer at Acceldata, where I've been for about five months. Before
-        that I spent four years at Menlo Security — I joined as an intern and left as an
-        engineer, which means most of what I know about production systems I learned inside
-        one codebase, slowly, usually the hard way.
+        I am a software engineer at Acceldata. I work on observability — how you
+        see a distributed system while it is running, and how you find out what
+        broke before the user has to tell you.
       </p>
       <p>
-        Moving from an established company to a startup reset a lot of my assumptions about
-        how software gets built. Alongside that, I'm working through Arpit Bhayani's system
-        design masterclass, which is the first time I've studied this material deliberately
-        rather than absorbing it by osmosis from whatever I happened to be on call for.
+        Before this I spent four years at Menlo Security. I joined as an intern and
+        left as a Senior Engineer, working on cybersecurity and networking. That
+        stretch taught me how production systems actually behave: latency, failure,
+        and the parts of a network you only notice when they are wrong. Most of
+        what I know I learned inside one codebase, slowly.
       </p>
       <p>
-        This site is where both of those land. Notes on system design as I work through it,
-        write-ups of problems I've actually hit, and the parts of a software career nobody
-        puts in a job description. It's a working log, not a highlight reel — written while
-        I'm still figuring it out rather than years after the fact.
+        I studied Mathematics and Computing at BIT Mesra. Alongside the job I have
+        gone deep on DSA and system design. Hundreds of problems. The useful part
+        was not the problem numbers. It was getting faster at seeing the pattern,
+        and getting clearer at explaining the tradeoff.
       </p>
       <p>
-        If something here is useful, wrong, or worth arguing about, I'd like to hear it.
+        This site is where I write that down. Notes on systems and networking.
+        Mental models from problem-solving, not solution dumps. The occasional
+        piece on the non-technical parts of the job — the transitions, the
+        assumptions that only show up when you change teams. Written while the
+        details are still sharp.
+      </p>
+      <p>
+        If something here is useful, wrong, or worth arguing about — write to me.
       </p>
     </div>
 
     <ul class="elsewhere" aria-label="Find me elsewhere">
+      <li>
+        <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
+      </li>
       {SOCIALS.map((social) => (
         <li>
           <a href={social.href} target="_blank" rel="me noopener noreferrer">{social.label}</a>
@@ -42,25 +70,58 @@ import { SITE, SOCIALS } from '../config';
 
 <style>
   .about {
-    max-width: var(--measure);
+    max-width: 46rem;
     margin: 0 auto;
-    padding: 3.5rem var(--gutter) 5rem;
+    padding: 4.5rem var(--gutter) 5rem;
   }
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 1rem;
+  .about-intro {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.75rem;
+  }
+  .portrait-wrap {
+    width: 7.5rem;
+    height: 7.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: #899b98;
+  }
+  .portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 48% 6%;
+    transform: scale(1.45) translateY(8%);
+    transform-origin: 50% 12%;
   }
   .about h1 {
-    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
-    margin-bottom: 1.75rem;
+    font-size: clamp(2.25rem, 5.5vw, 3.15rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin: 0 0 0.55rem;
+  }
+  .lede {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 28ch;
+  }
+  @media (max-width: 40rem) {
+    .about-intro {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
   .about-body p {
-    font-size: 1.08rem;
-    margin: 1.1em 0;
+    font-size: 1.12rem;
+    margin: 1.15em 0;
   }
 
   .elsewhere {
@@ -69,7 +130,7 @@ import { SITE, SOCIALS } from '../config';
     flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0;
-    margin: 2.5rem 0 0;
+    margin: 3rem 0 0;
     border-top: 1px solid var(--rule);
     padding-top: 2rem;
   }
