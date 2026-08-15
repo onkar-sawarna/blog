@@ -19,10 +19,12 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="description" content={description} />
+  <meta name="author" content={SITE.author} />
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={SITE.title} />
+  <meta property="article:author" content={SITE.author} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
@@ -37,6 +39,14 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
   <title>{title} · {SITE.title}</title>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.author,
+    url: SITE.url,
+    jobTitle: 'Software Engineer',
+    sameAs: SOCIALS.map((s) => s.href).filter((href) => !href.startsWith('mailto:')),
+  })} />
 </head>
 <body>
   <div class="skip-link"><a href="#main">Skip to content</a></div>
