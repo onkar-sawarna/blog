@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 import { SITE, SOCIALS } from '../config';
 
 interface Props {
@@ -47,6 +48,7 @@ const ogImage = new URL(image, Astro.site ?? SITE.url).href;
     jobTitle: 'Software Engineer',
     sameAs: SOCIALS.map((s) => s.href).filter((href) => !href.startsWith('mailto:')),
   })} />
+  <Analytics />
 </head>
 <body>
   <div class="skip-link"><a href="#main">Skip to content</a></div>
