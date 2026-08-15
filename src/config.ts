@@ -7,7 +7,7 @@ export const SITE = {
   description:
     'Notes on software engineering, systems, and career from the inside of a build.',
   // Set this to your real domain before deploying — RSS and sitemap use it.
-  url: 'https://example.com',
+  url: 'https://blog-rouge-rho-14.vercel.app',
 };
 
 // Delete any you don't want; the footer renders whatever is left.
