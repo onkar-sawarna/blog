@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+---
+<BaseLayout title="Writing">
+  <section class="hero">
+    <p class="eyebrow">Vol. 1 — Ongoing</p>
+    <h1>Notes from building things,<br />breaking things, and shipping anyway.</h1>
+    <p class="hero-dek">
+      A working log on software engineering, system design, and the slower parts of a career —
+      written in the open while learning in public.
+    </p>
+  </section>
+
+  <section class="index">
+    {posts.length === 0 && (
+      <p class="empty">Nothing published yet — the first entry is on its way.</p>
+    )}
+    <ol class="entries">
+      {posts.map((post) => (
+        <li class="entry">
+          <a href={`/blog/${post.id}/`} class="entry-link">
+            <span class="entry-date">{formatDate(post.data.pubDate)}</span>
+            <h2 class="entry-title">{post.data.title}</h2>
+            <p class="entry-desc">{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <ul class="entry-tags">
+                {post.data.tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+            )}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 3.5rem var(--gutter) 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    max-width: 34ch;
+  }
+  .hero-dek {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    margin-top: 1.25rem;
+  }
+
+  .index {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 1rem var(--gutter) 4rem;
+  }
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .entry {
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 2rem 0;
+    transition: padding-left 0.15s ease;
+  }
+  .entry-link:hover {
+    padding-left: 0.5rem;
+  }
+  .entry-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .entry-title {
+    font-size: 1.5rem;
+    margin: 0.4rem 0 0.5rem;
+    color: var(--ink);
+  }
+  .entry-link:hover .entry-title {
+    color: var(--accent-warm);
+  }
+  .entry-desc {
+    color: var(--ink-soft);
+    margin: 0 0 0.75rem;
+    max-width: var(--measure);
+  }
+  .entry-tags {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+  .entry-tags li {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: var(--tag-bg);
+    color: var(--ink-soft);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+  }
+  .empty {
+    color: var(--ink-soft);
+    font-style: italic;
+    padding: 2rem 0;
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, SOCIALS } from '../config';
+---
+<BaseLayout title="About">
+  <section class="about">
+    <p class="eyebrow">About</p>
+    <h1>Hi, I'm {SITE.author}.</h1>
+    <div class="about-body">
+      <p>
+        I'm a software engineer working on backend systems, currently building at a startup
+        in Bengaluru. Before this, I spent four years at Menlo Security, starting as an intern
+        and growing into a full-time engineering role.
+      </p>
+      <p>
+        This is where I write about what I'm learning — system design, distributed systems,
+        the practical tradeoffs behind the diagrams, and the less-talked-about parts of
+        building a software career. Most of it comes out of things I'm actively studying
+        or building at work, written up as I go rather than after the fact.
+      </p>
+      <p>
+        If something here is useful, wrong, or worth arguing about, I'd like to hear it.
+      </p>
+    </div>
+
+    <ul class="elsewhere" aria-label="Find me elsewhere">
+      {SOCIALS.map((social) => (
+        <li>
+          <a href={social.href} target="_blank" rel="me noopener noreferrer">{social.label}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 3.5rem var(--gutter) 5rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+  .about h1 {
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    margin-bottom: 1.75rem;
+  }
+  .about-body p {
+    font-size: 1.08rem;
+    margin: 1.1em 0;
+  }
+
+  .elsewhere {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 2.5rem 0 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 2rem;
+  }
+  .elsewhere a {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.5rem 0.9rem;
+  }
+  .elsewhere a:hover {
+    color: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+</style>

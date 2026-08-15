@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="post">
+    <header class="post-header">
+      <a href="/" class="back-link">&larr; All writing</a>
+      <p class="post-date">{formatDate(post.data.pubDate)}</p>
+      <h1>{post.data.title}</h1>
+      <p class="post-dek">{post.data.description}</p>
+      {post.data.tags.length > 0 && (
+        <ul class="post-tags">
+          {post.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      )}
+    </header>
+    <div class="post-body">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 3rem var(--gutter) 5rem;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+  .back-link:hover { color: var(--accent-warm); }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin: 0 0 0.75rem;
+  }
+  .post-header h1 {
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  }
+  .post-dek {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    margin-top: 0.75rem;
+  }
+  .post-tags {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    flex-wrap: wrap;
+  }
+  .post-tags li {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: var(--tag-bg);
+    color: var(--ink-soft);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+  }
+
+  .post-body {
+    margin-top: 2.5rem;
+    font-size: 1.08rem;
+  }
+  .post-body :global(h2) {
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .post-body :global(h3) {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+  }
+  .post-body :global(p) {
+    margin: 1.1em 0;
+  }
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    padding-left: 1.4em;
+  }
+  .post-body :global(li) {
+    margin: 0.4em 0;
+  }
+</style>
