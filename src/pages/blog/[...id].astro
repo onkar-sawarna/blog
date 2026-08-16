@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { readingTime } from '../../lib/readingTime';
 import Subscribe from '../../components/Subscribe.astro';
+import { SITE } from '../../config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -31,6 +32,21 @@ function formatDate(d: Date) {
       <p class="post-date">{formatDate(post.data.pubDate)} · {timeToRead}</p>
       <h1>{post.data.title}</h1>
       <p class="post-dek">{post.data.description}</p>
+      <a class="byline" href="/about">
+        <span class="byline-photo">
+          <img
+            class="byline-img"
+            src="/onkar.jpg"
+            alt=""
+            width="72"
+            height="72"
+          />
+        </span>
+        <span class="byline-text">
+          <span class="byline-name">{SITE.author}</span>
+          <span class="byline-role">software engineer</span>
+        </span>
+      </a>
       {post.data.tags.length > 0 && (
         <ul class="post-tags">
           {post.data.tags.map((tag) => <li class="tag" data-tag={tag}>{tag}</li>)}
@@ -80,6 +96,49 @@ function formatDate(d: Date) {
     color: var(--ink-soft);
     margin-top: 0.75rem;
   }
+  .byline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .byline-photo {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--rule);
+    background: #899b98;
+  }
+  .byline-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 48% 6%;
+    transform: scale(1.45) translateY(8%);
+    transform-origin: 50% 12%;
+  }
+  .byline-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .byline-name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .byline-role {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+  .byline:hover .byline-name { color: var(--accent); }
   .post-tags {
     list-style: none;
     display: flex;
