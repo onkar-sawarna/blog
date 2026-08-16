@@ -10,6 +10,11 @@ For a long time, when something could not connect, I pinged it.
 
 If echo came back, the network was fine and the bug was in the app. If echo did not come back, the network was down and I started traceroute. That was the whole decision tree. I would have called that knowing how networks work. I was wrong.
 
+<figure>
+  <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." />
+  <figcaption>Echo is a small fact. Treating it as the outage is the old model.</figcaption>
+</figure>
+
 ## The wrong model
 
 Ping is a gift. You send ICMP echo. You get ICMP echo reply. Round trip, one number, a yes or a no. After enough years of SSH and broken boxes, that yes starts to mean "the host is on the network." The no starts to mean "the path is dead."
@@ -32,11 +37,6 @@ I have had ICMP succeed to an address and the TCP connect hang. The box was up. 
 </figure>
 
 I have had ICMP fail and the service work. Someone blocked echo and left 443 alone. I spent time on a "down" host that was taking traffic.
-
-<figure>
-  <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." />
-  <figcaption>Echo is a small fact. Treating it as the outage is the old model.</figcaption>
-</figure>
 
 I have had ping hit a different machine than the request. NAT, anycast, a load balancer that answers ICMP on a VIP and sends the real connection somewhere else. The echo reply was honest. It was honest about the wrong question.
 

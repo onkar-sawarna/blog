@@ -12,6 +12,11 @@ You take a packet. You put it inside another packet. You send the outer one towa
 
 The part that mattered was not the wrap. It was the unwrap, the check, and the decision to let the inner packet continue.
 
+<figure>
+  <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." />
+  <figcaption>The wrap succeeded. The packet was still not allowed to continue.</figcaption>
+</figure>
+
 ## The wrong model
 
 IP-in-IP looks like a pipe. Outer header says where this envelope is going. Inner header is the original packet. Strip the outer header, and the inner packet is "back on the network." A lot of tunnel diagrams stop there.
@@ -36,11 +41,6 @@ If you skip the verify step, the simulator is a decapsulator. Any well-formed IP
 This is also why the work lived in userspace. A kernel interface will unwrap IP-in-IP and hand you a packet. It will not know your session table. The netstack is in-process, so the same code that allocated the id can see the packet, check it, and drop it before it ever looks like a normal IPv4 flow.
 
 I have watched a packet survive the wrap and die on the check: outer header fine, inner header fine, id missing or stale. From the wire it looked like a tunnel. From the stack it was a stranger.
-
-<figure>
-  <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." />
-  <figcaption>The wrap succeeded. The packet was still not allowed to continue.</figcaption>
-</figure>
 
 ## The model that stuck
 

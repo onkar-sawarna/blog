@@ -10,6 +10,11 @@ I spent four years at Menlo Security. I joined as an intern and left as a Senior
 Then I moved to Acceldata. Different pace, different domain, and a set of assumptions I did not know I was carrying until they stopped being true.
 
 <figure>
+  <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." />
+  <figcaption>The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
+</figure>
+
+<figure>
   <img src="/blog/write-teams.svg" alt="One codebase, deep and narrow, then a new team where the old assumptions show." />
   <figcaption>The move did not create the gap. It made it visible.</figcaption>
 </figure>
@@ -26,11 +31,6 @@ Changing teams made the gaps obvious. Not gaps in what I had done, but in what I
 </figure>
 
 Writing is the fix. It is much harder to fool yourself in prose than in your own head.
-
-<figure>
-  <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." />
-  <figcaption>The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
-</figure>
 
 ## What this is going to be
 
