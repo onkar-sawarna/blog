@@ -12,9 +12,16 @@ export function isPostId(id: string): boolean {
   return /^[a-z0-9][a-z0-9/_-]{0,199}$/i.test(id);
 }
 
+function readEnv(name: string): string | undefined {
+  const raw = process.env[name];
+  if (typeof raw !== 'string') return undefined;
+  const value = raw.trim().replace(/^['"]|['"]$/g, '');
+  return value || undefined;
+}
+
 function redisConfig() {
-  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+  const url = readEnv('UPSTASH_REDIS_REST_URL') ?? readEnv('KV_REST_API_URL');
+  const token = readEnv('UPSTASH_REDIS_REST_TOKEN') ?? readEnv('KV_REST_API_TOKEN');
   if (!url || !token) return null;
   return { url, token };
 }

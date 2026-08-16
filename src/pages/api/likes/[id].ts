@@ -16,8 +16,11 @@ export const GET: APIRoute = async ({ params }) => {
 
   try {
     return json({ count: await getLikes(id) });
-  } catch {
-    return json({ error: 'Likes are unavailable' }, 503);
+  } catch (error) {
+    const reason = error instanceof Error && error.message === 'Likes store is not configured'
+      ? 'not_configured'
+      : 'store_failed';
+    return json({ error: 'Likes are unavailable', reason }, 503);
   }
 };
 
@@ -40,7 +43,10 @@ export const POST: APIRoute = async ({ params, request }) => {
   try {
     const count = await bumpLikes(id, action === 'like' ? 1 : -1);
     return json({ count });
-  } catch {
-    return json({ error: 'Likes are unavailable' }, 503);
+  } catch (error) {
+    const reason = error instanceof Error && error.message === 'Likes store is not configured'
+      ? 'not_configured'
+      : 'store_failed';
+    return json({ error: 'Likes are unavailable', reason }, 503);
   }
 };
