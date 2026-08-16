@@ -68,6 +68,8 @@ const username = SITE.newsletter;
     border: 1px solid var(--rule);
     border-radius: 3px;
     padding: 0.65rem 0.8rem;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .subscribe input[type='email']:focus {
     outline: 2px solid var(--accent);
@@ -104,11 +106,19 @@ const username = SITE.newsletter;
 
   @media (max-width: 40rem) {
     .subscribe-row {
-      flex-direction: column;
-      max-width: none;
+      flex-wrap: nowrap;
+      max-width: 100%;
+    }
+    .subscribe input[type='email'] {
+      flex: 1 1 auto;
+      padding: 0.5rem 0.65rem;
+      font-size: 16px;
+      min-height: 2.5rem;
     }
     .subscribe button {
-      min-height: 2.75rem;
+      flex: 0 0 auto;
+      min-height: 2.5rem;
+      padding: 0.5rem 0.7rem;
     }
   }
 </style>
