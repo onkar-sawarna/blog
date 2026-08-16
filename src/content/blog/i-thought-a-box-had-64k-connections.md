@@ -3,7 +3,6 @@ title: "I thought a box could only hold 64k connections"
 description: "From one machine to one other machine, you often get about 64k TCP connections. That is a source-port limit, not a law of TCP. A server facing many clients is a different table."
 pubDate: 2026-08-16
 tags: ["networking", "systems"]
-draft: true
 ---
 
 I used to treat 65,535 as a hard ceiling on TCP.
@@ -103,6 +102,11 @@ An LB that does not rewrite the client IP (the server still sees A, B, and C) do
 </figure>
 
 If you try to reproduce "5 million connections" by looping `connect()` from one host to one host, you will hit ~64k and think the claim is fake. You fixed the source IP. They did not.
+
+<figure>
+  <img src="/blog/64k-loadtest.svg" alt="One laptop looping connect hits 64k and calls the claim fake. The other box: you fixed src, they did not." />
+  <figcaption>The load test did not disprove the server. It turned you into one client.</figcaption>
+</figure>
 
 ## The model that stuck
 

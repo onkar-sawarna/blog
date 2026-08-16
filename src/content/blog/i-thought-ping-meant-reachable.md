@@ -33,6 +33,11 @@ I have had ICMP succeed to an address and the TCP connect hang. The box was up. 
 
 I have had ICMP fail and the service work. Someone blocked echo and left 443 alone. I spent time on a "down" host that was taking traffic.
 
+<figure>
+  <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." />
+  <figcaption>Echo is a small fact. Treating it as the outage is the old model.</figcaption>
+</figure>
+
 I have had ping hit a different machine than the request. NAT, anycast, a load balancer that answers ICMP on a VIP and sends the real connection somewhere else. The echo reply was honest. It was honest about the wrong question.
 
 The useful questions look like this:

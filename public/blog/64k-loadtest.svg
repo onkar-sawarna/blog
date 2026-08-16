@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" role="img">
+  <title>A one-host load test hits 64k and calls the million-connection claim fake.</title>
+  <rect width="720" height="240" fill="#F7F7F5"/>
+  <rect x="36" y="32" width="300" height="140" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="186" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#B33A1A">one laptop</text>
+  <text x="186" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">connect() in a loop</text>
+  <text x="186" y="138" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#B33A1A">hits 64k: claim is fake</text>
+  <rect x="384" y="32" width="300" height="140" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="534" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#1A3D32">you fixed src</text>
+  <text x="534" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">they did not</text>
+  <text x="534" y="138" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">many IPs, one listen port</text>
+  <text x="360" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">The 64k showed up because you became m1.</text>
+</svg>

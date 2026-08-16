@@ -43,6 +43,11 @@ A log line can tell you that a process exited. It will not tell you whether that
 
 I have sat in front of a perfectly healthy volume of logs and still not been able to answer "is this getting worse." That is the tell. If the UI cannot answer a question you did not plan for last quarter, you do not have a window. You have a diary with a nicer font.
 
+<figure>
+  <img src="/blog/logs-diary.svg" alt="A wall of timeout, retry, accept, deny next to a blank box for the question is this getting worse." />
+  <figcaption>The pile can look complete and still leave the only useful question empty.</figcaption>
+</figure>
+
 Networking trained me to miss this. Tunnels, sessions, handshakes, firewalls: they all emit a lot of text. Text is comforting. You can have a wall of accept, deny, and timeout and still not know whether identity is wrong, the path is wrong, or the thing on the other side is just slow. A cluster is the same shape. The manager talks. The nodes talk. The UI has to decide which voice to trust.
 
 ## The model that stuck

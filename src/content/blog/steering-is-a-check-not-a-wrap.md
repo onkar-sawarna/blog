@@ -37,6 +37,11 @@ This is also why the work lived in userspace. A kernel interface will unwrap IP-
 
 I have watched a packet survive the wrap and die on the check: outer header fine, inner header fine, id missing or stale. From the wire it looked like a tunnel. From the stack it was a stranger.
 
+<figure>
+  <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." />
+  <figcaption>The wrap succeeded. The packet was still not allowed to continue.</figcaption>
+</figure>
+
 ## The model that stuck
 
 Steering is a checkpoint that happens to use a tunnel.

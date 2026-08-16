@@ -27,6 +27,11 @@ Changing teams made the gaps obvious. Not gaps in what I had done, but in what I
 
 Writing is the fix. It is much harder to fool yourself in prose than in your own head.
 
+<figure>
+  <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." />
+  <figcaption>The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
+</figure>
+
 ## What this is going to be
 
 Notes on systems, networking, and observability. Mental models from DSA: the patterns, not the problem numbers. Write-ups of problems I have actually hit, while the details are still sharp. And occasionally the non-technical parts of this job: the transitions, the tradeoffs, the things that turn out to matter more than the tech stack.
