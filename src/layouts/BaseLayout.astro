@@ -16,7 +16,9 @@ const path = Astro.url.pathname;
 const onWriting = path === '/' || path.startsWith('/blog');
 const onAbout = path.startsWith('/about');
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
-const ogImage = new URL(image, Astro.site ?? SITE.url).href;
+const ogImageUrl = new URL(image, Astro.site ?? SITE.url);
+ogImageUrl.searchParams.set('v', '2');
+const ogImage = ogImageUrl.href;
 ---
 <!doctype html>
 <html lang="en">
