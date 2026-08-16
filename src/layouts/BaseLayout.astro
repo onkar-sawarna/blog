@@ -3,36 +3,96 @@ import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import SocialIcon from '../components/SocialIcon.astro';
 import Subscribe from '../components/Subscribe.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { SITE, SOCIALS } from '../config';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+  tags?: string[];
 }
 
-const { title, description = SITE.description, image = '/og.png' } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  image = '/og.png',
+  type = 'website',
+  pubDate,
+  tags = [],
+} = Astro.props;
 const path = Astro.url.pathname;
 const onWriting = path === '/' || path.startsWith('/blog');
 const onAbout = path.startsWith('/about');
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 const ogImageUrl = new URL(image, Astro.site ?? SITE.url);
-ogImageUrl.searchParams.set('v', '3');
+ogImageUrl.searchParams.set('v', '4');
 const ogImage = ogImageUrl.href;
+const published = pubDate?.toISOString();
+const sameAs = SOCIALS.map((s) => s.href).filter((href) => !href.startsWith('mailto:'));
+const person = {
+  '@type': 'Person',
+  name: SITE.author,
+  url: SITE.url,
+  jobTitle: 'Software Engineer',
+  sameAs,
+};
+const jsonLd = type === 'article' && published
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description,
+      image: ogImage,
+      datePublished: published,
+      dateModified: published,
+      author: person,
+      publisher: person,
+      mainEntityOfPage: canonical,
+      url: canonical,
+      keywords: tags.length ? tags.join(', ') : undefined,
+    }
+  : {
+      '@context': 'https://schema.org',
+      ...person,
+    };
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
+  <script is:inline>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="description" content={description} />
   <meta name="author" content={SITE.author} />
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={type} />
   <meta property="og:site_name" content={SITE.title} />
+  {type === 'article' && published && (
+    <meta property="article:published_time" content={published} />
+  )}
+  {type === 'article' && published && (
+    <meta property="article:modified_time" content={published} />
+  )}
   <meta property="article:author" content={SITE.author} />
+  {tags.map((tag) => (
+    <meta property="article:tag" content={tag} />
+  ))}
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
@@ -47,14 +107,7 @@ const ogImage = ogImageUrl.href;
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
   <title>{title === SITE.title ? SITE.title : `${title} · ${SITE.title}`}</title>
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: SITE.author,
-    url: SITE.url,
-    jobTitle: 'Software Engineer',
-    sameAs: SOCIALS.map((s) => s.href).filter((href) => !href.startsWith('mailto:')),
-  })} />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <Analytics />
 </head>
 <body>
@@ -65,11 +118,14 @@ const ogImage = ogImageUrl.href;
       <a href="/" class="wordmark">
         <span class="wordmark-main">{SITE.title}</span>
       </a>
-      <nav class="site-nav" aria-label="Primary">
-        <a href="/" aria-current={onWriting ? 'page' : undefined}>Writing</a>
-        <a href="/about" aria-current={onAbout ? 'page' : undefined}>About</a>
-        <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
-      </nav>
+      <div class="masthead-tools">
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/" aria-current={onWriting ? 'page' : undefined}>Writing</a>
+          <a href="/about" aria-current={onAbout ? 'page' : undefined}>About</a>
+          <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
+        </nav>
+        <ThemeToggle />
+      </div>
     </div>
   </header>
 
@@ -141,6 +197,11 @@ const ogImage = ogImageUrl.href;
     color: var(--ink);
     letter-spacing: -0.025em;
     transition: color 0.15s ease;
+  }
+  .masthead-tools {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
   }
   .site-nav {
     display: flex;
@@ -230,8 +291,13 @@ const ogImage = ogImageUrl.href;
       gap: 0.85rem;
       padding: 1.1rem var(--gutter) 0.85rem;
     }
-    .site-nav {
+    .masthead-tools {
       width: 100%;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .site-nav {
+      flex: 1;
       justify-content: space-between;
       gap: 0.25rem;
     }

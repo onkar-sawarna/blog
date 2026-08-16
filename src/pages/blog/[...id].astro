@@ -26,6 +26,9 @@ function formatDate(d: Date) {
   title={post.data.title}
   description={post.data.description}
   image={`/og/${post.id}.png`}
+  type="article"
+  pubDate={post.data.pubDate}
+  tags={post.data.tags}
 >
   <article class="post">
     <header class="post-header">
@@ -37,7 +40,9 @@ function formatDate(d: Date) {
         <span class="byline-photo">
           <img
             class="byline-img"
-            src="/onkar.jpg"
+            src="/onkar-80.jpg"
+            srcset="/onkar-80.jpg 80w, /onkar-176.jpg 176w"
+            sizes="2.5rem"
             alt=""
             width="72"
             height="72"

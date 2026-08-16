@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import './fonts.css';
 
 :root {
   --paper: #F7F7F5;
@@ -13,6 +13,11 @@
   --accent-warm: #B33A1A;
   --gold: #8B6914;
   --tag-bg: #EDEDE9;
+  --code-bg: #DCE8E2;
+  --selection: #c5ddd2;
+  --liked-bg: #f8efe9;
+  --liked-border: #e4c4b8;
+  --color-scheme: light;
 
   --font-display: 'Fraunces', Georgia, serif;
   --font-body: 'Source Serif 4', Georgia, serif;
@@ -22,9 +27,30 @@
   --gutter: clamp(1.25rem, 4vw, 3rem);
 }
 
+html[data-theme='dark'] {
+  --paper: #121413;
+  --paper-raised: #1A1C1A;
+  --paper-tint: #161A17;
+  --ink: #EDEDE8;
+  --ink-soft: #A3A39C;
+  --rule: #2C2E2C;
+  --rule-tint: #3A453E;
+  --accent: #8FB9A0;
+  --accent-mid: #8FB9A0;
+  --accent-warm: #E07A4A;
+  --gold: #C4A24A;
+  --tag-bg: #2A2C2A;
+  --code-bg: #24332C;
+  --selection: #2A4A3C;
+  --liked-bg: #3A241C;
+  --liked-border: #8C4A32;
+  --color-scheme: dark;
+}
+
 * { box-sizing: border-box; }
 
 html {
+  color-scheme: var(--color-scheme);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
@@ -78,7 +104,7 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background: #c5ddd2;
+  background: var(--selection);
   color: var(--ink);
 }
 
@@ -97,7 +123,7 @@ pre {
 }
 
 code:not(pre code) {
-  background: #DCE8E2;
+  background: var(--code-bg);
   color: var(--accent);
   padding: 0.1em 0.4em;
   border-radius: 2px;
@@ -123,6 +149,10 @@ blockquote {
 .tag[data-tag='systems'] { background: #F0E6D2; color: #8B6914; }
 .tag[data-tag='career'] { background: #F3E0D8; color: #8C2E16; }
 .tag[data-tag='meta'] { background: #E3E0EA; color: #3D3555; }
+html[data-theme='dark'] .tag[data-tag='observability'] { background: #1E332C; color: #B5D4C4; }
+html[data-theme='dark'] .tag[data-tag='systems'] { background: #332C1A; color: #D4C08A; }
+html[data-theme='dark'] .tag[data-tag='career'] { background: #3A241C; color: #E0B0A0; }
+html[data-theme='dark'] .tag[data-tag='meta'] { background: #2A2833; color: #C4B8D4; }
 
 hr {
   border: none;
