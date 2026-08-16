@@ -13,8 +13,38 @@ Astro builds a static site from Markdown. There is no CMS. Each post is a file i
 | `src/content/blog/` | Posts. Filename is the URL: `my-post.md` → `/blog/my-post/` |
 | `src/config.ts` | Name, domain, social links, newsletter |
 | `src/pages/about.astro` | About page |
+| `src/components/LikeButton.astro` | Client `fetch` to the likes API |
+| `api/likes.go` | Go handler: GET/POST counts |
+| `cmd/likes/main.go` | Local HTTP server that calls that handler |
 | `public/blog/` | Original diagrams used in posts |
 | `public/og/` | Social preview images |
+
+## Architecture
+
+This is a static site plus one small API. There is no CMS and no database for posts.
+
+**Astro** turns Markdown into HTML at build time (`output: 'static'`). A file `src/content/blog/my-post.md` becomes `/blog/my-post/`. The homepage, About, RSS, and sitemap are also files after `astro build`. Opening a post does not run Node or Go.
+
+**Go** only handles like counts. `Handler` in `api/likes.go` is the entry. The browser never talks to Redis.
+
+```
+Markdown ──► Astro build ──► HTML/CSS/JS on Vercel
+                                  │
+Reader ──► page ──► LikeButton ──► GET/POST /api/likes/:id
+                                  │
+                           Go Handler
+                                  │
+                    Upstash Redis (likes:<id>)
+                    or .data/likes.json on a laptop
+```
+
+**Production.** One push to `main`. Vercel builds the Astro site and compiles `api/likes.go` as a function at `/api/likes`. `vercel.json` rewrites `/api/likes/:id` to `/api/likes?id=:id` so the function sees the post id. Redis env vars must be set on Vercel.
+
+**Local.** `npm run dev` starts `cmd/likes` on `127.0.0.1:8080`, then Astro on `4321`. Vite proxies `/api` to the Go process. Same `Handler`, same JSON: `{ "count": N }` and POST `{ "action": "like" | "unlike" }`.
+
+“Already liked” is `localStorage` in the browser (`liked:<id>`). The server stores a number only.
+
+Theme, subscribe (Buttondown), and analytics do not go through Go.
 
 ## Running it locally
 
