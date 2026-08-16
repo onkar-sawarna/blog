@@ -60,7 +60,8 @@ const { id } = Astro.props;
 
   for (const button of document.querySelectorAll<HTMLButtonElement>('[data-like-id]')) {
     const id = button.dataset.likeId;
-    if (!id) continue;
+    if (!id || button.dataset.likeBound === '1') continue;
+    button.dataset.likeBound = '1';
 
     const liked = localStorage.getItem(storageKey(id)) === '1';
     paint(button, liked, null);

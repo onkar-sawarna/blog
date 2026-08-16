@@ -36,7 +36,7 @@ async function redis(command: Array<string | number>): Promise<unknown> {
       Authorization: `Bearer ${config.token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(command),
+    body: JSON.stringify(command.map(String)),
   });
 
   if (!response.ok) {
@@ -80,9 +80,12 @@ export async function getLikes(id: string): Promise<number> {
 export async function bumpLikes(id: string, delta: 1 | -1): Promise<number> {
   if (redisConfig()) {
     const raw = await redis(['INCRBY', likesKey(id), delta]);
-    const n = typeof raw === 'number' ? raw : Number(raw ?? 0);
-    if (!Number.isFinite(n) || n <= 0) {
-      await redis(['SET', likesKey(id), 0]);
+    const n = typeof raw === 'number' ? raw : Number(raw);
+    if (!Number.isFinite(n)) {
+      throw new Error('Redis INCRBY returned a non-number');
+    }
+    if (n < 0) {
+      await redis(['SET', likesKey(id), '0']);
       return 0;
     }
     return Math.floor(n);
