@@ -1,0 +1,138 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<button
+  type="button"
+  class="like"
+  data-like-id={id}
+  aria-pressed="false"
+  disabled
+>
+  <svg class="like-icon" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 13.6s-5.2-3.2-5.2-6.4A2.9 2.9 0 0 1 8 4.8a2.9 2.9 0 0 1 5.2 2.4C13.2 10.4 8 13.6 8 13.6z" />
+  </svg>
+  <span class="like-label">Like</span>
+  <span class="like-count" data-like-count></span>
+</button>
+
+<script>
+  const storageKey = (id: string) => `liked:${id}`;
+
+  async function readCount(id: string): Promise<number | null> {
+    try {
+      const response = await fetch(`/api/likes/${id}`);
+      if (!response.ok) return null;
+      const data = (await response.json()) as { count?: number };
+      return typeof data.count === 'number' ? data.count : 0;
+    } catch {
+      return null;
+    }
+  }
+
+  async function writeCount(id: string, action: 'like' | 'unlike'): Promise<number | null> {
+    try {
+      const response = await fetch(`/api/likes/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      });
+      if (!response.ok) return null;
+      const data = (await response.json()) as { count?: number };
+      return typeof data.count === 'number' ? data.count : 0;
+    } catch {
+      return null;
+    }
+  }
+
+  function paint(button: HTMLButtonElement, liked: boolean, count: number | null) {
+    const label = button.querySelector('.like-label');
+    const countEl = button.querySelector('[data-like-count]');
+    button.setAttribute('aria-pressed', liked ? 'true' : 'false');
+    button.classList.toggle('is-liked', liked);
+    if (label) label.textContent = liked ? 'Liked' : 'Like';
+    if (countEl) countEl.textContent = count === null ? '' : String(count);
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-like-id]')) {
+    const id = button.dataset.likeId;
+    if (!id) continue;
+
+    const liked = localStorage.getItem(storageKey(id)) === '1';
+    paint(button, liked, null);
+
+    const count = await readCount(id);
+    paint(button, liked, count);
+    button.disabled = count === null;
+    if (count === null) continue;
+
+    button.addEventListener('click', async () => {
+      if (button.disabled) return;
+      const nextLiked = button.getAttribute('aria-pressed') !== 'true';
+      const shown = Number(button.querySelector('[data-like-count]')?.textContent ?? 0);
+      const optimistic = Math.max(0, shown + (nextLiked ? 1 : -1));
+      paint(button, nextLiked, optimistic);
+      button.disabled = true;
+
+      const saved = await writeCount(id, nextLiked ? 'like' : 'unlike');
+      if (saved === null) {
+        paint(button, !nextLiked, shown);
+        button.disabled = false;
+        return;
+      }
+
+      localStorage.setItem(storageKey(id), nextLiked ? '1' : '0');
+      paint(button, nextLiked, saved);
+      button.disabled = false;
+    });
+  }
+</script>
+
+<style>
+  .like {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+  }
+  .like:hover:not(:disabled) {
+    color: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+  .like:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+  .like-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+  .like.is-liked {
+    color: var(--accent-warm);
+    border-color: #e4c4b8;
+    background: #f8efe9;
+  }
+  .like.is-liked .like-icon {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+  .like-count:empty {
+    display: none;
+  }
+</style>

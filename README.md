@@ -4,7 +4,7 @@ Source for [www.onkarsawarna.dev](https://www.onkarsawarna.dev), my personal sit
 
 I am a software engineer. This repo is the writing: notes on engineering, networking, observability, and distributed systems. Mental models from production work and from DSA, written while the details are still sharp. Not a product blog and not a solutions dump.
 
-Astro builds a static site from Markdown. There is no database and no CMS. Each post is a file in this repo. Vercel deploys on every push to `main`.
+Astro builds a static site from Markdown. There is no CMS. Each post is a file in this repo. Vercel deploys on every push to `main`. Post likes are a small API route plus Redis (Upstash or Vercel KV).
 
 ## Layout
 
@@ -50,3 +50,16 @@ Your post here, in Markdown.
 `title`, `description`, and `pubDate` are required. `tags` and `draft` are optional. Keep `draft: true` until the post is ready; drafts stay off the homepage, RSS, and the production build.
 
 RSS is at `/rss.xml`.
+
+## Likes
+
+Each post has a like button. Counts live in Redis, not in the Markdown.
+
+Create a free [Upstash Redis](https://upstash.com) database (or Vercel KV) and set these on Vercel, then redeploy:
+
+```
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+Locally, if those are missing, counts are stored in `.data/likes.json` and stay on your machine.
