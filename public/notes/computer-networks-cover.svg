@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-label="Cover: Computer networks, as they show up on a box">
+  <rect width="420" height="560" fill="#1A3D32"/>
+  <rect x="0" y="0" width="10" height="560" fill="#122820"/>
+  <rect x="28" y="28" width="364" height="504" fill="#F7F7F5"/>
+  <text x="52" y="68" font-family="ui-monospace, monospace" font-size="11" letter-spacing="2.4" fill="#1A3D32">A NOTE</text>
+  <text x="52" y="118" font-family="Georgia, serif" font-size="28" fill="#161616">Computer</text>
+  <text x="52" y="152" font-family="Georgia, serif" font-size="28" fill="#161616">networks, as</text>
+  <text x="52" y="186" font-family="Georgia, serif" font-size="28" fill="#161616">they show up</text>
+  <text x="52" y="220" font-family="Georgia, serif" font-size="28" fill="#161616">on a box</text>
+  <rect x="52" y="248" width="72" height="2" fill="#B33A1A"/>
+
+  <rect x="52" y="290" width="128" height="88" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="116" y="328" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">laptop</text>
+  <text x="116" y="350" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">client</text>
+
+  <path d="M190 334 H268" stroke="#1A3D32" stroke-width="1.6" fill="none"/>
+  <path d="M260 328 L270 334 L260 340" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="229" y="322" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#5C5C59">IP : port</text>
+
+  <rect x="276" y="290" width="92" height="88" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="322" y="328" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">host</text>
+  <text x="322" y="350" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">server</text>
+
+  <text x="52" y="432" font-family="Georgia, serif" font-size="15" fill="#161616">How a connect works,</text>
+  <text x="52" y="454" font-family="Georgia, serif" font-size="15" fill="#161616">or fails.</text>
+
+  <text x="52" y="500" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">Onkar Sawarna</text>
+  <text x="368" y="500" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">20 pages</text>
+</svg>

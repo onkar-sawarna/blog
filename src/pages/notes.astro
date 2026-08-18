@@ -31,18 +31,25 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
           const paid = Boolean(note.buyUrl);
           return (
             <li class="note">
-              <div class="note-copy">
-                <h2>{note.title}</h2>
-                <p>{note.description}</p>
-                {note.pages != null && (
-                  <p class="note-meta">{note.pages} pages</p>
-                )}
-              </div>
-              <div class="note-buy">
-                <p class="note-price">{note.price}</p>
-                <a class="buy" href={href}>
-                  {paid ? 'Buy' : 'Email to buy'}
-                </a>
+              {note.cover && (
+                <figure class="note-cover">
+                  <img src={note.cover} alt={`Cover of ${note.title}`} width="420" height="560" />
+                </figure>
+              )}
+              <div class="note-body">
+                <div class="note-copy">
+                  <h2>{note.title}</h2>
+                  <p>{note.description}</p>
+                  {note.pages != null && (
+                    <p class="note-meta">{note.pages} pages</p>
+                  )}
+                </div>
+                <div class="note-buy">
+                  <p class="note-price">{note.price}</p>
+                  <a class="buy" href={href}>
+                    {paid ? 'Buy' : 'Email to buy'}
+                  </a>
+                </div>
               </div>
             </li>
           );
@@ -64,7 +71,7 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     border-bottom: 1px solid var(--rule-tint);
   }
   .hero-inner {
-    max-width: 48rem;
+    max-width: 52rem;
     margin: 0 auto;
   }
   .eyebrow {
@@ -101,9 +108,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     margin: 1.2rem 0 0;
   }
   .notes {
-    max-width: 48rem;
+    max-width: 52rem;
     margin: 0 auto;
-    padding: 0.5rem var(--gutter) 5rem;
+    padding: 1.25rem var(--gutter) 5rem;
   }
   .empty {
     color: var(--ink-soft);
@@ -117,11 +124,31 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
   }
   .note {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1.25rem 1.5rem;
-    align-items: start;
-    padding: 1.85rem 0;
+    grid-template-columns: 11.5rem minmax(0, 1fr);
+    gap: 2rem 2.25rem;
+    align-items: stretch;
+    padding: 2.4rem 0;
     border-bottom: 1px solid var(--rule);
+  }
+  .note-cover {
+    margin: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-tint);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgb(22 22 22 / 0.08);
+  }
+  .note-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .note-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    padding: 0.15rem 0 0.1rem;
   }
   .note h2 {
     font-size: 1.35rem;
@@ -146,10 +173,10 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
   }
   .note-buy {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.55rem;
-    min-width: 4.5rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.4rem;
   }
   .note-price {
     font-family: var(--font-mono);
@@ -165,16 +192,15 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     text-transform: uppercase;
     letter-spacing: 0.06em;
     text-decoration: none;
-    color: var(--accent);
-    background: transparent;
-    border: 1px solid var(--rule-tint);
-    border-radius: 2px;
-    padding: 0.4rem 0.75rem;
-  }
-  .buy:hover {
     color: var(--paper);
     background: var(--accent);
-    border-color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.48rem 0.95rem;
+  }
+  .buy:hover {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
   }
   .note-help {
     font-family: var(--font-mono);
@@ -188,11 +214,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     .hero { padding: 2.5rem var(--gutter) 2rem; }
     .notes { padding: 0 var(--gutter) 3.5rem; }
     .note {
-      grid-template-columns: 1fr;
-      padding: 1.5rem 0;
-    }
-    .note-buy {
-      align-items: flex-start;
+      grid-template-columns: 8.25rem minmax(0, 1fr);
+      gap: 1.15rem;
+      padding: 1.75rem 0;
     }
   }
 </style>
