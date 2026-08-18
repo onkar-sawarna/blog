@@ -9,18 +9,15 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
   title="Notes"
   description="Longer notes than the blog. One subject, my models. After you pay, the file downloads."
 >
-  <section class="notes">
-    <header class="notes-header">
-      <p class="eyebrow">Paid</p>
-      <h1>Notes</h1>
-      <p class="notes-dek">
-        Same models as the posts, written longer so you can sit with one subject.
-        When a note is ready it is here. You pay, the next page downloads the file.
-        If that tab shows no file, open <a href="/notes/thanks">/notes/thanks</a> and
-        paste the payment id from the Razorpay email.
-      </p>
-    </header>
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Notes</p>
+      <h1>Same models as the posts, written so you can sit with one subject.</h1>
+      <p class="hero-dek">You pay. The next page downloads the file.</p>
+    </div>
+  </section>
 
+  <section class="notes">
     {NOTES.length === 0 ? (
       <p class="empty">
         Nothing for sale yet. If you want a longer writeup of something already on the
@@ -36,14 +33,14 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
             <li class="note">
               {note.preview && (
                 <figure class="note-preview">
-                  <img src={note.preview} alt={`Blurred first pages of ${note.title}`} width="1200" height="820" />
+                  <img src={note.preview} alt={`Preview of ${note.title}`} width="1200" height="820" />
                 </figure>
               )}
               <div class="note-copy">
                 <h2>{note.title}</h2>
                 <p>{note.description}</p>
                 {note.pages != null && (
-                  <p class="note-meta">{note.pages} pages · PDF</p>
+                  <p class="note-meta">{note.pages} pages</p>
                 )}
               </div>
               <div class="note-buy">
@@ -62,117 +59,172 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
         })}
       </ul>
     )}
+    <p class="note-help">
+      If the file did not start, open <a href="/notes/thanks">the thanks page</a> and
+      paste the payment id from the receipt.
+    </p>
   </section>
 </BaseLayout>
 
 <style>
-  .notes {
-    max-width: var(--measure);
+  .hero {
+    margin: 0;
+    padding: 4.25rem var(--gutter) 3rem;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-tint);
+  }
+  .hero-inner {
+    max-width: 48rem;
     margin: 0 auto;
-    padding: 3.5rem var(--gutter) 5rem;
   }
   .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
-    margin: 0 0 0.75rem;
+    margin: 0 0 1.15rem;
   }
-  .notes-header h1 {
-    font-size: clamp(2rem, 5vw, 2.8rem);
+  .eyebrow::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero h1 {
+    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
     font-weight: 650;
+    max-width: 22ch;
     letter-spacing: -0.03em;
-    margin: 0 0 0.75rem;
+    line-height: 1.15;
+    margin: 0;
   }
-  .notes-dek {
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.55;
     color: var(--ink-soft);
-    font-size: 1.12rem;
-    margin: 0 0 2.5rem;
-    max-width: 38rem;
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
+  }
+  .notes {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 0.5rem var(--gutter) 5rem;
   }
   .empty {
     color: var(--ink-soft);
     font-size: 1.08rem;
+    padding-top: 2rem;
   }
   .note-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--rule);
   }
   .note {
     display: grid;
-    grid-template-columns: 10.5rem minmax(0, 1fr) auto;
-    gap: 1.15rem 1.25rem;
-    align-items: start;
-    padding: 1.35rem 0;
+    grid-template-columns: 6.75rem minmax(0, 1fr) auto;
+    gap: 1.25rem 1.35rem;
+    align-items: center;
+    padding: 1.85rem 0;
     border-bottom: 1px solid var(--rule);
   }
   .note h2 {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
+    font-weight: 600;
     margin: 0 0 0.4rem;
     letter-spacing: -0.02em;
+    line-height: 1.2;
   }
   .note-copy p {
     margin: 0;
     color: var(--ink-soft);
+    font-size: 1.02rem;
+    line-height: 1.5;
   }
   .note-meta {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.03em;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
     margin-top: 0.55rem !important;
   }
   .note-preview {
     margin: 0;
-    background: var(--paper-tint);
+    width: 6.75rem;
+    background: var(--paper-raised);
     border: 1px solid var(--rule);
-    border-radius: 4px;
+    border-radius: 2px;
     overflow: hidden;
+    box-shadow: 0 1px 0 var(--rule);
   }
   .note-preview img {
     display: block;
     width: 100%;
-    height: 7.25rem;
+    height: 8.6rem;
     object-fit: cover;
     object-position: top center;
     border: 0;
   }
   .note-buy {
-    flex-shrink: 0;
-    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.55rem;
+    min-width: 4.5rem;
   }
   .note-price {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: 0 0 0.55rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    margin: 0;
+    color: var(--ink);
   }
   .buy {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-decoration: none;
-    color: var(--paper);
-    background: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 3px;
-    padding: 0.45rem 0.85rem;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--rule-tint);
+    border-radius: 2px;
+    padding: 0.4rem 0.75rem;
   }
   .buy:hover {
-    background: var(--accent-warm);
-    border-color: var(--accent-warm);
+    color: var(--paper);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .note-help {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 2rem 0 0;
+    max-width: 36rem;
   }
   @media (max-width: 40rem) {
-    .notes { padding: 2rem var(--gutter) 3.5rem; }
+    .hero { padding: 2.5rem var(--gutter) 2rem; }
+    .notes { padding: 0 var(--gutter) 3.5rem; }
     .note {
-      grid-template-columns: 7.5rem minmax(0, 1fr);
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+      padding: 1.5rem 0;
     }
+    .note-preview { width: 5.5rem; }
+    .note-preview img { height: 7.1rem; }
     .note-buy {
       grid-column: 2;
-      text-align: left;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
     }
   }
 </style>
