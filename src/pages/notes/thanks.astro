@@ -38,11 +38,11 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     if (el) el.textContent = text;
   }
 
-  function showRecover() {
+  function showRecover(keepCopy = false) {
     if (recover) recover.hidden = false;
-    if (copy) {
+    if (!keepCopy && copy) {
       copy.innerHTML =
-        `If the download failed, paste the payment id (it starts with pay_) from the Razorpay receipt. Or <a href="mailto:${mail}">write to me</a>.`;
+        `Paste the payment id (it starts with pay_) from the Razorpay receipt. Or <a href="mailto:${mail}">write to me</a>.`;
     }
   }
 
@@ -58,7 +58,7 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
       const err = (await res.text()).trim() || res.statusText;
       setText(heading, 'The file did not start.');
       setText(copy, err);
-      showRecover();
+      showRecover(true);
       return;
     }
     const blob = await res.blob();
@@ -96,7 +96,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
 
   recover?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const id = pid instanceof HTMLInputElement ? pid.value.trim() : '';
+    const raw = pid instanceof HTMLInputElement ? pid.value.trim() : '';
+    const found = raw.match(/pay_[A-Za-z0-9]+/);
+    const id = found ? found[0] : raw;
     if (!id) return;
     pull('/api/notes-file?razorpay_payment_id=' + encodeURIComponent(id)).catch(() => {
       setText(heading, 'The file did not start.');

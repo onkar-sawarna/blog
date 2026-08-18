@@ -9,6 +9,16 @@ import (
 	"github.com/onkar-sawarna/blog/lib/rzpsig"
 )
 
+func TestExtractPayID(t *testing.T) {
+	got := extractPayID("Payment ID: pay_AbC123 from Razorpay")
+	if got != "pay_AbC123" {
+		t.Fatalf("got %q", got)
+	}
+	if extractPayID("plink_xxx") != "" {
+		t.Fatal("plink should not become a pay id")
+	}
+}
+
 func TestHandlerRejectsBadSignature(t *testing.T) {
 	t.Setenv("RAZORPAY_KEY_SECRET", "test-secret")
 	t.Setenv("NOTES_PDF_KEY", "00")

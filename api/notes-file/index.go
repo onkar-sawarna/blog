@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/onkar-sawarna/blog/lib/notepdf"
@@ -29,7 +28,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	linkID := strings.TrimSpace(q.Get("razorpay_payment_link_id"))
 	ref := strings.TrimSpace(q.Get("razorpay_payment_link_reference_id"))
 	status := strings.TrimSpace(q.Get("razorpay_payment_link_status"))
-	payID := strings.TrimSpace(q.Get("razorpay_payment_id"))
+	payID := extractPayID(q.Get("razorpay_payment_id"))
 	sig := strings.TrimSpace(q.Get("razorpay_signature"))
 
 	secret := env("RAZORPAY_KEY_SECRET")
@@ -55,11 +54,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	if !ok && payID != "" {
 		if err := paymentCaptured(payID); err != nil {
-			if errors.Is(err, errNotConfigured) {
-				http.Error(w, "Download is not configured", http.StatusServiceUnavailable)
-				return
-			}
-			http.Error(w, "Payment is not complete", http.StatusForbidden)
+			http.Error(w, err.Error(), statusFor(err))
 			return
 		}
 		ok = true
@@ -120,7 +115,45 @@ func env(name string) string {
 	return strings.Trim(v, `"'`)
 }
 
-var errNotConfigured = errors.New("not_configured")
+var (
+	errNotConfigured = errors.New("RAZORPAY_KEY_ID is not set on the server")
+	errBadPayID      = errors.New("that is not a payment id (it should start with pay_)")
+	errUnknownPay    = errors.New("Razorpay does not know this payment id")
+	errNotPaid       = errors.New("that payment is not captured yet")
+)
+
+func statusFor(err error) int {
+	if errors.Is(err, errNotConfigured) {
+		return http.StatusServiceUnavailable
+	}
+	return http.StatusForbidden
+}
+
+func extractPayID(raw string) string {
+	raw = strings.TrimSpace(raw)
+	for i := 0; i < len(raw)-4; i++ {
+		if raw[i:i+4] != "pay_" {
+			continue
+		}
+		if i > 0 {
+			c := raw[i-1]
+			if c == '_' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') {
+				continue
+			}
+		}
+		rest := raw[i:]
+		var b strings.Builder
+		for _, r := range rest {
+			if r == '_' || (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') {
+				b.WriteRune(r)
+				continue
+			}
+			break
+		}
+		return b.String()
+	}
+	return ""
+}
 
 func allowedValue(wantList, got string) bool {
 	if strings.TrimSpace(wantList) == "" {
@@ -134,43 +167,16 @@ func allowedValue(wantList, got string) bool {
 	return false
 }
 
-func allowedPaise() []int64 {
-	raw := env("NOTES_AMOUNT_PAISE")
-	if raw == "" {
-		return []int64{100, 14900}
-	}
-	var out []int64
-	for _, part := range strings.Split(raw, ",") {
-		n, err := strconv.ParseInt(strings.TrimSpace(part), 10, 64)
-		if err == nil && n > 0 {
-			out = append(out, n)
-		}
-	}
-	if len(out) == 0 {
-		return []int64{100, 14900}
-	}
-	return out
-}
-
-func amountAllowed(amount int64) bool {
-	for _, n := range allowedPaise() {
-		if amount == n {
-			return true
-		}
-	}
-	return false
-}
-
 func paymentCaptured(id string) error {
-	if !strings.HasPrefix(id, "pay_") || len(id) < 8 || len(id) > 40 {
-		return errors.New("bad id")
+	if !strings.HasPrefix(id, "pay_") || len(id) < 8 || len(id) > 64 {
+		return errBadPayID
 	}
 	key := env("RAZORPAY_KEY_ID")
 	secret := env("RAZORPAY_KEY_SECRET")
 	if key == "" || secret == "" {
 		return errNotConfigured
 	}
-	req, err := http.NewRequest(http.MethodGet, "https://api.razorpay.com/v1/payments/"+id, nil)
+	req, err := http.NewRequest(http.MethodGet, "https://api.razorpay.com/v1/payments/"+urlPathEscape(id), nil)
 	if err != nil {
 		return err
 	}
@@ -184,21 +190,26 @@ func paymentCaptured(id string) error {
 	if err != nil {
 		return err
 	}
+	if res.StatusCode == http.StatusNotFound || res.StatusCode == http.StatusBadRequest {
+		return errUnknownPay
+	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return errors.New("razorpay " + strconv.Itoa(res.StatusCode))
+		return errors.New("Razorpay rejected the lookup")
 	}
 	var got struct {
 		Status string `json:"status"`
-		Amount int64  `json:"amount"`
 	}
 	if err := json.Unmarshal(body, &got); err != nil {
 		return err
 	}
-	if got.Status != "captured" && got.Status != "authorized" {
-		return errors.New("not captured")
+	switch got.Status {
+	case "captured", "authorized", "refunded":
+		return nil
+	default:
+		return errNotPaid
 	}
-	if !amountAllowed(got.Amount) {
-		return errors.New("wrong amount")
-	}
-	return nil
+}
+
+func urlPathEscape(id string) string {
+	return strings.ReplaceAll(id, " ", "")
 }
