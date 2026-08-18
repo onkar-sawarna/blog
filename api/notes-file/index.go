@@ -42,11 +42,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if status == "paid" && sig != "" && payID != "" {
 		payload := rzpsig.PaymentLinkPayload(linkID, ref, status, payID)
 		if rzpsig.Verify(payload, sig, secret) {
-			if want := env("NOTES_PAYMENT_LINK_ID"); want != "" && linkID != want {
+			if !allowedValue(env("NOTES_PAYMENT_LINK_ID"), linkID) {
 				http.Error(w, "Unknown payment link", http.StatusForbidden)
 				return
 			}
-			if want := env("NOTES_REFERENCE_ID"); want != "" && ref != "" && ref != want {
+			if ref != "" && !allowedValue(env("NOTES_REFERENCE_ID"), ref) {
 				http.Error(w, "Unknown note", http.StatusForbidden)
 				return
 			}
@@ -122,14 +122,43 @@ func env(name string) string {
 
 var errNotConfigured = errors.New("not_configured")
 
-func expectedPaise() int64 {
-	if raw := env("NOTES_AMOUNT_PAISE"); raw != "" {
-		n, err := strconv.ParseInt(raw, 10, 64)
-		if err == nil && n > 0 {
-			return n
+func allowedValue(wantList, got string) bool {
+	if strings.TrimSpace(wantList) == "" {
+		return true
+	}
+	for _, part := range strings.Split(wantList, ",") {
+		if strings.TrimSpace(part) == got {
+			return true
 		}
 	}
-	return 14900
+	return false
+}
+
+func allowedPaise() []int64 {
+	raw := env("NOTES_AMOUNT_PAISE")
+	if raw == "" {
+		return []int64{100, 14900}
+	}
+	var out []int64
+	for _, part := range strings.Split(raw, ",") {
+		n, err := strconv.ParseInt(strings.TrimSpace(part), 10, 64)
+		if err == nil && n > 0 {
+			out = append(out, n)
+		}
+	}
+	if len(out) == 0 {
+		return []int64{100, 14900}
+	}
+	return out
+}
+
+func amountAllowed(amount int64) bool {
+	for _, n := range allowedPaise() {
+		if amount == n {
+			return true
+		}
+	}
+	return false
 }
 
 func paymentCaptured(id string) error {
@@ -168,7 +197,7 @@ func paymentCaptured(id string) error {
 	if got.Status != "captured" && got.Status != "authorized" {
 		return errors.New("not captured")
 	}
-	if got.Amount != expectedPaise() {
+	if !amountAllowed(got.Amount) {
 		return errors.New("wrong amount")
 	}
 	return nil

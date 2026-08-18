@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -29,8 +30,16 @@ func main() {
 		ref = "note-computer-networks"
 	}
 
+	amount := 100
+	if raw := strings.TrimSpace(os.Getenv("NOTES_AMOUNT_PAISE")); raw != "" {
+		n, err := strconv.Atoi(raw)
+		if err == nil && n > 0 {
+			amount = n
+		}
+	}
+
 	body := map[string]any{
-		"amount":          14900,
+		"amount":          amount,
 		"currency":        "INR",
 		"accept_partial":  false,
 		"description":     "Computer networks, as they show up on a box",
