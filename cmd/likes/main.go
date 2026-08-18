@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	handler "github.com/onkar-sawarna/blog/api"
+	notesbuy "github.com/onkar-sawarna/blog/api/notes-buy"
 	notesfile "github.com/onkar-sawarna/blog/api/notes-file"
 )
 
@@ -24,6 +25,8 @@ func main() {
 	mux.HandleFunc("/api/likes", handler.Handler)
 	mux.HandleFunc("/api/notes-file/", notesfile.Handler)
 	mux.HandleFunc("/api/notes-file", notesfile.Handler)
+	mux.HandleFunc("/api/notes-buy/", notesbuy.Handler)
+	mux.HandleFunc("/api/notes-buy", notesbuy.Handler)
 
 	log.Printf("likes api on http://%s", addr)
 	log.Fatal(http.ListenAndServe(addr, mux))

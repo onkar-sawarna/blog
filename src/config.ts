@@ -14,10 +14,9 @@ export const SITE = {
 };
 
 // Delete any you don't want; the footer renders whatever is left.
-// Paid PDFs. buyUrl must be a Payment Link created with callback_url
-// https://www.onkarsawarna.dev/notes/thanks and callback_method get
-// (go run ./cmd/razorpay-link). Dashboard links that do not redirect
-// cannot auto-deliver. Leave buyUrl empty to fall back to mailto.
+// Paid PDFs. buyUrl /api/notes-buy?id=... creates a fresh Razorpay
+// Payment Link per click (a single rzp.io link dies after one pay).
+// Leave buyUrl empty to fall back to mailto.
 export const NOTES: Array<{
   id: string;
   title: string;
@@ -35,7 +34,7 @@ export const NOTES: Array<{
     price: '₹1',
     pages: 20,
     preview: '/notes/computer-networks-preview.png',
-    buyUrl: 'https://rzp.io/rzp/SKal7Wl',
+    buyUrl: '/api/notes-buy?id=computer-networks',
   },
 ];
 

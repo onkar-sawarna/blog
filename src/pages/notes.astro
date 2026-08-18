@@ -28,7 +28,7 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
         {NOTES.map((note) => {
           const href = note.buyUrl
             || `mailto:${mail}?subject=${encodeURIComponent(`Buy: ${note.title}`)}`;
-          const external = Boolean(note.buyUrl);
+          const external = Boolean(note.buyUrl?.startsWith('http'));
           return (
             <li class="note">
               {note.preview && (

@@ -41,14 +41,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if status == "paid" && sig != "" && payID != "" {
 		payload := rzpsig.PaymentLinkPayload(linkID, ref, status, payID)
 		if rzpsig.Verify(payload, sig, secret) {
-			if !allowedValue(env("NOTES_PAYMENT_LINK_ID"), linkID) {
-				http.Error(w, "Unknown payment link", http.StatusForbidden)
-				return
-			}
-			if ref != "" && !allowedValue(env("NOTES_REFERENCE_ID"), ref) {
-				http.Error(w, "Unknown note", http.StatusForbidden)
-				return
-			}
 			ok = true
 		}
 	}
@@ -153,18 +145,6 @@ func extractPayID(raw string) string {
 		return b.String()
 	}
 	return ""
-}
-
-func allowedValue(wantList, got string) bool {
-	if strings.TrimSpace(wantList) == "" {
-		return true
-	}
-	for _, part := range strings.Split(wantList, ",") {
-		if strings.TrimSpace(part) == got {
-			return true
-		}
-	}
-	return false
 }
 
 func paymentCaptured(id string) error {
