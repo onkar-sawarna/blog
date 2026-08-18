@@ -7,8 +7,11 @@ import { readingTime } from '../lib/readingTime';
 const allPosts = await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft);
 const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-function formatDate(d: Date) {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+function dayNum(d: Date) {
+  return String(d.getDate()).padStart(2, '0');
+}
+function monthYear(d: Date) {
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 ---
 <BaseLayout title={SITE.title}>
@@ -32,8 +35,12 @@ function formatDate(d: Date) {
         <li class="entry">
           <a href={`/blog/${post.id}/`} class="entry-link">
             <div class="entry-meta">
-              <span class="entry-date">{formatDate(post.data.pubDate)}</span>
+              <span class="entry-day">{dayNum(post.data.pubDate)}</span>
+              <span class="entry-month">{monthYear(post.data.pubDate)}</span>
               <span class="entry-time">{readingTime(post.body ?? '')}</span>
+              {post.data.tags[0] && (
+                <span class="tag" data-tag={post.data.tags[0]}>{post.data.tags[0]}</span>
+              )}
             </div>
             <div class="entry-main">
               <h2 class="entry-title">{post.data.title}</h2>
@@ -111,8 +118,8 @@ function formatDate(d: Date) {
   }
   .entry-link {
     display: grid;
-    grid-template-columns: 9.5rem minmax(0, 1fr);
-    gap: 1.5rem 2rem;
+    grid-template-columns: 7.25rem minmax(0, 1fr);
+    gap: 1.35rem 1.75rem;
     align-items: start;
     text-decoration: none;
     color: inherit;
@@ -121,18 +128,29 @@ function formatDate(d: Date) {
   .entry-meta {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding-top: 0.35rem;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding-top: 0.05rem;
   }
-  .entry-date,
+  .entry-day {
+    font-family: var(--font-display);
+    font-size: 2.35rem;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .entry-month,
   .entry-time {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    color: var(--ink-soft);
   }
-  .entry-date { color: var(--accent-warm); }
-  .entry-time { color: var(--ink-soft); }
+  .entry-meta .tag {
+    margin-top: 0.65rem;
+  }
   .entry-title {
     font-size: 1.45rem;
     font-weight: 600;
@@ -176,9 +194,13 @@ function formatDate(d: Date) {
     }
     .entry-meta {
       flex-direction: row;
-      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.55rem 0.85rem;
       padding-top: 0;
     }
+    .entry-day { font-size: 1.5rem; }
+    .entry-meta .tag { margin-top: 0; }
     .entry-title { font-size: 1.28rem; }
   }
 </style>

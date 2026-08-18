@@ -9,6 +9,13 @@ import { SITE, SOCIALS } from '../config';
   description="Onkar Sawarna, software engineer at Acceldata. Previously Menlo Security. Writing on observability, networking, and distributed systems."
   image="/og/about.png"
 >
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">About</p>
+      <p class="hero-dek">The same person as the writing.</p>
+    </div>
+  </section>
+
   <section class="about">
     <header class="about-intro">
       <div class="portrait-wrap">
@@ -80,10 +87,44 @@ import { SITE, SOCIALS } from '../config';
 </BaseLayout>
 
 <style>
-  .about {
-    max-width: 46rem;
+  .hero {
+    margin: 0;
+    padding: 3.5rem var(--gutter) 2.25rem;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-tint);
+  }
+  .hero-inner {
+    max-width: 52rem;
     margin: 0 auto;
-    padding: 4.5rem var(--gutter) 5rem;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 0.85rem;
+  }
+  .eyebrow::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .about {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2.75rem var(--gutter) 5rem;
   }
   .about-intro {
     display: flex;
@@ -128,8 +169,9 @@ import { SITE, SOCIALS } from '../config';
     max-width: 28ch;
   }
   @media (max-width: 40rem) {
+    .hero { padding: 2.25rem var(--gutter) 1.75rem; }
     .about {
-      padding: 2.25rem var(--gutter) 3.5rem;
+      padding: 2rem var(--gutter) 3.5rem;
     }
     .about-intro {
       flex-direction: column;
@@ -151,9 +193,16 @@ import { SITE, SOCIALS } from '../config';
       min-height: 2.75rem;
     }
   }
+  .about-body {
+    max-width: 40rem;
+  }
   .about-body p {
     font-size: 1.12rem;
     margin: 1.15em 0;
+  }
+  .about-body p:first-child {
+    font-size: 1.2rem;
+    line-height: 1.6;
   }
 
   .about-subscribe {
