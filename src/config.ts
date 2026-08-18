@@ -23,7 +23,6 @@ export const NOTES: Array<{
   description: string;
   price: string;
   pages?: number;
-  preview?: string;
   buyUrl?: string;
 }> = [
   {
@@ -33,7 +32,6 @@ export const NOTES: Array<{
       'Computer networks from first words: process, packet, IP, port, then tuples, NAT, ping, and what to measure when a connect fails. My models, not a syllabus.',
     price: '₹1',
     pages: 20,
-    preview: '/notes/computer-networks-preview.png',
     buyUrl: '/api/notes-buy?id=computer-networks',
   },
 ];

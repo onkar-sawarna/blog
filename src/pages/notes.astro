@@ -28,14 +28,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
         {NOTES.map((note) => {
           const href = note.buyUrl
             || `mailto:${mail}?subject=${encodeURIComponent(`Buy: ${note.title}`)}`;
-          const external = Boolean(note.buyUrl?.startsWith('http'));
+          const paid = Boolean(note.buyUrl);
           return (
             <li class="note">
-              {note.preview && (
-                <figure class="note-preview">
-                  <img src={note.preview} alt={`Preview of ${note.title}`} width="1200" height="820" />
-                </figure>
-              )}
               <div class="note-copy">
                 <h2>{note.title}</h2>
                 <p>{note.description}</p>
@@ -45,13 +40,8 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
               </div>
               <div class="note-buy">
                 <p class="note-price">{note.price}</p>
-                <a
-                  class="buy"
-                  href={href}
-                  target={external ? '_blank' : undefined}
-                  rel={external ? 'noopener noreferrer' : undefined}
-                >
-                  {external ? 'Buy' : 'Email to buy'}
+                <a class="buy" href={href}>
+                  {paid ? 'Buy' : 'Email to buy'}
                 </a>
               </div>
             </li>
@@ -127,9 +117,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
   }
   .note {
     display: grid;
-    grid-template-columns: 6.75rem minmax(0, 1fr) auto;
-    gap: 1.25rem 1.35rem;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.25rem 1.5rem;
+    align-items: start;
     padding: 1.85rem 0;
     border-bottom: 1px solid var(--rule);
   }
@@ -153,23 +143,6 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     text-transform: uppercase;
     color: var(--accent-warm);
     margin-top: 0.55rem !important;
-  }
-  .note-preview {
-    margin: 0;
-    width: 6.75rem;
-    background: var(--paper-raised);
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    overflow: hidden;
-    box-shadow: 0 1px 0 var(--rule);
-  }
-  .note-preview img {
-    display: block;
-    width: 100%;
-    height: 8.6rem;
-    object-fit: cover;
-    object-position: top center;
-    border: 0;
   }
   .note-buy {
     display: flex;
@@ -215,16 +188,11 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     .hero { padding: 2.5rem var(--gutter) 2rem; }
     .notes { padding: 0 var(--gutter) 3.5rem; }
     .note {
-      grid-template-columns: 5.5rem minmax(0, 1fr);
+      grid-template-columns: 1fr;
       padding: 1.5rem 0;
     }
-    .note-preview { width: 5.5rem; }
-    .note-preview img { height: 7.1rem; }
     .note-buy {
-      grid-column: 2;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
+      align-items: flex-start;
     }
   }
 </style>
