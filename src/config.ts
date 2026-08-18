@@ -31,7 +31,7 @@ export const NOTES: Array<{
     title: 'Computer networks, as they show up on a box',
     description:
       'Computer networks from first words: process, packet, IP, port, then tuples, NAT, ping, and what to measure when a connect fails. My models, not a syllabus.',
-    price: '₹1',
+    price: '₹99',
     pages: 20,
     cover: '/notes/computer-networks-cover.svg',
     buyUrl: '/api/notes-buy?id=computer-networks',

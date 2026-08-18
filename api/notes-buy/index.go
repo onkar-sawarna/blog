@@ -84,12 +84,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func amountPaise() int {
 	raw := env("NOTES_AMOUNT_PAISE")
 	if raw == "" {
-		return 100
+		return 9900
 	}
 	first, _, _ := strings.Cut(raw, ",")
 	n, err := strconv.Atoi(strings.TrimSpace(first))
 	if err != nil || n <= 0 {
-		return 100
+		return 9900
 	}
 	return n
 }
