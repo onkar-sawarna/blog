@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/onkar-sawarna/blog/internal/notepdf"
-	"github.com/onkar-sawarna/blog/internal/rzpsig"
+	"github.com/onkar-sawarna/blog/lib/notepdf"
+	"github.com/onkar-sawarna/blog/lib/rzpsig"
 )
 
 //go:embed computer-networks.pdf.enc

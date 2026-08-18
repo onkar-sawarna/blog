@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/onkar-sawarna/blog/internal/rzpsig"
+	"github.com/onkar-sawarna/blog/lib/rzpsig"
 )
 
 func TestHandlerRejectsBadSignature(t *testing.T) {

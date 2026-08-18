@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/onkar-sawarna/blog/internal/notepdf"
+	"github.com/onkar-sawarna/blog/lib/notepdf"
 )
 
 func main() {
