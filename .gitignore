@@ -21,6 +21,10 @@ pnpm-debug.log*
 # local like counts when Redis is not configured
 .data/
 
+# Paid note sources and PDFs at repo root. Do not put these under public/.
+# Leading slash so src/pages/notes and public/notes stay tracked.
+/notes/
+
 # macOS-specific files
 .DS_Store
 

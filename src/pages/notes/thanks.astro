@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SOCIALS } from '../../config';
+
+const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('mailto:', '')
+  ?? 'onkarsawarna@gmail.com';
+
+const q = Astro.url.searchParams;
+const status = q.get('razorpay_payment_link_status') ?? '';
+const paid = status === 'paid';
+const download = paid ? `/api/notes-file${Astro.url.search}` : '';
+---
+<BaseLayout
+  title="Your note"
+  description="Download the note after a completed payment."
+>
+  <section class="thanks">
+    {paid ? (
+      <>
+        <p class="eyebrow">Paid</p>
+        <h1>The file is ready.</h1>
+        <p>
+          If the download did not start, use the button. Keep this tab or the
+          payment email if you need the file again. The download link is this
+          page’s address. It only works for a real Razorpay payment.
+        </p>
+        <p>
+          <a class="buy" id="dl" href={download}>Download the PDF</a>
+        </p>
+      </>
+    ) : (
+      <>
+        <p class="eyebrow">Notes</p>
+        <h1>No payment on this page.</h1>
+        <p>
+          After you pay, Razorpay should send you here and the file should
+          start downloading. If you closed that tab, write to me with the
+          payment id from the Razorpay receipt.
+        </p>
+        <p>
+          <a href="/notes">Back to Notes</a>
+          {' · '}
+          <a href={`mailto:${mail}`}>Email</a>
+        </p>
+      </>
+    )}
+  </section>
+</BaseLayout>
+
+{paid && (
+  <script is:inline>
+    const a = document.getElementById('dl');
+    if (a instanceof HTMLAnchorElement) a.click();
+  </script>
+)}
+
+<style>
+  .thanks {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 3.5rem var(--gutter) 5rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 0.75rem;
+  }
+  .thanks h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.75rem;
+  }
+  .thanks p {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    max-width: 38rem;
+  }
+  .buy {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.45rem 0.85rem;
+  }
+  .buy:hover {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+</style>

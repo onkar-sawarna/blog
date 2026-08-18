@@ -11,8 +11,9 @@ Astro builds a static site from Markdown. There is no CMS. Each post is a file i
 | Path | What it is |
 | :--- | :--------- |
 | `src/content/blog/` | Posts. Filename is the URL: `my-post.md` → `/blog/my-post/` |
-| `src/config.ts` | Name, domain, social links, newsletter |
+| `src/config.ts` | Name, domain, social links, newsletter, paid notes |
 | `src/pages/about.astro` | About page |
+| `src/pages/notes.astro` | Paid PDFs. Add rows to `NOTES` in `src/config.ts` |
 | `src/components/LikeButton.astro` | Client `fetch` to the likes API |
 | `api/likes.go` | Go handler: GET/POST counts |
 | `cmd/likes/main.go` | Local HTTP server that calls that handler |
@@ -25,7 +26,7 @@ This is a static site plus one small API. There is no CMS and no database for po
 
 **Astro** turns Markdown into HTML at build time (`output: 'static'`). A file `src/content/blog/my-post.md` becomes `/blog/my-post/`. The homepage, About, RSS, and sitemap are also files after `astro build`. Opening a post does not run Node or Go.
 
-**Go** only handles like counts. `Handler` in `api/likes.go` is the entry. The browser never talks to Redis.
+**Go** handles like counts and the paid-note download. `Handler` in `api/likes.go` is likes. `api/notes-file` streams the PDF after a Razorpay payment-link callback. The browser never talks to Redis.
 
 ```
 Markdown ──► Astro build ──► HTML/CSS/JS on Vercel
@@ -95,3 +96,18 @@ UPSTASH_REDIS_REST_TOKEN=
 ```
 
 Locally, `npm run dev` starts the Go API next to Astro. If Redis env vars are missing, counts are stored in `.data/likes.json` and stay on your machine.
+
+## Paid notes
+
+The PDF is not in `public/`. An encrypted copy lives at `api/notes-file/computer-networks.pdf.enc`. After checkout, Razorpay redirects to `/notes/thanks`. That page calls `/api/notes-file` with the signed query. The function checks the HMAC, decrypts, and streams the file.
+
+On Vercel set:
+
+```
+RAZORPAY_KEY_SECRET=
+NOTES_PDF_KEY=
+NOTES_PAYMENT_LINK_ID=
+NOTES_REFERENCE_ID=note-computer-networks
+```
+
+`NOTES_PDF_KEY` is in local `.env` after `go run ./cmd/encrypt-note`. Paste the same value on Vercel. The payment link must use callback `https://www.onkarsawarna.dev/notes/thanks` (`go run ./cmd/razorpay-link`, then put `buyUrl` in `src/config.ts`). A dashboard link that does not redirect cannot deliver the file.

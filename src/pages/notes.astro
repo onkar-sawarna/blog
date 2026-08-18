@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { NOTES, SOCIALS } from '../config';
+
+const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('mailto:', '')
+  ?? 'onkarsawarna@gmail.com';
+---
+<BaseLayout
+  title="Notes"
+  description="Longer notes than the blog. One subject, my models. After you pay, the file downloads."
+>
+  <section class="notes">
+    <header class="notes-header">
+      <p class="eyebrow">Paid</p>
+      <h1>Notes</h1>
+      <p class="notes-dek">
+        Same models as the posts, written longer so you can sit with one subject.
+        When a note is ready it is here. You pay, the next page downloads the file.
+        If that tab closes, write to me with the payment id.
+      </p>
+    </header>
+
+    {NOTES.length === 0 ? (
+      <p class="empty">
+        Nothing for sale yet. If you want a longer writeup of something already on the
+        site, <a href={`mailto:${mail}`}>write to me</a>.
+      </p>
+    ) : (
+      <ul class="note-list">
+        {NOTES.map((note) => {
+          const href = note.buyUrl
+            || `mailto:${mail}?subject=${encodeURIComponent(`Buy: ${note.title}`)}`;
+          const external = Boolean(note.buyUrl);
+          return (
+            <li class="note">
+              <div class="note-copy">
+                <h2>{note.title}</h2>
+                <p>{note.description}</p>
+                {note.pages != null && (
+                  <p class="note-meta">{note.pages} pages · PDF</p>
+                )}
+                {note.preview && (
+                  <figure class="note-preview">
+                    <img src={note.preview} alt={`Preview figure from ${note.title}`} width="720" height="220" />
+                    <figcaption>One figure from the note. The rest is in the PDF.</figcaption>
+                  </figure>
+                )}
+              </div>
+              <div class="note-buy">
+                <p class="note-price">{note.price}</p>
+                <a
+                  class="buy"
+                  href={href}
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noopener noreferrer' : undefined}
+                >
+                  {external ? 'Buy' : 'Email to buy'}
+                </a>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .notes {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 3.5rem var(--gutter) 5rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 0.75rem;
+  }
+  .notes-header h1 {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.75rem;
+  }
+  .notes-dek {
+    color: var(--ink-soft);
+    font-size: 1.12rem;
+    margin: 0 0 2.5rem;
+    max-width: 38rem;
+  }
+  .empty {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+  }
+  .note-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .note {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .note h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.02em;
+  }
+  .note-copy p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .note-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    margin-top: 0.55rem !important;
+  }
+  .note-preview {
+    margin: 1rem 0 0;
+  }
+  .note-preview img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+  }
+  .note-preview figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+  }
+  .note-buy {
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .note-price {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: 0 0 0.55rem;
+  }
+  .buy {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.45rem 0.85rem;
+  }
+  .buy:hover {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+  @media (max-width: 40rem) {
+    .notes { padding: 2rem var(--gutter) 3.5rem; }
+    .note { flex-direction: column; }
+    .note-buy { text-align: left; }
+  }
+</style>
