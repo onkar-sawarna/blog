@@ -22,6 +22,7 @@ export const NOTES: Array<{
   title: string;
   description: string;
   price: string;
+  wasPrice?: string;
   pages?: number;
   cover?: string;
   buyUrl?: string;
@@ -32,6 +33,7 @@ export const NOTES: Array<{
     description:
       'Computer networks from first words: process, packet, IP, port, then tuples, NAT, ping, and what to measure when a connect fails. My models, not a syllabus.',
     price: '₹99',
+    wasPrice: '₹299',
     pages: 20,
     cover: '/notes/computer-networks-cover.svg',
     buyUrl: '/api/notes-buy?id=computer-networks',

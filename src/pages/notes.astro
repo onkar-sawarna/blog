@@ -45,7 +45,11 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
                   )}
                 </div>
                 <div class="note-buy">
-                  <p class="note-price">{note.price}</p>
+                  <p class="note-price">
+                    {note.wasPrice && <s class="note-was">{note.wasPrice}</s>}
+                    <span>{note.price}</span>
+                    {note.wasPrice && <span class="note-off">67% off</span>}
+                  </p>
                   <a class="buy" href={href}>
                     {paid ? 'Buy' : 'Email to buy'}
                   </a>
@@ -179,11 +183,26 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     margin-top: 1.4rem;
   }
   .note-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.55rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     letter-spacing: 0.03em;
     margin: 0;
     color: var(--ink);
+  }
+  .note-was {
+    color: var(--ink-soft);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .note-off {
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
   }
   .buy {
     display: inline-block;
