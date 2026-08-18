@@ -2,9 +2,13 @@ package handler
 
 import (
 	_ "embed"
+	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/onkar-sawarna/blog/lib/notepdf"
@@ -33,21 +37,35 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Download is not configured", http.StatusServiceUnavailable)
 		return
 	}
-	if status != "paid" {
+
+	ok := false
+	if status == "paid" && sig != "" && payID != "" {
+		payload := rzpsig.PaymentLinkPayload(linkID, ref, status, payID)
+		if rzpsig.Verify(payload, sig, secret) {
+			if want := env("NOTES_PAYMENT_LINK_ID"); want != "" && linkID != want {
+				http.Error(w, "Unknown payment link", http.StatusForbidden)
+				return
+			}
+			if want := env("NOTES_REFERENCE_ID"); want != "" && ref != "" && ref != want {
+				http.Error(w, "Unknown note", http.StatusForbidden)
+				return
+			}
+			ok = true
+		}
+	}
+	if !ok && payID != "" {
+		if err := paymentCaptured(payID); err != nil {
+			if errors.Is(err, errNotConfigured) {
+				http.Error(w, "Download is not configured", http.StatusServiceUnavailable)
+				return
+			}
+			http.Error(w, "Payment is not complete", http.StatusForbidden)
+			return
+		}
+		ok = true
+	}
+	if !ok {
 		http.Error(w, "Payment is not complete", http.StatusForbidden)
-		return
-	}
-	payload := rzpsig.PaymentLinkPayload(linkID, ref, status, payID)
-	if !rzpsig.Verify(payload, sig, secret) {
-		http.Error(w, "Invalid payment signature", http.StatusForbidden)
-		return
-	}
-	if want := env("NOTES_PAYMENT_LINK_ID"); want != "" && linkID != want {
-		http.Error(w, "Unknown payment link", http.StatusForbidden)
-		return
-	}
-	if want := env("NOTES_REFERENCE_ID"); want != "" && ref != want {
-		http.Error(w, "Unknown note", http.StatusForbidden)
 		return
 	}
 
@@ -100,4 +118,58 @@ func loadPDF() ([]byte, string, error) {
 func env(name string) string {
 	v := strings.TrimSpace(os.Getenv(name))
 	return strings.Trim(v, `"'`)
+}
+
+var errNotConfigured = errors.New("not_configured")
+
+func expectedPaise() int64 {
+	if raw := env("NOTES_AMOUNT_PAISE"); raw != "" {
+		n, err := strconv.ParseInt(raw, 10, 64)
+		if err == nil && n > 0 {
+			return n
+		}
+	}
+	return 14900
+}
+
+func paymentCaptured(id string) error {
+	if !strings.HasPrefix(id, "pay_") || len(id) < 8 || len(id) > 40 {
+		return errors.New("bad id")
+	}
+	key := env("RAZORPAY_KEY_ID")
+	secret := env("RAZORPAY_KEY_SECRET")
+	if key == "" || secret == "" {
+		return errNotConfigured
+	}
+	req, err := http.NewRequest(http.MethodGet, "https://api.razorpay.com/v1/payments/"+id, nil)
+	if err != nil {
+		return err
+	}
+	req.SetBasicAuth(key, secret)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return errors.New("razorpay " + strconv.Itoa(res.StatusCode))
+	}
+	var got struct {
+		Status string `json:"status"`
+		Amount int64  `json:"amount"`
+	}
+	if err := json.Unmarshal(body, &got); err != nil {
+		return err
+	}
+	if got.Status != "captured" && got.Status != "authorized" {
+		return errors.New("not captured")
+	}
+	if got.Amount != expectedPaise() {
+		return errors.New("wrong amount")
+	}
+	return nil
 }

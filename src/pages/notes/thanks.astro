@@ -4,55 +4,106 @@ import { SOCIALS } from '../../config';
 
 const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('mailto:', '')
   ?? 'onkarsawarna@gmail.com';
-
-const q = Astro.url.searchParams;
-const status = q.get('razorpay_payment_link_status') ?? '';
-const paid = status === 'paid';
-const download = paid ? `/api/notes-file${Astro.url.search}` : '';
 ---
 <BaseLayout
   title="Your note"
   description="Download the note after a completed payment."
 >
-  <section class="thanks">
-    {paid ? (
-      <>
-        <p class="eyebrow">Paid</p>
-        <h1>The file is ready.</h1>
-        <p>
-          If the download did not start, use the button. Keep this tab or the
-          payment email if you need the file again. The download link is this
-          page’s address. It only works for a real Razorpay payment.
-        </p>
-        <p>
-          <a class="buy" id="dl" href={download}>Download the PDF</a>
-        </p>
-      </>
-    ) : (
-      <>
-        <p class="eyebrow">Notes</p>
-        <h1>No payment on this page.</h1>
-        <p>
-          After you pay, Razorpay should send you here and the file should
-          start downloading. If you closed that tab, write to me with the
-          payment id from the Razorpay receipt.
-        </p>
-        <p>
-          <a href="/notes">Back to Notes</a>
-          {' · '}
-          <a href={`mailto:${mail}`}>Email</a>
-        </p>
-      </>
-    )}
+  <section class="thanks" data-mail={mail}>
+    <p class="eyebrow" id="eyebrow">Notes</p>
+    <h1 id="heading">Checking the payment.</h1>
+    <p id="copy">One moment.</p>
+    <p>
+      <a class="buy" id="dl" hidden href="#">Download the PDF</a>
+    </p>
+    <form id="recover" hidden>
+      <label for="pid">Payment id from the Razorpay email</label>
+      <input id="pid" name="pid" type="text" autocomplete="off" spellcheck="false" />
+      <button type="submit">Get the file</button>
+    </form>
   </section>
 </BaseLayout>
 
-{paid && (
-  <script is:inline>
-    const a = document.getElementById('dl');
-    if (a instanceof HTMLAnchorElement) a.click();
-  </script>
-)}
+<script>
+  const root = document.querySelector('.thanks');
+  const mail = root instanceof HTMLElement ? root.dataset.mail ?? '' : '';
+  const eyebrow = document.getElementById('eyebrow');
+  const heading = document.getElementById('heading');
+  const copy = document.getElementById('copy');
+  const dl = document.getElementById('dl');
+  const recover = document.getElementById('recover');
+  const pid = document.getElementById('pid');
+
+  function setText(el: HTMLElement | null, text: string) {
+    if (el) el.textContent = text;
+  }
+
+  function showRecover() {
+    if (recover) recover.hidden = false;
+    if (copy) {
+      copy.innerHTML =
+        `If the download failed, paste the payment id (it starts with pay_) from the Razorpay receipt. Or <a href="mailto:${mail}">write to me</a>.`;
+    }
+  }
+
+  async function pull(href: string) {
+    setText(eyebrow, 'Paid');
+    setText(heading, 'Getting the file.');
+    if (dl instanceof HTMLAnchorElement) {
+      dl.hidden = false;
+      dl.href = href;
+    }
+    const res = await fetch(href);
+    if (!res.ok) {
+      const err = (await res.text()).trim() || res.statusText;
+      setText(heading, 'The file did not start.');
+      setText(copy, err);
+      showRecover();
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'computer-networks.pdf';
+    a.click();
+    setText(heading, 'The file is ready.');
+    setText(
+      copy,
+      'If the save dialog did not open, use the button. This page’s address works again while the Razorpay query is still on it.',
+    );
+    if (dl instanceof HTMLAnchorElement) dl.href = href;
+  }
+
+  const q = new URLSearchParams(location.search);
+  const status = q.get('razorpay_payment_link_status') ?? '';
+  const pay = q.get('razorpay_payment_id') ?? '';
+  const sig = q.get('razorpay_signature') ?? '';
+
+  if (pay && (sig || status === 'paid')) {
+    pull('/api/notes-file' + location.search).catch(() => {
+      setText(heading, 'The file did not start.');
+      showRecover();
+    });
+  } else {
+    setText(heading, 'No payment on this page.');
+    setText(
+      copy,
+      'Razorpay should have sent you here with a payment id in the URL. If you already paid, paste that id below.',
+    );
+    showRecover();
+  }
+
+  recover?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = pid instanceof HTMLInputElement ? pid.value.trim() : '';
+    if (!id) return;
+    pull('/api/notes-file?razorpay_payment_id=' + encodeURIComponent(id)).catch(() => {
+      setText(heading, 'The file did not start.');
+      showRecover();
+    });
+  });
+</script>
 
 <style>
   .thanks {
@@ -95,5 +146,39 @@ const download = paid ? `/api/notes-file${Astro.url.search}` : '';
   .buy:hover {
     background: var(--accent-warm);
     border-color: var(--accent-warm);
+  }
+  #recover {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.45rem;
+    max-width: 22rem;
+  }
+  #recover[hidden] {
+    display: none;
+  }
+  #recover label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+  #recover input {
+    font: inherit;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  #recover button {
+    justify-self: start;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.45rem 0.85rem;
   }
 </style>
