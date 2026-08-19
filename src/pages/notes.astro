@@ -233,9 +233,12 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     .hero { padding: 2.5rem var(--gutter) 2rem; }
     .notes { padding: 0 var(--gutter) 3.5rem; }
     .note {
-      grid-template-columns: 8.25rem minmax(0, 1fr);
-      gap: 1.15rem;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
       padding: 1.75rem 0;
+    }
+    .note-cover {
+      width: min(14rem, 70vw);
     }
   }
 </style>
