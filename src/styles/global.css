@@ -149,10 +149,12 @@ blockquote {
 .tag[data-tag='systems'] { background: #F0E6D2; color: #8B6914; }
 .tag[data-tag='career'] { background: #F3E0D8; color: #8C2E16; }
 .tag[data-tag='meta'] { background: #E3E0EA; color: #3D3555; }
+.tag[data-tag='dsa'] { background: #DCE4F0; color: #2A3F66; }
 html[data-theme='dark'] .tag[data-tag='observability'] { background: #1E332C; color: #B5D4C4; }
 html[data-theme='dark'] .tag[data-tag='systems'] { background: #332C1A; color: #D4C08A; }
 html[data-theme='dark'] .tag[data-tag='career'] { background: #3A241C; color: #E0B0A0; }
 html[data-theme='dark'] .tag[data-tag='meta'] { background: #2A2833; color: #C4B8D4; }
+html[data-theme='dark'] .tag[data-tag='dsa'] { background: #1E2838; color: #B4C6E0; }
 
 hr {
   border: none;

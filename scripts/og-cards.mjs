@@ -26,6 +26,16 @@ const cards = [
     footer: 'Same incident. One of these is a window.',
   },
   {
+    file: 'public/og/binary-search-is-a-predicate.png',
+    leftTitle: 'sorted array',
+    leftMid: 'find this number',
+    leftBot: 'that is one use',
+    rightTitle: 'predicate',
+    rightMid: 'ok(k)?',
+    rightBot: 'search the first yes',
+    footer: 'The array was never the point. The predicate was.',
+  },
+  {
     file: 'public/og/why-i-started-writing.png',
     leftTitle: 'in my head',
     leftMid: 'I already know this',
