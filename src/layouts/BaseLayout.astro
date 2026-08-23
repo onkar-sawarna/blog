@@ -20,6 +20,8 @@ interface Props {
   pubDate?: Date;
   updatedDate?: Date;
   tags?: string[];
+  /** Set when the page already renders a Subscribe form, so the footer omits its own. */
+  hasSubscribe?: boolean;
 }
 
 const {
@@ -30,6 +32,7 @@ const {
   pubDate,
   updatedDate,
   tags = [],
+  hasSubscribe = false,
 } = Astro.props;
 const preloadFonts = [displayFont, bodyFont, monoFont];
 const path = Astro.url.pathname;
@@ -152,7 +155,7 @@ const jsonLd = type === 'article' && published
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <Subscribe compact />
+      {!hasSubscribe && <Subscribe compact />}
       <div class="footer-bottom">
       <p class="footer-line">&copy; {new Date().getFullYear()} {SITE.author}. Written and coded by hand.</p>
       <ul class="social-links" aria-label="Social profiles">
@@ -194,8 +197,8 @@ const jsonLd = type === 'article' && published
     z-index: 1;
   }
   .masthead-inner {
-    max-width: 64rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 1.5rem var(--gutter) 1.35rem;
     display: flex;
     align-items: center;
@@ -254,8 +257,8 @@ const jsonLd = type === 'article' && published
     z-index: 1;
   }
   .footer-inner {
-    max-width: 64rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 2rem var(--gutter) 3rem;
     display: flex;
     flex-direction: column;

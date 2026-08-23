@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
 import PostList from '../../components/PostList.astro';
 import { allTags, publishedPosts, tagPath, tagSlug } from '../../lib/tags';
 import type { CollectionEntry } from 'astro:content';
@@ -29,13 +30,9 @@ const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
   title={`Tagged ${tag}`}
   description={`Posts tagged ${tag}: notes on engineering, networking, observability, and distributed systems.`}
 >
-  <section class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">Tag</p>
-      <h1>{tag}</h1>
-      <p class="hero-dek">{count}</p>
-    </div>
-  </section>
+  <PageHero eyebrow="Tag" title={tag}>
+    <p class="hero-dek">{count}</p>
+  </PageHero>
 
   <section class="index">
     <PostList posts={posts} empty="Nothing under this tag yet." />
@@ -56,41 +53,6 @@ const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
 </BaseLayout>
 
 <style>
-  .hero {
-    margin: 0;
-    padding: 3.5rem var(--gutter) 2.5rem;
-    background: var(--paper-tint);
-    border-bottom: 1px solid var(--rule-tint);
-  }
-  .hero-inner {
-    max-width: 52rem;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 1.15rem;
-  }
-  .eyebrow::after {
-    content: '';
-    width: 2.25rem;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
-  .hero h1 {
-    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
-    font-weight: 650;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin: 0;
-  }
   .hero-dek {
     font-family: var(--font-mono);
     font-size: 0.8rem;
@@ -101,8 +63,8 @@ const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
   }
 
   .index {
-    max-width: 52rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 1.25rem var(--gutter) 5rem;
   }
 
@@ -144,7 +106,6 @@ const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
   }
 
   @media (max-width: 40rem) {
-    .hero { padding: 2.25rem var(--gutter) 1.75rem; }
     .index { padding: 0 var(--gutter) 3.5rem; }
   }
 </style>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -7,16 +8,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 4);
 ---
 <BaseLayout title="Not found" description="That page does not exist.">
-  <section class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">404</p>
-      <h1>That page does not exist.</h1>
-      <p class="hero-dek">
-        Either the URL is wrong or I moved something and did not leave a
-        forwarding address. Recent writing is below.
-      </p>
-    </div>
-  </section>
+  <PageHero eyebrow="404" title="That page does not exist.">
+    <p class="hero-dek">
+      Either the URL is wrong or I moved something and did not leave a
+      forwarding address. Recent writing is below.
+    </p>
+  </PageHero>
 
   <section class="suggestions">
     <ul class="list">
@@ -31,41 +28,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </BaseLayout>
 
 <style>
-  .hero {
-    margin: 0;
-    padding: 4.25rem var(--gutter) 3rem;
-    background: var(--paper-tint);
-    border-bottom: 1px solid var(--rule-tint);
-  }
-  .hero-inner {
-    max-width: 52rem;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 1.15rem;
-  }
-  .eyebrow::after {
-    content: '';
-    width: 2.25rem;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
-  .hero h1 {
-    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
-    font-weight: 650;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin: 0;
-  }
   .hero-dek {
     font-size: 1.15rem;
     line-height: 1.55;
@@ -75,8 +37,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   .suggestions {
-    max-width: 52rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 2.5rem var(--gutter) 5rem;
   }
   .list {
@@ -118,7 +80,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   @media (max-width: 40rem) {
-    .hero { padding: 2.5rem var(--gutter) 2rem; }
     .suggestions { padding: 1.75rem var(--gutter) 3.5rem; }
   }
 </style>
