@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+---
+<BaseLayout title="Not found" description="That page does not exist.">
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">404</p>
+      <h1>That page does not exist.</h1>
+      <p class="hero-dek">
+        Either the URL is wrong or I moved something and did not leave a
+        forwarding address. Recent writing is below.
+      </p>
+    </div>
+  </section>
+
+  <section class="suggestions">
+    <ul class="list">
+      {posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+        </li>
+      ))}
+    </ul>
+    <p class="all"><a href="/">All writing</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    margin: 0;
+    padding: 4.25rem var(--gutter) 3rem;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-tint);
+  }
+  .hero-inner {
+    max-width: 52rem;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 1.15rem;
+  }
+  .eyebrow::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero h1 {
+    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0;
+  }
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
+  }
+
+  .suggestions {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2.5rem var(--gutter) 5rem;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .list a {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 1.1rem 0;
+  }
+  .list a:hover {
+    color: var(--accent-warm);
+  }
+  .all {
+    margin: 1.75rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .all a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .all a:hover {
+    color: var(--accent-warm);
+    border-bottom-color: var(--accent-warm);
+  }
+
+  @media (max-width: 40rem) {
+    .hero { padding: 2.5rem var(--gutter) 2rem; }
+    .suggestions { padding: 1.75rem var(--gutter) 3.5rem; }
+  }
+</style>
