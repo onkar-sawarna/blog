@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>n is how many lanes you have. You can add lanes. You cannot remove them. A smaller n means a new topic.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <text x="186" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">orders  n = 3</text>
+  <rect x="48" y="48" width="88" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="92" y="71" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">p0</text>
+  <rect x="148" y="48" width="88" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="192" y="71" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">p1</text>
+  <rect x="248" y="48" width="88" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="292" y="71" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">p2</text>
+  <text x="186" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">3 writers, 3 readers in one group</text>
+
+  <path d="M356 66 H404" stroke="#B33A1A" stroke-width="2"/>
+  <path d="M356 58 L404 74" stroke="#B33A1A" stroke-width="2"/>
+  <text x="380" y="56" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">shrink</text>
+
+  <rect x="420" y="40" width="260" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="550" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#B33A1A">n = 1</text>
+  <text x="550" y="102" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">the broker will refuse</text>
+
+  <rect x="48" y="148" width="300" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="198" y="178" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">grow to n = 6</text>
+  <text x="198" y="200" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">old lines stay. new hash uses 6.</text>
+
+  <rect x="372" y="148" width="308" height="72" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.8"/>
+  <text x="526" y="178" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">want fewer? new topic</text>
+  <text x="526" y="200" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">orders-v2, then replay</text>
+
+  <text x="360" y="252" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">n is a one-way door. Pick it for the job, not for this week.</text>
+</svg>

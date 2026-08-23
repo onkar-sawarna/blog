@@ -73,6 +73,29 @@ If the API only wrote the row and then HTTP-called search and the counter, check
 
 Three partitions means three parallel logs. That is how the cluster scales, and that is where my order model died.
 
+## What n is for
+
+n is not decoration. It is three promises at once.
+
+**How hard you can write.** The API can append to three logs at the same time. One partition is one disk path. Checkout traffic that all hashes to one user sits on one partition and the other two sit idle. A bad key wastes n.
+
+**How hard one group can read.** Search can use at most three live members that actually work. The unit of parallelism is the partition. You do not get a fourth pair of hands on `orders` until you add a fourth partition.
+
+**Where order lives.** u1's checkouts stay in order only because they share a partition. n is how many independent ordered logs you asked for.
+
+You can raise n on a live topic. The broker will add empty partitions. Old messages stay on 0, 1, and 2. New publishes use `hash(key) % 6`. u1 that always lived on 0 can start landing on 4. Going forward, same key still sticks. The old log and the new log are not one story. Support looking up "everything u1 did" now has to read two lanes.
+
+You cannot lower n. There is no "make `orders` have one partition" on that topic. The messages already exist on three logs. The broker will not glue them back into one. If checkout is quiet and three search members are a waste, you still have three partitions. The extra members sit idle, or one member holds two lanes. n does not shrink to match the traffic.
+
+The way out is a new topic, `orders-v2`, with the n you actually want. You publish new checkouts there. You replay the old topic into it if you need the history. That is a migration. It is not a setting.
+
+So I pick n for the peak I am willing to operate, not for today's lag graph. Too small, and search cannot catch up no matter how many processes I launch. Too big, and I live with empty lanes and a hash I cannot undo.
+
+<figure>
+  <img src="/blog/kafka-n.svg" alt="Three partitions on orders. A shrink to n equals 1 is crossed out. Grow keeps old lines. Fewer lanes means a new topic and a replay." width="720" height="280" />
+  <figcaption>You can add lanes. You cannot remove them. A smaller n is a new topic.</figcaption>
+</figure>
+
 ## The wrong model
 
 A queue hands a message to one worker and the message is gone. Kafka looks close enough that you borrow the word. You say topic when you mean pipe. You say consumer when you mean worker. You assume the cluster remembers the order your API saw.
@@ -122,17 +145,11 @@ In one consumer group, a partition is assigned to at most one live member. The u
 
 If you have fewer consumers than partitions, one process reads more than one lane. Those lanes still have no order between them. So even a single process does not give you global order. It gives you two (or n) ordered logs that you interleave however you poll.
 
-n is not a knob you twist for free.
-
-If you increase the partition count, the old messages stay where they were written. New messages hash into the new n. u1 that always lived on 0 can start landing on 4. Per-key order still holds going forward. It does not stitch the old log and the new log into one story.
-
-You also cannot shrink n on a topic. The way out of a bad n is a new topic with the count you actually want, then you process from the old one into the new one. That is a migration. It is not a setting.
-
 ## The model that stuck
 
 I keep three facts, in this order.
 
-**1. The partition is the log.** Order, replay, and "who is reading this" all attach here. The topic is how you name a set of those logs.
+**1. The partition is the log.** Order, replay, and "who is reading this" all attach here. The topic is how you name a set of those logs. n is how many of those logs you have. You can grow it. You cannot shrink it.
 
 **2. The key is which order you care about.** User, order id, host, whatever must stay in sequence. No key means you accepted scatter.
 
