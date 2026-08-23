@@ -1,0 +1,67 @@
+---
+// The tinted band at the top of every page. The band is full-bleed and carries
+// no horizontal padding; the inner shell is what aligns it with the masthead
+// and the body below.
+interface Props {
+  eyebrow: string;
+  title?: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">{eyebrow}</p>
+    {title && <h1>{title}</h1>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero {
+    margin: 0;
+    padding: 4.25rem 0 3rem;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-tint);
+  }
+  .hero-inner {
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 1.15rem;
+  }
+  .eyebrow::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero h1 {
+    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
+    font-weight: 650;
+    max-width: 22ch;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .hero {
+      padding: 2.5rem 0 2rem;
+    }
+    .hero h1 {
+      max-width: none;
+    }
+  }
+</style>

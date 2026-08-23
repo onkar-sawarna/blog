@@ -65,7 +65,9 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'computer-networks.pdf';
+    const disp = res.headers.get('Content-Disposition') ?? '';
+    const named = /filename="([^"]+)"/.exec(disp);
+    a.download = named?.[1] ?? 'note.pdf';
     a.click();
     setText(heading, 'The file is ready.');
     setText(

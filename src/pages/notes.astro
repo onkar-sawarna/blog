@@ -1,21 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
 import { NOTES, SOCIALS } from '../config';
 
 const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('mailto:', '')
   ?? 'onkarsawarna@gmail.com';
+
+function rupees(s: string) {
+  return Number(s.replace(/[^\d]/g, ''));
+}
+
+function discountLabel(was?: string, price?: string) {
+  if (!was || !price) return '';
+  const a = rupees(was);
+  const b = rupees(price);
+  if (!a || b >= a) return '';
+  return `${Math.round((1 - b / a) * 100)}% off`;
+}
 ---
 <BaseLayout
   title="Notes"
   description="Longer notes than the blog. One subject, my models. After you pay, the file downloads."
 >
-  <section class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">Notes</p>
-      <h1>Same models as the posts, written so you can sit with one subject.</h1>
-      <p class="hero-dek">You pay. The next page downloads the file.</p>
-    </div>
-  </section>
+  <PageHero eyebrow="Notes" title="Same models as the posts, written so you can sit with one subject.">
+    <p class="hero-dek">You pay. The next page downloads the file.</p>
+  </PageHero>
 
   <section class="notes">
     {NOTES.length === 0 ? (
@@ -29,6 +38,7 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
           const href = note.buyUrl
             || `mailto:${mail}?subject=${encodeURIComponent(`Buy: ${note.title}`)}`;
           const paid = Boolean(note.buyUrl);
+          const off = discountLabel(note.wasPrice, note.price);
           return (
             <li class="note">
               {note.cover && (
@@ -48,8 +58,11 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
                   <p class="note-price">
                     {note.wasPrice && <s class="note-was">{note.wasPrice}</s>}
                     <span>{note.price}</span>
-                    {note.wasPrice && <span class="note-off">67% off</span>}
+                    {off && <span class="note-off">{off}</span>}
                   </p>
+                  {note.previewUrl && (
+                    <a class="preview" href={note.previewUrl}>Preview</a>
+                  )}
                   <a class="buy" href={href}>
                     {paid ? 'Buy' : 'Email to buy'}
                   </a>
@@ -68,42 +81,6 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
 </BaseLayout>
 
 <style>
-  .hero {
-    margin: 0;
-    padding: 4.25rem var(--gutter) 3rem;
-    background: var(--paper-tint);
-    border-bottom: 1px solid var(--rule-tint);
-  }
-  .hero-inner {
-    max-width: 52rem;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 1.15rem;
-  }
-  .eyebrow::after {
-    content: '';
-    width: 2.25rem;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
-  .hero h1 {
-    font-size: clamp(1.85rem, 4.5vw, 2.65rem);
-    font-weight: 650;
-    max-width: 22ch;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin: 0;
-  }
   .hero-dek {
     font-size: 1.15rem;
     line-height: 1.55;
@@ -112,8 +89,8 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     margin: 1.2rem 0 0;
   }
   .notes {
-    max-width: 52rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 1.25rem var(--gutter) 5rem;
   }
   .empty {
@@ -204,6 +181,23 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     text-transform: uppercase;
     color: var(--accent-warm);
   }
+  .preview {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.48rem 0.95rem;
+  }
+  .preview:hover {
+    color: var(--paper);
+    background: var(--accent);
+  }
   .buy {
     display: inline-block;
     font-family: var(--font-mono);
@@ -230,7 +224,6 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.replace('ma
     max-width: 36rem;
   }
   @media (max-width: 40rem) {
-    .hero { padding: 2.5rem var(--gutter) 2rem; }
     .notes { padding: 0 var(--gutter) 3.5rem; }
     .note {
       grid-template-columns: 1fr;

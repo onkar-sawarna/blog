@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>A process on one box wants a process on another box to see some bytes.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <rect x="36" y="36" width="200" height="140" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="136" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">your laptop</text>
+  <text x="136" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">a process</text>
+  <text x="136" y="132" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">the client</text>
+  <text x="136" y="156" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">starts the call</text>
+
+  <line x1="236" y1="106" x2="472" y2="106" stroke="#1A3D32" stroke-width="1.8"/>
+  <polygon points="464,102 472,106 464,110" fill="#1A3D32"/>
+  <text x="354" y="88" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">packets</text>
+  <text x="354" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">to IP : port</text>
+
+  <rect x="484" y="36" width="200" height="140" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="584" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">another machine</text>
+  <text x="584" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">a process</text>
+  <text x="584" y="132" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">the server</text>
+  <text x="584" y="156" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">waits on a door</text>
+
+  <text x="360" y="224" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">The rest of these notes is how this arrow works, or fails.</text>
+  <text x="360" y="252" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">Layer names later have somewhere to sit if you keep this picture.</text>
+</svg>

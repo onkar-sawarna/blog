@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Seven steps. Classes come last.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="24" y="28" width="154" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="40" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">1</text>
+  <text x="101" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Bound</text>
+  <text x="101" y="92" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">in and out</text>
+
+  <rect x="196" y="28" width="154" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="212" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">2</text>
+  <text x="273" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Requests</text>
+  <text x="273" y="92" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">ok or fail</text>
+
+  <rect x="368" y="28" width="154" height="88" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="384" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">3</text>
+  <text x="445" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Scarce</text>
+  <text x="445" y="92" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">invariant</text>
+
+  <rect x="540" y="28" width="154" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="556" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">4</text>
+  <text x="617" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Contains</text>
+  <text x="617" y="92" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">1 to many</text>
+
+  <rect x="24" y="144" width="210" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="40" y="168" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">5</text>
+  <text x="129" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Happy walk</text>
+  <text x="129" y="208" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">who flips what</text>
+
+  <rect x="254" y="144" width="210" height="88" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="270" y="168" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">6</text>
+  <text x="359" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Two at once</text>
+  <text x="359" y="208" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">lock or hold</text>
+
+  <rect x="484" y="144" width="210" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="500" y="168" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">7</text>
+  <text x="589" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Owners</text>
+  <text x="589" y="208" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">then a pattern, if two ways</text>
+
+  <text x="360" y="272" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">Draw 4 as boxes. Draw 5 as a sequence. Fill methods on 7.</text>
+</svg>

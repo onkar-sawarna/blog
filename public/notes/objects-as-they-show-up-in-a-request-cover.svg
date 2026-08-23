@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-label="Cover: Low-level design, as it shows up in a request">
+  <rect width="420" height="560" fill="#1A3D32"/>
+  <rect x="0" y="0" width="10" height="560" fill="#122820"/>
+  <rect x="28" y="28" width="364" height="504" fill="#F7F7F5"/>
+  <text x="52" y="68" font-family="ui-monospace, monospace" font-size="11" letter-spacing="2.4" fill="#1A3D32">LLD</text>
+  <text x="52" y="118" font-family="Georgia, serif" font-size="26" fill="#161616">Low-level</text>
+  <text x="52" y="150" font-family="Georgia, serif" font-size="26" fill="#161616">design, as it</text>
+  <text x="52" y="182" font-family="Georgia, serif" font-size="26" fill="#161616">shows up in</text>
+  <text x="52" y="214" font-family="Georgia, serif" font-size="26" fill="#161616">a request</text>
+  <rect x="52" y="238" width="72" height="2" fill="#B33A1A"/>
+
+  <rect x="52" y="262" width="96" height="72" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="100" y="292" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">1 Bound</text>
+  <text x="100" y="314" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">in / out</text>
+
+  <rect x="162" y="262" width="96" height="72" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="210" y="292" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">3 Scarce</text>
+  <text x="210" y="314" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">invariant</text>
+
+  <rect x="272" y="262" width="96" height="72" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="320" y="292" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#161616">6 Two</text>
+  <text x="320" y="314" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">lock / hold</text>
+
+  <text x="52" y="380" font-family="Georgia, serif" font-size="15" fill="#161616">Seven steps. Then the</text>
+  <text x="52" y="402" font-family="Georgia, serif" font-size="15" fill="#161616">same walk on a lot, a</text>
+  <text x="52" y="424" font-family="Georgia, serif" font-size="15" fill="#161616">seat, a cache, a lift.</text>
+
+  <text x="52" y="458" font-family="Georgia, serif" font-size="14" fill="#B33A1A">For a first LLD board.</text>
+
+  <text x="52" y="500" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">Onkar Sawarna</text>
+  <text x="368" y="500" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">39 pages</text>
+</svg>

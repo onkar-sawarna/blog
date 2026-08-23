@@ -99,7 +99,7 @@ Locally, `npm run dev` starts the Go API next to Astro. If Redis env vars are mi
 
 ## Paid notes
 
-The PDF is not in `public/`. An encrypted copy lives at `api/notes-file/computer-networks.pdf.enc`. After checkout, Razorpay redirects to `/notes/thanks`. That page calls `/api/notes-file` with the signed query. The function checks the HMAC, decrypts, and streams the file.
+The PDFs are not in `public/`. Encrypted copies live under `api/notes-file/*.pdf.enc`. After checkout, Razorpay redirects to `/notes/thanks`. That page calls `/api/notes-file` with the signed query. The function checks the HMAC, picks the note from the payment, decrypts, and streams the file.
 
 On Vercel set:
 

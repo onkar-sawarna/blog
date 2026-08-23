@@ -26,17 +26,31 @@ export const NOTES: Array<{
   pages?: number;
   cover?: string;
   buyUrl?: string;
+  previewUrl?: string;
 }> = [
+  {
+    id: 'objects-as-they-show-up-in-a-request',
+    title: 'Low-level design, as it shows up in a request',
+    description:
+      'LLD as I walk it: ten headings on every system, then the same walk on a lot, a seat, a cache, a lift, a wallet. For a first board. My models, not a syllabus.',
+    price: '₹49',
+    wasPrice: '₹199',
+    pages: 39,
+    cover: '/notes/objects-as-they-show-up-in-a-request-cover.svg',
+    buyUrl: '/api/notes-buy?id=objects-as-they-show-up-in-a-request',
+    previewUrl: '/notes/low-level-design/',
+  },
   {
     id: 'computer-networks',
     title: 'Computer networks, as they show up on a box',
     description:
       'Computer networks from first words: process, packet, IP, port, then tuples, NAT, ping, and what to measure when a connect fails. My models, not a syllabus.',
-    price: '₹99',
-    wasPrice: '₹299',
+    price: '₹49',
+    wasPrice: '₹199',
     pages: 20,
     cover: '/notes/computer-networks-cover.svg',
     buyUrl: '/api/notes-buy?id=computer-networks',
+    previewUrl: '/notes/computer-networks/',
   },
 ];
 

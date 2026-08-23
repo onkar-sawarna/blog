@@ -1,0 +1,208 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { NOTES } from '../../config';
+
+const note = NOTES.find((n) => n.id === 'objects-as-they-show-up-in-a-request');
+const buy = note?.buyUrl ?? '/notes';
+const price = note?.price ?? '₹49';
+const pages = note?.pages ?? 39;
+---
+<BaseLayout
+  title="Preview: Low-level design"
+  description="A free sample of the LLD note. Ten headings, then one walk on a parking lot. The PDF has the rest."
+>
+  <PageHero eyebrow="Preview" title="Low-level design, as it shows up in a request">
+    <p class="hero-dek">
+      A free sample. The PDF is {pages} pages.
+    </p>
+  </PageHero>
+
+  <article class="sample">
+    <p class="lede">
+      I hold a design in my head before I draw a class. A request arrives. Some
+      object already owns a piece of state. The design is whether that state is
+      still true when the request returns.
+    </p>
+
+    <h2>How to read the note</h2>
+    <p>
+      Words, then what a C++ object is, then the thinking steps and the ten
+      headings I write on a board. Then the walks. SOLID and the pattern names
+      come after you have owners. How to apply them is next. The timed board is
+      last.
+    </p>
+    <p>
+      If you are short on time, do the lot, the seat, and the cache. That is the
+      core. The later walks are the same clothes.
+    </p>
+
+    <h2>The ten headings</h2>
+    <p>
+      I do not start with Vehicle, Spot, Level, Gate. That list does not say who
+      is allowed to flip <code>occupied</code>. On a board I write these ten, in
+      this order. I do not start at patterns.
+    </p>
+    <figure>
+      <img
+        src="/notes/lld-preview-ten.svg"
+        alt="Ten headings: scope, API, data, classes, patterns, sequence, concurrency, edges, C++, extend."
+        width="720"
+        height="340"
+      />
+      <figcaption>Figure. A pattern is a name after two ways exist. Creational, structural, or behavioural.</figcaption>
+    </figure>
+    <ol>
+      <li>Scope. In and out. Types. Multiplicity. Pick logic. Where a race lives.</li>
+      <li>Use cases and API. Calls, success, fail.</li>
+      <li>Data model. What I store. The invariant in one sentence.</li>
+      <li>Core classes. Who owns the scarce bit.</li>
+      <li>Patterns. A name only if two ways exist.</li>
+      <li>Sequence. One happy call.</li>
+      <li>Concurrency. Two at once.</li>
+      <li>Edges. Every fail on the API.</li>
+      <li>C++ skeleton. The smallest code that holds the invariant.</li>
+      <li>Extensions. What I put out on purpose.</li>
+    </ol>
+
+    <h2>One walk: a car enters a lot</h2>
+    <p>
+      Scope: park, unpark, how many free. Out: SMS, a display board, four kinds
+      of gates. Types: bike, car, truck. Multiplicity: one lot, many floors.
+      Logic: first fit, lowest floor. Race: two parks, one stall.
+    </p>
+    <ul>
+      <li><code>park(plate, kind) -&gt; ticket | full</code></li>
+      <li><code>unpark(ticket) -&gt; fee | unknown ticket</code></li>
+      <li><code>freeCount(kind) -&gt; number</code></li>
+    </ul>
+    <blockquote>
+      A stall is free or it is held by exactly one active ticket. A ticket
+      points at one stall.
+    </blockquote>
+    <figure>
+      <img
+        src="/notes/lld-preview-lot.svg"
+        alt="Lot owns assign. Stall owns occupied. Ticket points at one stall."
+        width="720"
+        height="220"
+      />
+      <figcaption>Figure. Two cars at once: lock pick-and-take. Stall flips the bit.</figcaption>
+    </figure>
+    <p>
+      That is the sample. The PDF walks the same ten headings on a seat, a
+      cache, a copy, a wallet, a lift, a rate limit, a bill, and a cab. Then
+      C++, SOLID, Factory through Observer, and how I apply a name after the
+      walk.
+    </p>
+
+    <div class="cta">
+      <p>The rest is in the file.</p>
+      <a class="buy" href={buy}>Buy the PDF, {price}</a>
+      <a class="back" href="/notes">All notes</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
+  }
+  .sample {
+    max-width: var(--prose);
+    margin-inline: auto;
+    padding: 2.5rem var(--gutter) 5rem;
+  }
+  .lede {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0 0 2rem;
+  }
+  .sample h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 2.2rem 0 0.7rem;
+  }
+  .sample p,
+  .sample li {
+    color: var(--ink);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .sample ul,
+  .sample ol {
+    padding-left: 1.15rem;
+  }
+  .sample code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 0.08em 0.28em;
+    border-radius: 2px;
+  }
+  .sample blockquote {
+    margin: 1.2rem 0;
+    padding: 0.85rem 1rem;
+    background: var(--paper-tint);
+    border-left: 3px solid var(--accent);
+    color: var(--accent);
+    font-style: italic;
+  }
+  .sample figure {
+    margin: 1.4rem 0 1.8rem;
+  }
+  .sample img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .sample figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.55rem;
+    line-height: 1.45;
+  }
+  .cta {
+    margin-top: 2.8rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+  .cta p {
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .buy {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.48rem 0.95rem;
+    margin-right: 0.75rem;
+  }
+  .buy:hover {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+  .back {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220" role="img">
+  <title>A stall is free or held by one ticket.</title>
+  <rect width="720" height="220" fill="#F7F7F5"/>
+  <rect x="40" y="36" width="200" height="100" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="140" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Lot</text>
+  <text x="140" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">owns assign</text>
+  <rect x="280" y="36" width="180" height="100" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="370" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Stall</text>
+  <text x="370" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">occupied</text>
+  <rect x="500" y="36" width="180" height="100" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="590" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Ticket</text>
+  <text x="590" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">one stall</text>
+  <line x1="240" y1="86" x2="280" y2="86" stroke="#1A3D32" stroke-width="1.4"/>
+  <line x1="460" y1="86" x2="500" y2="86" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="360" y="180" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">One stall, one active ticket. Two cars cannot both win.</text>
+</svg>

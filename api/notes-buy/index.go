@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/onkar-sawarna/blog/lib/notespec"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -18,8 +20,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	id := strings.TrimSpace(r.URL.Query().Get("id"))
-	if id != "computer-networks" {
+	spec, ok := notespec.ByID(r.URL.Query().Get("id"))
+	if !ok {
 		http.Error(w, "Unknown note", http.StatusNotFound)
 		return
 	}
@@ -41,17 +43,18 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not start checkout", http.StatusInternalServerError)
 		return
 	}
-	ref := "n-cn-" + hex.EncodeToString(nonce)
+	ref := spec.RefPrefix + hex.EncodeToString(nonce)
 
 	body, _ := json.Marshal(map[string]any{
-		"amount":          amountPaise(),
+		"amount":          amountPaise(spec),
 		"currency":        "INR",
 		"accept_partial":  false,
-		"description":     "Computer networks, as they show up on a box",
+		"description":     spec.Title,
 		"reference_id":    ref,
 		"callback_url":    callback,
 		"callback_method": "get",
 		"reminder_enable": false,
+		"notes":           map[string]string{"note": spec.ID},
 	})
 	req, err := http.NewRequest(http.MethodPost, "https://api.razorpay.com/v1/payment_links", bytes.NewReader(body))
 	if err != nil {
@@ -81,17 +84,35 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, got.ShortURL, http.StatusFound)
 }
 
-func amountPaise() int {
+func amountPaise(spec notespec.Spec) int {
 	raw := env("NOTES_AMOUNT_PAISE")
 	if raw == "" {
-		return 9900
+		return spec.AmountPaise
 	}
-	first, _, _ := strings.Cut(raw, ",")
-	n, err := strconv.Atoi(strings.TrimSpace(first))
-	if err != nil || n <= 0 {
-		return 9900
+	// Bare 4900 applies to every note. id=paise overrides one note.
+	fallback := 0
+	for _, part := range strings.Split(raw, ",") {
+		part = strings.TrimSpace(part)
+		id, amt, ok := strings.Cut(part, "=")
+		if ok {
+			if strings.TrimSpace(id) != spec.ID {
+				continue
+			}
+			n, err := strconv.Atoi(strings.TrimSpace(amt))
+			if err == nil && n > 0 {
+				return n
+			}
+			continue
+		}
+		n, err := strconv.Atoi(part)
+		if err == nil && n > 0 {
+			fallback = n
+		}
 	}
-	return n
+	if fallback > 0 {
+		return fallback
+	}
+	return spec.AmountPaise
 }
 
 func env(name string) string {

@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { NOTES } from '../../config';
+
+const note = NOTES.find((n) => n.id === 'computer-networks');
+const buy = note?.buyUrl ?? '/notes';
+const price = note?.price ?? '₹49';
+const pages = note?.pages ?? 20;
+---
+<BaseLayout
+  title="Preview: Computer networks"
+  description="A free sample of the networks note. Two machines, four facts, then the tuple. The PDF has the rest."
+>
+  <PageHero eyebrow="Preview" title="Computer networks, as they show up on a box">
+    <p class="hero-dek">
+      A free sample. The PDF is {pages} pages.
+    </p>
+  </PageHero>
+
+  <article class="sample">
+    <p class="lede">
+      One program on one computer is trying to send bytes to a program on
+      another computer. Everything in these notes is how that arrow works, or
+      fails.
+    </p>
+
+    <h2>The picture</h2>
+    <p>
+      Left: a process on your laptop. Right: a process on another machine. The
+      arrow is packets, each carrying to this IP, this port. Layer names later
+      have somewhere to sit if you keep this picture.
+    </p>
+    <figure>
+      <img
+        src="/notes/net-preview-machines.svg"
+        alt="A client process sending packets to a server process at an IP and port."
+        width="720"
+        height="280"
+      />
+      <figcaption>Figure. The whole subject in one picture.</figcaption>
+    </figure>
+
+    <h2>Four facts</h2>
+    <p>
+      If a connect fails and you cannot point at one of these four, stop and
+      name them on paper before you capture packets.
+    </p>
+    <ul>
+      <li><strong>Address.</strong> Which machine. Almost always an IP.</li>
+      <li><strong>Door.</strong> Which process. That is a port.</li>
+      <li><strong>Path.</strong> What sits between: NAT, a filter, a hop.</li>
+      <li><strong>Talk.</strong> TCP (an agreement) or UDP (a throw).</li>
+    </ul>
+    <figure>
+      <img
+        src="/notes/net-preview-facts.svg"
+        alt="Four boxes: address, door, path, talk."
+        width="720"
+        height="260"
+      />
+      <figcaption>Figure. If you cannot name these four, you are guessing.</figcaption>
+    </figure>
+    <blockquote>
+      A TCP connection is source IP, source port, dest IP, dest port. Dest port
+      443 is shared. The conversation is the row.
+    </blockquote>
+    <p>
+      That is the sample. The PDF walks ping versus 443, NAT, localhost, HTTP
+      last, and the questions I want answered in a room.
+    </p>
+
+    <div class="cta">
+      <p>The rest is in the file.</p>
+      <a class="buy" href={buy}>Buy the PDF, {price}</a>
+      <a class="back" href="/notes">All notes</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
+  }
+  .sample {
+    max-width: var(--prose);
+    margin-inline: auto;
+    padding: 2.5rem var(--gutter) 5rem;
+  }
+  .lede {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0 0 2rem;
+  }
+  .sample h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 2.2rem 0 0.7rem;
+  }
+  .sample p,
+  .sample li {
+    color: var(--ink);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .sample ul {
+    padding-left: 1.15rem;
+  }
+  .sample blockquote {
+    margin: 1.2rem 0;
+    padding: 0.85rem 1rem;
+    background: var(--paper-tint);
+    border-left: 3px solid var(--accent);
+    color: var(--accent);
+    font-style: italic;
+  }
+  .sample figure {
+    margin: 1.4rem 0 1.8rem;
+  }
+  .sample img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .sample figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.55rem;
+    line-height: 1.45;
+  }
+  .cta {
+    margin-top: 2.8rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+  .cta p {
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .buy {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.48rem 0.95rem;
+    margin-right: 0.75rem;
+  }
+  .buy:hover {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+  .back {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+</style>

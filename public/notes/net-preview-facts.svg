@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img">
+  <title>Address, door, path, conversation.</title>
+  <rect width="720" height="260" fill="#F7F7F5"/>
+
+  <rect x="20" y="28" width="160" height="140" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="36" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">1</text>
+  <text x="100" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Address</text>
+  <text x="100" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">which machine</text>
+  <text x="100" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">IP</text>
+
+  <rect x="192" y="28" width="160" height="140" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="208" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">2</text>
+  <text x="272" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Door</text>
+  <text x="272" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">which process</text>
+  <text x="272" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">port</text>
+
+  <rect x="364" y="28" width="160" height="140" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="380" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">3</text>
+  <text x="444" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Path</text>
+  <text x="444" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">what sits between</text>
+  <text x="444" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">NAT, filter, hop</text>
+
+  <rect x="536" y="28" width="164" height="140" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="552" y="52" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">4</text>
+  <text x="618" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Talk</text>
+  <text x="618" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">TCP or a throw</text>
+  <text x="618" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">UDP</text>
+
+  <text x="360" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">If you cannot name these four, you are guessing.</text>
+  <text x="360" y="238" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">Name them on paper before you capture packets.</text>
+</svg>

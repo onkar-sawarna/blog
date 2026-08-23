@@ -11,11 +11,15 @@ import (
 	"strings"
 
 	"github.com/onkar-sawarna/blog/lib/notepdf"
+	"github.com/onkar-sawarna/blog/lib/notespec"
 	"github.com/onkar-sawarna/blog/lib/rzpsig"
 )
 
 //go:embed computer-networks.pdf.enc
-var embeddedEnc []byte
+var networksEnc []byte
+
+//go:embed objects-as-they-show-up-in-a-request.pdf.enc
+var objectsEnc []byte
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet && r.Method != http.MethodHead {
@@ -38,6 +42,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ok := false
+	noteID := strings.TrimSpace(q.Get("id"))
+	description := ""
 	if status == "paid" && sig != "" && payID != "" {
 		payload := rzpsig.PaymentLinkPayload(linkID, ref, status, payID)
 		if rzpsig.Verify(payload, sig, secret) {
@@ -45,18 +51,35 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !ok && payID != "" {
-		if err := paymentCaptured(payID); err != nil {
+		pay, err := lookupPayment(payID)
+		if err != nil {
 			http.Error(w, err.Error(), statusFor(err))
 			return
 		}
 		ok = true
+		if noteID == "" {
+			noteID = pay.NoteID
+		}
+		description = pay.Description
+		if ref == "" {
+			ref = pay.Ref
+		}
 	}
 	if !ok {
 		http.Error(w, "Payment is not complete", http.StatusForbidden)
 		return
 	}
 
-	pdf, name, err := loadPDF()
+	spec, found := notespec.ByHint(noteID, description, ref)
+	if !found {
+		spec, found = notespec.ByID("computer-networks")
+	}
+	if !found {
+		http.Error(w, "Unknown note", http.StatusNotFound)
+		return
+	}
+
+	pdf, name, err := loadPDF(spec)
 	if err != nil {
 		http.Error(w, "The file is not available", http.StatusServiceUnavailable)
 		return
@@ -73,21 +96,22 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(pdf)
 }
 
-func loadPDF() ([]byte, string, error) {
-	name := "computer-networks.pdf"
+func loadPDF(spec notespec.Spec) ([]byte, string, error) {
 	if p := env("NOTES_PDF_PATH"); p != "" {
 		b, err := os.ReadFile(p)
 		return b, filepath.Base(p), err
 	}
-	if b, err := os.ReadFile(filepath.Join("notes", "computer-networks.pdf")); err == nil && env("VERCEL") == "" {
-		return b, name, nil
+	if env("VERCEL") == "" {
+		if b, err := os.ReadFile(filepath.Join("notes", spec.Filename)); err == nil {
+			return b, spec.Filename, nil
+		}
 	}
 
 	key, err := notepdf.ParseKey(env("NOTES_PDF_KEY"))
 	if err != nil {
 		return nil, "", err
 	}
-	raw := embeddedEnc
+	raw := encFor(spec.ID)
 	if p := env("NOTES_PDF_ENC"); p != "" {
 		b, err := os.ReadFile(p)
 		if err != nil {
@@ -95,11 +119,23 @@ func loadPDF() ([]byte, string, error) {
 		}
 		raw = b
 	}
+	if len(raw) == 0 {
+		return nil, "", errors.New("no ciphertext")
+	}
 	plain, err := notepdf.Decrypt(raw, key)
 	if err != nil {
 		return nil, "", err
 	}
-	return plain, name, nil
+	return plain, spec.Filename, nil
+}
+
+func encFor(id string) []byte {
+	switch id {
+	case "objects-as-they-show-up-in-a-request":
+		return objectsEnc
+	default:
+		return networksEnc
+	}
 }
 
 func env(name string) string {
@@ -147,46 +183,58 @@ func extractPayID(raw string) string {
 	return ""
 }
 
-func paymentCaptured(id string) error {
+type paymentInfo struct {
+	NoteID      string
+	Description string
+	Ref         string
+}
+
+func lookupPayment(id string) (paymentInfo, error) {
 	if !strings.HasPrefix(id, "pay_") || len(id) < 8 || len(id) > 64 {
-		return errBadPayID
+		return paymentInfo{}, errBadPayID
 	}
 	key := env("RAZORPAY_KEY_ID")
 	secret := env("RAZORPAY_KEY_SECRET")
 	if key == "" || secret == "" {
-		return errNotConfigured
+		return paymentInfo{}, errNotConfigured
 	}
 	req, err := http.NewRequest(http.MethodGet, "https://api.razorpay.com/v1/payments/"+urlPathEscape(id), nil)
 	if err != nil {
-		return err
+		return paymentInfo{}, err
 	}
 	req.SetBasicAuth(key, secret)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return paymentInfo{}, err
 	}
 	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return paymentInfo{}, err
 	}
 	if res.StatusCode == http.StatusNotFound || res.StatusCode == http.StatusBadRequest {
-		return errUnknownPay
+		return paymentInfo{}, errUnknownPay
 	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return errors.New("Razorpay rejected the lookup")
+		return paymentInfo{}, errors.New("Razorpay rejected the lookup")
 	}
 	var got struct {
-		Status string `json:"status"`
+		Status      string            `json:"status"`
+		Description string            `json:"description"`
+		Notes       map[string]string `json:"notes"`
 	}
 	if err := json.Unmarshal(body, &got); err != nil {
-		return err
+		return paymentInfo{}, err
 	}
 	switch got.Status {
 	case "captured", "authorized", "refunded":
-		return nil
+		info := paymentInfo{Description: got.Description}
+		if got.Notes != nil {
+			info.NoteID = strings.TrimSpace(got.Notes["note"])
+		}
+		return info, nil
 	default:
-		return errNotPaid
+		return paymentInfo{}, errNotPaid
 	}
 }
 
