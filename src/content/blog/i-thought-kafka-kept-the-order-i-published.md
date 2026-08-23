@@ -75,7 +75,15 @@ Three partitions means three parallel logs. That is how the cluster scales, and 
 
 ## What n is for
 
-n is not decoration. It is three promises at once.
+n = 1 works. A lot of systems should start there.
+
+One partition is one log. Every checkout appends to the same line. Search has one member that actually works. You get a total order on `orders`: u1, then u2, then u1 again, in the order the API published, for the whole topic. The model I wanted is true. The cost is that one disk path and one reader are the ceiling.
+
+I add partitions when that ceiling shows up on a real Friday, not because three looks more serious.
+
+Checkout is 200 orders a second. Search does a fat write per event. One member cannot keep up. Lag grows. Launching four search processes does nothing. They have one partition to share, so three of them sit idle. I need more lanes so more members can work. That is the significance: **n is how many of this job can run at once, and how many appends can land at once.**
+
+n is three promises at once.
 
 **How hard you can write.** The API can append to three logs at the same time. One partition is one disk path. Checkout traffic that all hashes to one user sits on one partition and the other two sit idle. A bad key wastes n.
 
