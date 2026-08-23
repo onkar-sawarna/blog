@@ -1,13 +1,50 @@
 ---
 title: "I thought Kafka kept the order I published"
-description: "Publish order is not consume order. Kafka is a shared log. The key picks a lane. Extra consumers do not invent more lanes."
+description: "A topic is a named log sliced into partitions. The API writes the row, then publishes. Order lives on a partition, not on the topic."
 pubDate: 2026-08-23
 tags: ["systems"]
 ---
 
 I used to treat Kafka like a durable queue with a nicer name. I borrowed queue rules for order. Publish 1, then 2, then 3, and they come back that way. If you need more throughput, you add consumers.
 
-Who sees the event (one inbox versus two jobs) is a different fight. This one is only the order I thought I had bought.
+That only makes sense if you already know what the cluster is. I did not write that down the first time. Here it is, then the order mistake.
+
+## What Kafka is
+
+Kafka is a cluster that keeps events on disk and lets other processes read them later. You append. You poll. The events stay. Retention is time or size, not "someone already took this."
+
+The names that matter:
+
+**Topic.** A named stream. `orders`. `payments`. `listing-events`. That is the inbox you publish to. It is not one pipe. It is a label on a set of logs.
+
+**Partition.** One of those logs. A topic has n partitions. A partition is append-only and ordered. Two partitions have no order between them. If you needed a total order for the whole topic, you wanted n = 1, and you also wanted the throughput of one log.
+
+**Key.** How a message picks a partition. `hash(key) % n`. Same key, same partition, as long as n does not change. No key, and the producer scatters.
+
+**Consumer group.** A job with a cursor on each partition. Search is a group. Counter is a group. Each group sees every message. Two processes in the same group split partitions. They do not both see every message.
+
+That is the architecture. The rest of this post is what people get wrong about order once they have those words.
+
+## A real request
+
+A buyer hits checkout.
+
+The API does two things on purpose, in this order.
+
+First it writes the order row to the database. That is the fact. If this fails, there is no order. The request returns an error.
+
+Then it publishes an event to a Kafka topic, say `orders`, keyed by `user_id` or `order_id`. The body is small: order id, user, total, created at. The API does not call search. It does not increment a dashboard. It returns 200.
+
+A search group polls `orders` and writes the order into an index so support can find it. A counter group polls the same topic and writes "orders today" back to the database. They do not call each other. They do not steal. Each group has its own cursor. If search is down for an hour, the events are still on the topic. Search catches up. The database row was never waiting on search.
+
+<figure>
+  <img src="/blog/kafka-job.svg" alt="A user hits the API. The API writes an order row to the database, then publishes to a Kafka topic named orders with three partitions. A search group and a counter group each poll that topic." width="720" height="300" />
+  <figcaption>The row is the fact. The topic is the news. Two groups, two cursors, same topic.</figcaption>
+</figure>
+
+If the API only wrote the row and then HTTP-called search and the counter, checkout is coupled to both. One of them slow, and the buyer waits. One of them down, and checkout fails for a side job. Kafka is the buffer. The API is done when the row is in and the event is on the topic.
+
+The topic `orders` is still sliced. Three partitions means three parallel logs. That is how the cluster scales, and that is where my order model died.
 
 ## The wrong model
 
@@ -24,9 +61,9 @@ That model is what you get from a diagram with one cylinder and two arrows. Publ
 
 ## Where it broke
 
-The useful picture is the cut inside the topic.
+The useful picture is that cut, used as a promise.
 
-Messages in one partition are ordered. Messages in two partitions are not. There is no global order across the topic. If you needed that, you wanted one partition, and you also wanted the throughput of one partition.
+Messages in one partition are ordered. Messages in two partitions are not. There is no global order across `orders`. If you needed that, you wanted one partition, and you also wanted the throughput of one log.
 
 A message lands in a partition by key. You hash the key and take it modulo n. Same key, same lane, every time, as long as n does not change.
 
