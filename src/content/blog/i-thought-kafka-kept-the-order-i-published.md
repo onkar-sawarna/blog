@@ -33,18 +33,45 @@ The API does two things on purpose, in this order.
 
 First it writes the order row to the database. That is the fact. If this fails, there is no order. The request returns an error.
 
-Then it publishes an event to a Kafka topic, say `orders`, keyed by `user_id` or `order_id`. The body is small: order id, user, total, created at. The API does not call search. It does not increment a dashboard. It returns 200.
+Then it publishes an event to a Kafka topic, say `orders`. Someone created that topic with n partitions. The API does not invent n on the request. Ops (or you) set n when the topic was born.
 
-A search group polls `orders` and writes the order into an index so support can find it. A counter group polls the same topic and writes "orders today" back to the database. They do not call each other. They do not steal. Each group has its own cursor. If search is down for an hour, the events are still on the topic. Search catches up. The database row was never waiting on search.
+The producer, the client library inside the API, picks the partition. You pass a key. The library does `hash(key) % n` and sends the bytes to that partition. The broker appends. It does not re-decide the lane.
+
+I key by `user_id`. Three partitions.
+
+Buyer u1 checks out. `hash(u1) % 3` is 0. The event is the next line on partition 0.
+
+Buyer u2 checks out a second later. `hash(u2) % 3` is 2. That event is the next line on partition 2.
+
+u1 buys again. Same key, same 0. That second event sits after the first one on partition 0. That is the only order this path promised: u1's checkouts, in the order the API published them, on that one log.
+
+The body is small: order id, user, total, created at. The API does not call search. It does not increment a dashboard. It returns 200.
+
+Now the groups.
+
+Search is a consumer group. Counter is a different consumer group. Kafka assigns every partition of `orders` to each group, independently. Both jobs see every event. They do not share a cursor. Search being behind does not stall the counter.
+
+If search has three live members, Kafka gives each member one partition. Member s0 polls only p0. s1 polls p1. s2 polls p2. s0 sees u1. s2 sees u2. Nobody in search sees both unless one member holds two partitions.
+
+Counter does the same math on its own members. c0 also polls p0. c0 also sees u1. s0 did not hand that event to c0. Two processes read the same line on the same log, because they belong to two groups.
+
+If search has one member, that one process polls p0, p1, and p2. It still sees every order. It just does the three lanes itself. If search has four members and three partitions, the fourth member is assigned nothing.
+
+Search writes the order into an index so support can find it. Counter writes "orders today" back to the database. If search is down for an hour, the events are still on the topic. Search catches up from its cursor. The database row was never waiting on search.
 
 <figure>
   <img src="/blog/kafka-job.svg" alt="A user hits the API. The API writes an order row to the database, then publishes to a Kafka topic named orders with three partitions. A search group and a counter group each poll that topic." width="720" height="300" />
   <figcaption>The row is the fact. The topic is the news. Two groups, two cursors, same topic.</figcaption>
 </figure>
 
+<figure>
+  <img src="/blog/kafka-groups.svg" alt="The API hashes user ids onto partitions. Search members s0 s1 s2 each take one partition. Counter members c0 c1 c2 take the same three partitions again." width="720" height="300" />
+  <figcaption>The API hashes the key. Each group covers every partition. Same event, two jobs.</figcaption>
+</figure>
+
 If the API only wrote the row and then HTTP-called search and the counter, checkout is coupled to both. One of them slow, and the buyer waits. One of them down, and checkout fails for a side job. Kafka is the buffer. The API is done when the row is in and the event is on the topic.
 
-The topic `orders` is still sliced. Three partitions means three parallel logs. That is how the cluster scales, and that is where my order model died.
+Three partitions means three parallel logs. That is how the cluster scales, and that is where my order model died.
 
 ## The wrong model
 
