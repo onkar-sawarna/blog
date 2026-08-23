@@ -29,9 +29,6 @@
      no padding of their own; an inner shell does the aligning. */
   --shell: 52rem;
   --measure: 42rem;
-  /* The reading column itself, inside the shell's gutter. Keep it near 65
-     characters; figures are what get the extra room, not the prose. */
-  --prose: 36rem;
   --gutter: clamp(1.25rem, 4vw, 3rem);
 }
 

@@ -85,23 +85,11 @@ function formatDate(d: Date) {
 
 <style>
   /* The article uses the page shell so it lines up with the masthead, and the
-     prose inside is capped at the reading measure. Figures opt out and take the
-     full shell, which is what the diagrams were drawn for. */
+     text runs the same width as the diagrams, which are drawn on a 720px canvas. */
   .post {
     max-width: var(--shell);
     margin-inline: auto;
     padding: 3rem var(--gutter) 5rem;
-  }
-  .post-header,
-  .post-like,
-  .post-subscribe,
-  .post-body :global(> *) {
-    max-width: var(--prose);
-  }
-  .post-body :global(> figure),
-  .post-body :global(> img),
-  .post-body :global(> video) {
-    max-width: none;
   }
   .back-link {
     font-family: var(--font-mono);
