@@ -31,6 +31,7 @@ function formatDate(d: Date) {
   pubDate={post.data.pubDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
+  hasSubscribe
 >
   <article class="post">
     <header class="post-header">
@@ -83,10 +84,24 @@ function formatDate(d: Date) {
 </BaseLayout>
 
 <style>
+  /* The article uses the page shell so it lines up with the masthead, and the
+     prose inside is capped at the reading measure. Figures opt out and take the
+     full shell, which is what the diagrams were drawn for. */
   .post {
-    max-width: var(--measure);
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 3rem var(--gutter) 5rem;
+  }
+  .post-header,
+  .post-like,
+  .post-subscribe,
+  .post-body :global(> *) {
+    max-width: var(--prose);
+  }
+  .post-body :global(> figure),
+  .post-body :global(> img),
+  .post-body :global(> video) {
+    max-width: none;
   }
   .back-link {
     font-family: var(--font-mono);
@@ -190,6 +205,27 @@ function formatDate(d: Date) {
   .post-body :global(h3) {
     font-size: 1.2rem;
     margin-top: 2rem;
+  }
+  .post-body :global(.heading-anchor) {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 400;
+    color: var(--rule-tint);
+    text-decoration: none;
+    margin-left: 0.45em;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .post-body :global(.heading-anchor)::before {
+    content: '#';
+  }
+  .post-body :global(h2:hover .heading-anchor),
+  .post-body :global(h3:hover .heading-anchor),
+  .post-body :global(.heading-anchor:focus-visible) {
+    opacity: 1;
+  }
+  .post-body :global(.heading-anchor:hover) {
+    color: var(--accent-warm);
   }
   .post-body :global(p) {
     margin: 1.1em 0;

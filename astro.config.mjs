@@ -7,6 +7,7 @@ import { satteri } from '@astrojs/markdown-satteri';
 import { SITE } from './src/config.ts';
 import { codeTheme } from './src/lib/shikiTheme.ts';
 import { postMedia } from './src/lib/postMedia.ts';
+import { headingAnchors } from './src/lib/headingAnchors.ts';
 
 export default defineConfig({
   site: SITE.url,
@@ -19,7 +20,7 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: { theme: codeTheme },
-    processor: satteri({ hastPlugins: [postMedia] }),
+    processor: satteri({ hastPlugins: [postMedia, headingAnchors] }),
   },
   vite: {
     server: {
