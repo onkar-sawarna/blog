@@ -1,0 +1,137 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { readingTime } from '../lib/readingTime';
+import { tagPath } from '../lib/tags';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  empty?: string;
+}
+
+const { posts, empty = 'Nothing published yet. The first entry is on its way.' } = Astro.props;
+
+function dayNum(d: Date) {
+  return String(d.getDate()).padStart(2, '0');
+}
+function monthYear(d: Date) {
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+---
+{posts.length === 0 && <p class="empty">{empty}</p>}
+<ol class="entries">
+  {posts.map((post) => (
+    <li class="entry">
+      <a href={`/blog/${post.id}/`} class="entry-link">
+        <div class="entry-meta">
+          <span class="entry-day">{dayNum(post.data.pubDate)}</span>
+          <span class="entry-month">{monthYear(post.data.pubDate)}</span>
+          <span class="entry-time">{readingTime(post.body ?? '')}</span>
+        </div>
+        <div class="entry-main">
+          <h2 class="entry-title">{post.data.title}</h2>
+          <p class="entry-desc">{post.data.description}</p>
+        </div>
+      </a>
+      {post.data.tags.length > 0 && (
+        <ul class="entry-tags">
+          {post.data.tags.map((tag) => (
+            <li><a class="tag" data-tag={tag} href={tagPath(tag)}>{tag}</a></li>
+          ))}
+        </ul>
+      )}
+    </li>
+  ))}
+</ol>
+
+<style>
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .entry {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.15rem;
+  }
+  .entry-link {
+    display: grid;
+    grid-template-columns: 7.25rem minmax(0, 1fr);
+    gap: 1.35rem 1.75rem;
+    align-items: start;
+    text-decoration: none;
+    color: inherit;
+    padding: 2.15rem 0 0.85rem;
+  }
+  .entry-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding-top: 0.05rem;
+  }
+  .entry-day {
+    font-family: var(--font-display);
+    font-size: 2.35rem;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .entry-month,
+  .entry-time {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .entry-title {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: color 0.15s ease;
+  }
+  .entry-link:hover .entry-title {
+    color: var(--accent-warm);
+  }
+  .entry-desc {
+    color: var(--ink-soft);
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    max-width: 38rem;
+  }
+  .entry-tags {
+    list-style: none;
+    display: flex;
+    gap: 0.4rem;
+    padding: 0;
+    margin: 0 0 0 9rem;
+    flex-wrap: wrap;
+  }
+  .empty {
+    color: var(--ink-soft);
+    padding: 2rem 0;
+  }
+
+  @media (max-width: 40rem) {
+    .entry-link {
+      grid-template-columns: 1fr;
+      gap: 0.55rem;
+      padding: 1.6rem 0 0.7rem;
+    }
+    .entry-meta {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.55rem 0.85rem;
+      padding-top: 0;
+    }
+    .entry-day { font-size: 1.5rem; }
+    .entry-title { font-size: 1.28rem; }
+    .entry-tags { margin-left: 0; }
+  }
+</style>

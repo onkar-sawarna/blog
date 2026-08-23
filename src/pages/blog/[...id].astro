@@ -5,9 +5,10 @@ import { readingTime } from '../../lib/readingTime';
 import Subscribe from '../../components/Subscribe.astro';
 import LikeButton from '../../components/LikeButton.astro';
 import { SITE } from '../../config';
+import { tagPath } from '../../lib/tags';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft);
   return posts.map((post) => ({
     params: { id: post.id },
     props: { post },
@@ -28,12 +29,20 @@ function formatDate(d: Date) {
   image={`/og/${post.id}.png`}
   type="article"
   pubDate={post.data.pubDate}
+  updatedDate={post.data.updatedDate}
   tags={post.data.tags}
 >
   <article class="post">
     <header class="post-header">
       <a href="/" class="back-link">&larr; All writing</a>
-      <p class="post-date">{formatDate(post.data.pubDate)} · {timeToRead}</p>
+      <p class="post-date">
+        {formatDate(post.data.pubDate)} · {timeToRead}
+        {post.data.updatedDate && (
+          <span class="post-updated">
+            Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+          </span>
+        )}
+      </p>
       <h1>{post.data.title}</h1>
       <p class="post-dek">{post.data.description}</p>
       <a class="byline" href="/about">
@@ -55,7 +64,9 @@ function formatDate(d: Date) {
       </a>
       {post.data.tags.length > 0 && (
         <ul class="post-tags">
-          {post.data.tags.map((tag) => <li class="tag" data-tag={tag}>{tag}</li>)}
+          {post.data.tags.map((tag) => (
+            <li><a class="tag" data-tag={tag} href={tagPath(tag)}>{tag}</a></li>
+          ))}
         </ul>
       )}
     </header>
@@ -94,6 +105,13 @@ function formatDate(d: Date) {
     letter-spacing: 0.04em;
     color: var(--accent-warm);
     margin: 0 0 0.75rem;
+  }
+  .post-updated {
+    color: var(--ink-soft);
+  }
+  .post-updated::before {
+    content: '·';
+    margin: 0 0.4rem;
   }
   .post-header h1 {
     font-size: clamp(1.9rem, 4.5vw, 2.7rem);
@@ -155,16 +173,6 @@ function formatDate(d: Date) {
     padding: 0;
     margin: 1.25rem 0 0;
     flex-wrap: wrap;
-  }
-  .post-tags li {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    background: var(--tag-bg);
-    color: var(--ink-soft);
-    padding: 0.2rem 0.55rem;
-    border-radius: 2px;
   }
 
   .post-body {
