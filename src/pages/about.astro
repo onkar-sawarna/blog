@@ -1,20 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SocialIcon from '../components/SocialIcon.astro';
+import PageHero from '../components/PageHero.astro';
 import Subscribe from '../components/Subscribe.astro';
 import { SITE, SOCIALS } from '../config';
+
+const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:onkarsawarna@gmail.com';
 ---
 <BaseLayout
   title="About"
   description="Onkar Sawarna, software engineer at Acceldata. Previously Menlo Security. Writing on observability, networking, and distributed systems."
   image="/og/about.png"
+  hasSubscribe
 >
-  <section class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">About</p>
-      <p class="hero-dek">I write the models I use when a connect fails or a metric lies.</p>
-    </div>
-  </section>
+  <PageHero eyebrow="About" title={`Hey, I am ${SITE.author.split(' ')[0]}.`}>
+    <p class="hero-dek">I write the models I use when a connect fails or a metric lies.</p>
+  </PageHero>
 
   <section class="about">
     <header class="about-intro">
@@ -30,7 +30,6 @@ import { SITE, SOCIALS } from '../config';
         />
       </div>
       <div class="about-heading">
-        <h1>Hey, I am {SITE.author.split(' ')[0]}.</h1>
         <p class="lede">engineering, networking, observability, and distributed systems.</p>
       </div>
     </header>
@@ -62,68 +61,28 @@ import { SITE, SOCIALS } from '../config';
         details are still sharp.
       </p>
       <p>
-        If something here is useful, wrong, or worth arguing about, write to me.
+        If something here is useful, wrong, or worth arguing about,
+        <a href={mail}>write to me</a>.
       </p>
     </div>
 
     <div class="about-subscribe">
       <Subscribe />
     </div>
-
-    <ul class="elsewhere" aria-label="Find me elsewhere">
-      <li>
-        <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
-      </li>
-      {SOCIALS.map((social) => (
-        <li>
-          <a href={social.href} target="_blank" rel="me noopener noreferrer">
-            <SocialIcon name={social.label} />
-            {social.label}
-          </a>
-        </li>
-      ))}
-    </ul>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
-    margin: 0;
-    padding: 3.5rem var(--gutter) 2.25rem;
-    background: var(--paper-tint);
-    border-bottom: 1px solid var(--rule-tint);
-  }
-  .hero-inner {
-    max-width: 52rem;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 0.85rem;
-  }
-  .eyebrow::after {
-    content: '';
-    width: 2.25rem;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
   .hero-dek {
     font-size: 1.15rem;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--ink-soft);
-    margin: 0;
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
   }
   .about {
-    max-width: 52rem;
-    margin: 0 auto;
+    max-width: var(--shell);
+    margin-inline: auto;
     padding: 2.75rem var(--gutter) 5rem;
   }
   .about-intro {
@@ -152,13 +111,6 @@ import { SITE, SOCIALS } from '../config';
     transform: scale(1.45) translateY(8%);
     transform-origin: 50% 12%;
   }
-  .about h1 {
-    font-size: clamp(2.25rem, 5.5vw, 3.15rem);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    margin: 0 0 0.55rem;
-  }
   .lede {
     font-family: var(--font-display);
     font-size: clamp(1.15rem, 2.4vw, 1.45rem);
@@ -169,7 +121,6 @@ import { SITE, SOCIALS } from '../config';
     max-width: 28ch;
   }
   @media (max-width: 40rem) {
-    .hero { padding: 2.25rem var(--gutter) 1.75rem; }
     .about {
       padding: 2rem var(--gutter) 3.5rem;
     }
@@ -184,14 +135,6 @@ import { SITE, SOCIALS } from '../config';
       height: 8.5rem;
     }
     .lede { max-width: none; }
-    .elsewhere {
-      gap: 0.6rem;
-      margin-top: 2.25rem;
-    }
-    .elsewhere a {
-      padding: 0.7rem 1rem;
-      min-height: 2.75rem;
-    }
   }
   .about-body {
     max-width: 40rem;
@@ -209,34 +152,5 @@ import { SITE, SOCIALS } from '../config';
     margin-top: 2.75rem;
     padding-top: 2rem;
     border-top: 1px solid var(--rule);
-  }
-  .elsewhere {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding: 0;
-    margin: 2rem 0 0;
-    padding-top: 0;
-  }
-  .elsewhere a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    color: var(--ink);
-    background: var(--paper-raised);
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    padding: 0.5rem 0.9rem;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-  .elsewhere a:hover {
-    color: var(--accent);
-    border-color: var(--accent);
   }
 </style>
