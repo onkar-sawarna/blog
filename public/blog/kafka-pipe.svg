@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img">
+  <title>A queue is one line. Kafka is lanes. Publish order is not consume order.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <text x="170" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">the queue in my head</text>
+  <rect x="36" y="52" width="268" height="72" rx="36" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <rect x="56" y="70" width="36" height="36" rx="4" fill="#F7F7F5" stroke="#B33A1A" stroke-width="1.2"/>
+  <text x="74" y="93" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">1</text>
+  <rect x="104" y="70" width="36" height="36" rx="4" fill="#F7F7F5" stroke="#B33A1A" stroke-width="1.2"/>
+  <text x="122" y="93" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">2</text>
+  <rect x="152" y="70" width="36" height="36" rx="4" fill="#F7F7F5" stroke="#B33A1A" stroke-width="1.2"/>
+  <text x="170" y="93" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">3</text>
+  <rect x="200" y="70" width="36" height="36" rx="4" fill="#F7F7F5" stroke="#B33A1A" stroke-width="1.2"/>
+  <text x="218" y="93" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">4</text>
+  <path d="M248 88 H292" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M284 82 L294 88 L284 94" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="170" y="154" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">one line, one order</text>
+
+  <text x="550" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">what is actually there</text>
+  <rect x="404" y="48" width="280" height="28" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <rect x="416" y="53" width="22" height="18" rx="2" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1"/>
+  <text x="427" y="66" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#1A3D32">1</text>
+  <rect x="444" y="53" width="22" height="18" rx="2" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1"/>
+  <text x="455" y="66" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#1A3D32">3</text>
+  <text x="620" y="67" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">lane 0</text>
+  <rect x="404" y="86" width="280" height="28" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="620" y="105" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">lane 1</text>
+  <rect x="404" y="124" width="280" height="28" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <rect x="416" y="129" width="22" height="18" rx="2" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1"/>
+  <text x="427" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#1A3D32">2</text>
+  <rect x="444" y="129" width="22" height="18" rx="2" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1"/>
+  <text x="455" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#1A3D32">4</text>
+  <text x="620" y="143" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">lane 2</text>
+  <path d="M688 100 H704" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M696 94 L706 100 L696 106" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+
+  <text x="360" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">I called this a queue.</text>
+  <text x="360" y="236" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#5C5C59">It is lanes. 1 can finish after 4.</text>
+</svg>
