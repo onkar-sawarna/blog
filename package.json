@@ -11,7 +11,8 @@
     "dev:site": "astro dev",
     "og": "node scripts/og-cards.mjs",
     "og:force": "node scripts/og-cards.mjs --force",
-    "build": "npm run og && astro build",
+    "check:anchors": "node scripts/check-heading-anchors.mjs",
+    "build": "npm run og && astro build && npm run check:anchors",
     "preview": "astro preview",
     "astro": "astro"
   },
