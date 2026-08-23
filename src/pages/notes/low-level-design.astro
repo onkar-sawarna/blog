@@ -112,8 +112,11 @@ const pages = note?.pages ?? 39;
     max-width: 36rem;
     margin: 1.2rem 0 0;
   }
+  /* The shell, not the prose measure: the sample figures are drawn on a 720px
+     canvas and the text is meant to run the same width as them, the way it does
+     on a phone. */
   .sample {
-    max-width: var(--prose);
+    max-width: var(--shell);
     margin-inline: auto;
     padding: 2.5rem var(--gutter) 5rem;
   }
