@@ -9,11 +9,14 @@
     "dev": "node scripts/dev.mjs",
     "dev:api": "go run ./cmd/likes",
     "dev:site": "astro dev",
-    "build": "astro build",
+    "og": "node scripts/og-cards.mjs",
+    "og:force": "node scripts/og-cards.mjs --force",
+    "build": "npm run og && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.3.7",
     "@astrojs/mdx": "^7.0.5",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
@@ -22,6 +25,13 @@
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/source-serif-4": "^5.3.0",
     "@vercel/analytics": "^2.0.1",
-    "astro": "^7.2.2"
+    "astro": "^7.2.2",
+    "markdown-it": "^15.0.0",
+    "sanitize-html": "^2.17.7",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.2.0",
+    "@types/sanitize-html": "^2.16.1"
   }
 }
