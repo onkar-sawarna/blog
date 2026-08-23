@@ -19,6 +19,8 @@
     function paint(next) {
       document.documentElement.setAttribute('data-theme', next);
       try { localStorage.setItem(key, next); } catch (e) {}
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', next === 'dark' ? '#0C0D0C' : '#F7F7F5');
       var button = document.querySelector('[data-theme-toggle]');
       if (!button) return;
       button.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');

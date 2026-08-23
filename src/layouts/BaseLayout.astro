@@ -64,6 +64,8 @@ const jsonLd = type === 'article' && published
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#F7F7F5" />
   <script is:inline>
     (function () {
       try {
@@ -72,10 +74,12 @@ const jsonLd = type === 'article' && published
           ? stored
           : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
+        var color = theme === 'dark' ? '#0C0D0C' : '#F7F7F5';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', color);
       } catch (e) {}
     })();
   </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="description" content={description} />

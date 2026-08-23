@@ -28,13 +28,13 @@
 }
 
 html[data-theme='dark'] {
-  --paper: #121413;
-  --paper-raised: #1A1C1A;
-  --paper-tint: #161A17;
-  --ink: #EDEDE8;
-  --ink-soft: #A3A39C;
-  --rule: #2C2E2C;
-  --rule-tint: #3A453E;
+  --paper: #0C0D0C;
+  --paper-raised: #222522;
+  --paper-tint: #1B2822;
+  --ink: #F3F2EB;
+  --ink-soft: #B8B6AC;
+  --rule: #4A524C;
+  --rule-tint: #3D4F45;
   --accent: #8FB9A0;
   --accent-mid: #8FB9A0;
   --accent-warm: #E07A4A;
@@ -51,6 +51,7 @@ html[data-theme='dark'] {
 
 html {
   color-scheme: var(--color-scheme);
+  background: var(--paper);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
