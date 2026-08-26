@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>SNS copies one event into two SQS queues. Kafka keeps one log and two cursors.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <text x="186" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">SNS + two SQS</text>
+  <rect x="86" y="48" width="72" height="36" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="122" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">API</text>
+  <path d="M158 66 H200" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="200" y="48" width="88" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="244" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">SNS</text>
+  <path d="M244 84 V104" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M186 104 H302" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M186 104 V120" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M302 104 V120" stroke="#B33A1A" stroke-width="1.5"/>
+  <rect x="128" y="120" width="116" height="52" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.8"/>
+  <text x="186" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">SQS search</text>
+  <text x="186" y="160" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">copy of 1</text>
+  <rect x="244" y="120" width="116" height="52" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.8"/>
+  <text x="302" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">SQS count</text>
+  <text x="302" y="160" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">copy of 1</text>
+  <text x="186" y="198" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">two inboxes</text>
+  <text x="186" y="218" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">two deletes</text>
+
+  <text x="534" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Kafka</text>
+  <rect x="498" y="48" width="72" height="36" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="534" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">API</text>
+  <path d="M534 84 V104" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="430" y="104" width="208" height="44" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="534" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">one log, event 1 stays</text>
+  <path d="M480 148 V168" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M588 148 V168" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="420" y="168" width="120" height="48" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="480" y="190" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">search</text>
+  <text x="480" y="206" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">cursor</text>
+  <rect x="528" y="168" width="120" height="48" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="588" y="190" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">counter</text>
+  <text x="588" y="206" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">cursor</text>
+  <text x="534" y="238" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1A3D32">one inbox</text>
+
+  <text x="360" y="268" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Same publish. Same two jobs.</text>
+  <text x="360" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#5C5C59">SNS copies. Kafka lets both read.</text>
+</svg>

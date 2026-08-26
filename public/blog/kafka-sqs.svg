@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Two workers share one SQS queue and one codebase. One takes the event. The other never sees it.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="28" y="28" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="72" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">API</text>
+  <path d="M116 54 H200" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M192 48 L202 54 L192 60" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="158" y="44" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#5C5C59">publish</text>
+
+  <rect x="208" y="28" width="200" height="52" rx="26" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="308" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">one SQS</text>
+  <text x="308" y="68" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">event 1 sits once</text>
+
+  <path d="M308 80 V108" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M250 108 L250 128" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M366 108 L366 128" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M250 108 H366" stroke="#B33A1A" stroke-width="1.6"/>
+
+  <rect x="180" y="128" width="140" height="64" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="250" y="154" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">worker A</text>
+  <text x="250" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">got 1, deleted</text>
+
+  <rect x="296" y="128" width="140" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <text x="366" y="154" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#5C5C59">worker B</text>
+  <text x="366" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">never saw 1</text>
+
+  <text x="308" y="220" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">same repo, two tasks</text>
+
+  <rect x="480" y="28" width="212" height="188" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="586" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">Kafka</text>
+  <text x="586" y="78" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">one log, event 1 stays</text>
+  <rect x="500" y="96" width="172" height="44" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="586" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">search group</text>
+  <text x="586" y="132" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">reads 1</text>
+  <rect x="500" y="152" width="172" height="44" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="586" y="172" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">counter group</text>
+  <text x="586" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">also reads 1</text>
+
+  <text x="360" y="258" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">One queue. Two tasks. One of them loses the event.</text>
+  <text x="360" y="282" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#5C5C59">Two Kafka groups. Each job sees every message.</text>
+</svg>
