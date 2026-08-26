@@ -2,9 +2,22 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Subscribe from '../components/Subscribe.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import { SITE, SOCIALS } from '../config';
 
 const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:onkarsawarna@gmail.com';
+
+function socialLine(href: string) {
+  if (href.startsWith('mailto:')) return href.replace('mailto:', '');
+  try {
+    const u = new URL(href);
+    const host = u.hostname.replace(/^www\./, '');
+    const path = u.pathname.replace(/\/$/, '');
+    return `${host}${path}`;
+  } catch {
+    return href;
+  }
+}
 ---
 <BaseLayout
   title="About"
@@ -31,6 +44,21 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:
       </div>
       <div class="about-heading">
         <p class="lede">engineering, networking, observability, and distributed systems.</p>
+        <ul class="about-socials" aria-label="Social profiles">
+          {SOCIALS.map((social) => (
+            <li>
+              <a
+                href={social.href}
+                target={social.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel="me noopener noreferrer"
+              >
+                <SocialIcon name={social.label} />
+                <span class="social-label">{social.label}</span>
+                <span class="social-url">{socialLine(social.href)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </header>
 
@@ -54,15 +82,10 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:
         and getting clearer at explaining the tradeoff.
       </p>
       <p>
-        This site is where I write that down. Notes on systems and networking.
-        Mental models from problem-solving, not solution dumps. The occasional
-        piece on the non-technical parts of the job: the transitions, the
-        assumptions that only show up when you change teams. Written while the
-        details are still sharp.
-      </p>
-      <p>
-        If something here is useful, wrong, or worth arguing about,
-        <a href={mail}>write to me</a>.
+        This site is where I write that down. Mental models, not solution dumps.
+        Writing lives on the homepage. Longer notes are on
+        <a href="/notes">Notes</a>. If something here is useful, wrong, or worth
+        arguing about, <a href={mail}>write to me</a>.
       </p>
     </div>
 
@@ -87,7 +110,7 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:
   }
   .about-intro {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 1.5rem;
     margin-bottom: 2.75rem;
     padding-bottom: 2.25rem;
@@ -119,6 +142,41 @@ const mail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href ?? 'mailto:
     color: var(--accent-mid);
     margin: 0;
     max-width: 28ch;
+  }
+  .about-heading {
+    min-width: 0;
+  }
+  .about-socials {
+    list-style: none;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .about-socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    color: var(--ink);
+    border-bottom: 1px solid transparent;
+  }
+  .about-socials a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .social-label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    min-width: 5.25rem;
+  }
+  .social-url {
+    color: var(--ink);
   }
   @media (max-width: 40rem) {
     .about {

@@ -43,7 +43,10 @@ On About and in posts, do not name products, internal tools, customers, or cowor
 A post must prove a thought, not announce a blog.
 
 - Prefer: wrong model → where it broke → model that stuck → how I notice the old model → what I would still get wrong.
-- DSA: patterns and mental models, one example problem as proof. Never a solutions dump or "LeetCode #N."
+- Every systems post needs a real request path, not only definitions. Name the actors (user, API, database, the other job) and one concrete walk-through (checkout, a connect that fails, an agent on a host). Then the model.
+- Every systems post needs original diagrams in `public/blog/` (SVG). Draw the path: boxes, lanes, arrows. Not two caption cards. No screenshots. No broken unicode in SVG text (use ASCII).
+- DSA: patterns and mental models, one example problem as proof. Never a solutions dump or "LeetCode #N." Still show the walk (the piles, the `ok` row), plus a diagram.
+- Do not ship a post that is only vocabulary (topic, partition, queue) with no scenario and no figure.
 - Do not lead the site with a "why I started writing" manifesto. About already covers that.
 - Filename is the URL: `src/content/blog/my-post.md` → `/blog/my-post/`.
 - Required frontmatter: `title`, `description`, `pubDate`. Optional: `tags`, `draft`.
