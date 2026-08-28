@@ -1,5 +1,5 @@
 ---
-title: "SNS-SQS vs Kafka"
+title: "SNS-SQS and Kafka, are they the same?"
 description: "Same checkout, three brokers. One Simple Queue Service (SQS) queue and search steals the order from the counter. Simple Notification Service (SNS) copies into two queues. Kafka keeps one log and two cursors."
 pubDate: 2026-08-28
 tags: ["systems"]
