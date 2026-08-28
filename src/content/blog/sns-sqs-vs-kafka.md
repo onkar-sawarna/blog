@@ -25,7 +25,7 @@ The broker is one Simple Queue Service (SQS) queue. Both jobs poll it.
 I called that "two consumers." I thought both would see `o1`. They will not.
 
 <figure>
-  <img src="/blog/two-consumers.svg" alt="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing." width="720" height="280" />
+  <img src="/blog/two-consumers.svg" alt="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing." width="720" height="300" />
   <figcaption>Two consumers is a sentence. The queue only heard one job.</figcaption>
 </figure>
 
