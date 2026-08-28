@@ -72,7 +72,7 @@ const PANELS = {
     rightBot: 'the key picks it',
     footer: 'Publish order is not consume order.',
   },
-  'i-thought-two-workers-on-one-sqs-queue-could-do-two-jobs': {
+  'sns-sqs-vs-kafka': {
     leftTitle: 'one SQS',
     leftMid: 'two tasks',
     leftBot: 'one of them loses',

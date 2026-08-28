@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Search is down for an hour. Checkout still returns 200. The counter reads o1. Search later reads o1 from its cursor.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="24" y="24" width="208" height="208" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="128" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">t = 0</text>
+  <rect x="44" y="68" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="128" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">checkout 200</text>
+  <rect x="44" y="116" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="128" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">o1 on topic</text>
+  <rect x="44" y="164" width="168" height="48" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="128" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">search</text>
+  <text x="128" y="202" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">down</text>
+
+  <rect x="256" y="24" width="208" height="208" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="360" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">same hour</text>
+  <rect x="276" y="68" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="360" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">counter polls</text>
+  <rect x="276" y="116" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="360" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1A3D32">orders today = 1</text>
+  <rect x="276" y="164" width="168" height="48" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="360" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">o1 still on disk</text>
+  <text x="360" y="202" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">nobody deleted it</text>
+
+  <rect x="488" y="24" width="208" height="208" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="592" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">t = 1 hour</text>
+  <rect x="508" y="68" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="592" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">search is back</text>
+  <rect x="508" y="116" width="168" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="592" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">cursor: read o1</text>
+  <rect x="508" y="164" width="168" height="48" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="592" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">index has o1</text>
+  <text x="592" y="202" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">counter already done</text>
+
+  <path d="M232 128 H256" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M248 122 L258 128 L248 134" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M464 128 H488" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M480 122 L490 128 L480 134" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <text x="360" y="268" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Checkout did not wait on search. The log held o1.</text>
+</svg>

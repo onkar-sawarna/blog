@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>What I said versus what the queue did. I said two consumers. The queue gave o1 to one worker.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <rect x="24" y="28" width="328" height="188" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="188" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">what I said</text>
+  <text x="188" y="80" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">"we have two consumers"</text>
+  <rect x="52" y="100" width="80" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="92" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">o1</text>
+  <path d="M132 118 H168" stroke="#1A3D32" stroke-width="1.4"/>
+  <path d="M160 112 L170 118 L160 124" fill="none" stroke="#1A3D32" stroke-width="1.4"/>
+  <path d="M168 118 V148" stroke="#1A3D32" stroke-width="1.4"/>
+  <path d="M168 118 V88" stroke="#1A3D32" stroke-width="1.4"/>
+  <rect x="176" y="72" width="148" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="250" y="96" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">search sees o1</text>
+  <rect x="176" y="132" width="148" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="250" y="156" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">counter sees o1</text>
+  <text x="188" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">same repo, so same event</text>
+
+  <rect x="368" y="28" width="328" height="188" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="532" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">what the queue did</text>
+  <text x="532" y="80" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">one inbox, one winner</text>
+  <rect x="396" y="100" width="80" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="436" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">o1</text>
+  <path d="M476 118 H512" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M504 112 L514 118 L504 124" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+  <rect x="520" y="72" width="148" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="594" y="96" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">search got o1</text>
+  <rect x="520" y="132" width="148" height="36" rx="5" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="594" y="156" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">counter: empty</text>
+  <text x="532" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">the repo was never the inbox</text>
+
+  <text x="360" y="252" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Two consumers is a sentence. The queue only heard one job.</text>
+</svg>

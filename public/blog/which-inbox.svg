@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Three ways to handle o1. One SQS for one job. SNS copies into two queues. Kafka keeps one log and two cursors.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="20" y="20" width="216" height="220" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="128" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">one SQS</text>
+  <rect x="40" y="64" width="176" height="32" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="128" y="86" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">API</text>
+  <path d="M128 96 V112" stroke="#B33A1A" stroke-width="1.4"/>
+  <rect x="40" y="112" width="176" height="36" rx="4" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="128" y="136" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">one queue</text>
+  <path d="M88 148 V164" stroke="#B33A1A" stroke-width="1.3"/>
+  <path d="M168 148 V164" stroke="#C5D4CB" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <rect x="40" y="164" width="84" height="36" rx="4" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.3"/>
+  <text x="82" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">search</text>
+  <rect x="132" y="164" width="84" height="36" rx="4" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="174" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">count</text>
+  <text x="128" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#B33A1A">one winner</text>
+
+  <rect x="252" y="20" width="216" height="220" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="360" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">SNS + two SQS</text>
+  <rect x="272" y="64" width="176" height="32" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="360" y="86" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">API</text>
+  <path d="M360 96 V112" stroke="#1A3D32" stroke-width="1.4"/>
+  <rect x="272" y="112" width="176" height="28" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="360" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1A3D32">SNS copies</text>
+  <path d="M320 140 V164" stroke="#1A3D32" stroke-width="1.3"/>
+  <path d="M400 140 V164" stroke="#1A3D32" stroke-width="1.3"/>
+  <rect x="272" y="164" width="84" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="314" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">search</text>
+  <rect x="364" y="164" width="84" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="406" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">count</text>
+  <text x="360" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1A3D32">two deletes</text>
+
+  <rect x="484" y="20" width="216" height="220" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="592" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">Kafka</text>
+  <rect x="504" y="64" width="176" height="32" rx="4" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="592" y="86" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#161616">API</text>
+  <path d="M592 96 V112" stroke="#1A3D32" stroke-width="1.4"/>
+  <rect x="504" y="112" width="176" height="28" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="592" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1A3D32">one log, o1 stays</text>
+  <path d="M552 140 V164" stroke="#1A3D32" stroke-width="1.3"/>
+  <path d="M632 140 V164" stroke="#1A3D32" stroke-width="1.3"/>
+  <rect x="504" y="164" width="84" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="546" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">search</text>
+  <rect x="596" y="164" width="84" height="36" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="638" y="188" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#1A3D32">count</text>
+  <text x="592" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1A3D32">two cursors</text>
+
+  <text x="360" y="274" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Same o1. The inbox is what changes.</text>
+</svg>
