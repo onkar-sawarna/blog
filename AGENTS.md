@@ -10,6 +10,10 @@ Manage the background server with `astro dev stop`, `astro dev status`, and `ast
 
 Site URL: `https://www.onkarsawarna.dev`. Personal config lives in `src/config.ts`. Posts are Markdown in `src/content/blog/`.
 
+## Git
+
+Do not name the editor or coding assistant in a commit message, PR title, branch name, comment, or file that ships. Do not add editor config folders to git. Kafka consumer position and CSS pointer style stay as normal engineering words.
+
 ## Voice
 
 Write as a working engineer, not a student and not a literary journal.
