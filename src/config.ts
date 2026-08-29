@@ -58,5 +58,5 @@ export const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/onkar-sawarna' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/onkar-sawarna-569615187/' },
   { label: 'X', href: 'https://x.com/onkar_sawarna' },
-  { label: 'Email', href: 'mailto:onkarsawarna@gmail.com' },
+  { label: 'Email', href: 'mailto:osamonke2112@gmail.com' },
 ];
