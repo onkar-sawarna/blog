@@ -9,7 +9,7 @@ I used to treat Kafka like a queue with a nicer name. My picture was simple. Mes
 
 Both halves of that are wrong. One checkout is enough to show why.
 
-## 9:14, a buyer taps Buy
+## A buyer taps Buy
 
 A buyer, u1, checks out. The API does two things, in this order, and the order is deliberate.
 
@@ -31,7 +31,7 @@ I key by user id. For u1 the remainder comes out 0, so u1's checkout is appended
 
 A second later, u2 checks out. For u2 the remainder is 2, so that event goes on the end of a different file entirely.
 
-At 9:15, u1 buys again. Same user id, so the same hash, so the same remainder, so the same lane. That second checkout lands directly after the first one on partition 0.
+A moment later, u1 buys again. Same user id, so the same hash, so the same remainder, so the same lane. That second checkout lands directly after the first one on partition 0.
 
 That is the only ordering anything ever promised me: one user's own checkouts, in the order the API sent them, within one file.
 

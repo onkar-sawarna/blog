@@ -7,7 +7,7 @@ tags: ["systems"]
 
 Support could look up the order. The dashboard said zero orders today. Both of those were reading the same checkout, and I had written both of them myself, in the same repository, on the same afternoon.
 
-## 9:14, a buyer taps Buy
+## A buyer taps Buy
 
 The buyer checks out and the API does two things in a deliberate order.
 

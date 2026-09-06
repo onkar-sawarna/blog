@@ -1,14 +1,14 @@
 ---
-title: "A thousand clicks should not mean a thousand sockets"
-description: "A pair of shoes goes on the homepage and a thousand people tap it. Three separate things go wrong on that path, and the fix for the third one makes the second one worse."
+title: "Request hedging is a second GET, not a bigger pool"
+description: "A homepage flood, a pool that reuses TCP, an empty Redis key, and a second GET that sits on the same pool."
 pubDate: 2026-09-06
 tags: ["systems"]
 draft: true
 ---
 
-At 9:02 a pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute, and every tap is one request to my API asking for that one product.
+A pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API for that one product.
 
-My API reads from Redis and from the database. Three separate things go wrong on that path that morning, one after another, and the fix for the third one makes the second one considerably worse.
+My API reads from Redis and from the database. Three things go wrong on that path, one after another. The fix for the third one makes the second one worse.
 
 ## Opening a socket per page
 
@@ -46,7 +46,7 @@ What the pool does not do is make the database faster. It removes the handshake 
 
 Four connections are still four connections, so the page will be slow if every request reaches the database at all. That is what the cache is for. The API looks in Redis first, under a key like `item:42`. If the value is there, the request is answered from memory and the pool is never touched. If it is not, Redis returns nil, and the API has to read the row and then write it back into Redis so the next request stops at the cache.
 
-At 9:02 the homepage flips and Redis has never seen `item:42`, or the key it did have has just expired. A thousand requests arrive for the same URL within a few seconds.
+The homepage flips. Redis has never seen `item:42`, or the key expired. A thousand requests arrive for the same URL within a few seconds.
 
 Every one of them does exactly the same thing. Ask Redis, get nil, borrow a connection from the pool, run the identical query. The pool I was pleased with fills up entirely with a thousand copies of one read. Requests for other products, which have perfectly good cache entries, now queue behind item 42 waiting for a connection to come free. Pages that should have been instant are slow because of a product they have nothing to do with.
 
@@ -83,7 +83,7 @@ The reason the first request was slow was the empty cache key. The hedge did not
 
 Hedging earns its keep when the second attempt can land somewhere genuinely different, on another host or another replica, and when the losing copy is actually cancelled so it gives its connection back promptly. Neither of those was true here. And in no arrangement does a hedge write a value into Redis, which is what this page needed.
 
-## What the morning taught me
+## What I took from this
 
 Three problems, three tools, and they do not substitute for each other.
 
