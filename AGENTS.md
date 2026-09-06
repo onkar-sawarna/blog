@@ -46,7 +46,7 @@ On About and in posts, do not name products, internal tools, customers, or cowor
 
 A post must prove a thought, not announce a blog.
 
-- The story is the spine, not an exhibit inside an argument. Open on one concrete scene with a clock and named actors (9:14, a buyer taps Buy; item 42 is a pair of shoes). Follow that one path the whole way down. State the wrong model in two sentences up top, let the story break it, and close with what the story taught me and what I still get wrong.
+- The story is the spine, not an exhibit inside an argument. Open on one concrete scene with named actors (a buyer taps Buy; item 42 is a pair of shoes). Do not invent a wall-clock time. Follow that one path the whole way down. State the wrong model in two sentences up top, let the story break it, and close with what the story taught me and what I still get wrong.
 - Introduce a term at the moment the story runs into it, never as a glossary up front. The reader should meet "partition" when an event lands on one, not two sections earlier. No vocabulary section before the walk-through.
 - Plain language. Use the real name (partition, broker, cursor, hash) and give it one ordinary-language sentence the first time, then use it normally. Say what `hash(key) % 3` actually does. Say a cursor is a bookmark. Say "one single sequence" before leaning on "total order". This is not baby-talk: the rule is no term left unexplained, not simpler words for their own sake.
 - Explain the mechanism the concept depends on, not only the concept. Reading not removing the event is why two consumer groups work at all, so it has to be on the page.
