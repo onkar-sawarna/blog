@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>A connection pool is a fixed set of live database connections. A request checks one out, uses it, and returns it.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="24" y="24" width="160" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="104" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">API workers</text>
+  <rect x="44" y="68" width="120" height="32" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="104" y="90" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">w1 wants 42</text>
+  <rect x="44" y="108" width="120" height="32" rx="4" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.3"/>
+  <text x="104" y="130" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">w2 wants 42</text>
+  <rect x="44" y="148" width="120" height="32" rx="4" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.3"/>
+  <text x="104" y="170" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">w3 waiting</text>
+  <text x="104" y="204" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">many requests</text>
+
+  <path d="M184 122 H232" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M224 116 L234 122 L224 128" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="208" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#5C5C59">checkout</text>
+
+  <rect x="236" y="24" width="248" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="360" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">pool, size 4</text>
+  <rect x="256" y="68" width="96" height="44" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="304" y="88" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">c1 busy</text>
+  <text x="304" y="104" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#B33A1A">with w1</text>
+  <rect x="368" y="68" width="96" height="44" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="416" y="88" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">c2 busy</text>
+  <text x="416" y="104" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#B33A1A">with w2</text>
+  <rect x="256" y="124" width="96" height="44" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="304" y="152" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">c3 free</text>
+  <rect x="368" y="124" width="96" height="44" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="416" y="152" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">c4 free</text>
+  <text x="360" y="198" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">return when the query ends</text>
+
+  <path d="M484 122 H532" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M524 116 L534 122 L524 128" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="508" y="110" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#5C5C59">query</text>
+
+  <rect x="536" y="72" width="160" height="104" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="616" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">database</text>
+  <text x="616" y="144" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">accepts 4 at once</text>
+
+  <text x="360" y="258" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The pool is a budget, not a queue you ignore.</text>
+  <text x="360" y="282" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">A fifth checkout waits. It does not open socket number 5.</text>
+</svg>

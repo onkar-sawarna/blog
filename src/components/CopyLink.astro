@@ -1,0 +1,47 @@
+---
+---
+<button type="button" class="copy-link" data-copy-link>
+  Copy link
+</button>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-link]')) {
+    if (button.dataset.copyBound === '1') continue;
+    button.dataset.copyBound = '1';
+
+    button.addEventListener('click', async () => {
+      const url = window.location.href;
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        window.prompt('Copy this link', url);
+        return;
+      }
+      const previous = button.textContent;
+      button.textContent = 'Copied';
+      window.setTimeout(() => {
+        button.textContent = previous;
+      }, 1600);
+    });
+  }
+</script>
+
+<style>
+  .copy-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+  }
+  .copy-link:hover {
+    color: var(--accent-warm);
+    border-color: var(--accent-warm);
+  }
+</style>

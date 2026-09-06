@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <nav class="related" aria-label="More writing">
+    <p class="related-label">More writing</p>
+    <ol>
+      {posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}/`}>
+            <span class="related-title">{post.data.title}</span>
+            <span class="related-desc">{post.data.description}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .related {
+    margin-top: 2.75rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .related-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin: 0 0 0.85rem;
+  }
+  .related ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .related li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .related li:last-child {
+    border-bottom: none;
+  }
+  .related a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.95rem 0;
+  }
+  .related-title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .related a:hover .related-title {
+    color: var(--accent-warm);
+  }
+  .related-desc {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.5;
+    max-width: 38rem;
+  }
+</style>

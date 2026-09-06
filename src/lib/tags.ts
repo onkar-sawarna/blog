@@ -17,6 +17,27 @@ export async function publishedPosts(): Promise<CollectionEntry<'blog'>[]> {
   return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
+/** Other posts, tag overlap first, then recency, so a finished article still has a next click. */
+export function relatedPosts(
+  current: CollectionEntry<'blog'>,
+  all: CollectionEntry<'blog'>[],
+  limit = 3,
+): CollectionEntry<'blog'>[] {
+  const tags = new Set(current.data.tags);
+  return all
+    .filter((post) => post.id !== current.id)
+    .map((post) => ({
+      post,
+      overlap: post.data.tags.filter((tag) => tags.has(tag)).length,
+    }))
+    .sort((a, b) => {
+      if (b.overlap !== a.overlap) return b.overlap - a.overlap;
+      return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf();
+    })
+    .slice(0, limit)
+    .map(({ post }) => post);
+}
+
 /** Every tag in use, most-used first, then alphabetical so the order is stable. */
 export async function allTags(): Promise<Array<{ tag: string; slug: string; count: number }>> {
   const counts = new Map<string, { tag: string; count: number }>();

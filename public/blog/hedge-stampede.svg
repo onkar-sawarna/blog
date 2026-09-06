@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>Many requests miss the same cache key and each take a pool connection. The database does the same read many times.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <rect x="24" y="36" width="88" height="168" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="68" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">users</text>
+  <text x="68" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">42</text>
+  <text x="68" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">42</text>
+  <text x="68" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">42</text>
+  <text x="68" y="162" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">42</text>
+  <text x="68" y="184" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">42</text>
+
+  <path d="M112 120 H152" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M144 114 L154 120 L144 126" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+
+  <rect x="156" y="72" width="120" height="96" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="216" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">cache</text>
+  <text x="216" y="138" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">miss, miss, miss</text>
+
+  <path d="M276 120 H316" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M308 114 L318 120 L308 126" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+
+  <rect x="320" y="56" width="168" height="128" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="404" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">pool, size 4</text>
+  <text x="404" y="116" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">4 busy on 42</text>
+  <text x="404" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">more wait</text>
+  <text x="404" y="164" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">same query, 4 times</text>
+
+  <path d="M488 120 H528" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M520 114 L530 120 L520 126" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+
+  <rect x="532" y="72" width="164" height="96" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="614" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">database</text>
+  <text x="614" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">hot on one row</text>
+
+  <text x="360" y="236" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">One key expired. The pool filled with the same read.</text>
+  <text x="360" y="260" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">No lock. Every miss thinks it owns the fill.</text>
+</svg>

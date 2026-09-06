@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import PostList from '../components/PostList.astro';
+import TagStrip from '../components/TagStrip.astro';
 import { SITE } from '../config';
 import { publishedPosts } from '../lib/tags';
 
@@ -16,6 +17,7 @@ const posts = await publishedPosts();
   </PageHero>
 
   <section class="index">
+    <TagStrip />
     <PostList posts={posts} />
   </section>
 </BaseLayout>

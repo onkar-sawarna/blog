@@ -7,6 +7,8 @@ interface Props {
 
 const { compact = false } = Astro.props;
 const username = SITE.newsletter;
+const frame = compact ? 'subscribe-frame-compact' : 'subscribe-frame';
+const emailId = compact ? 'subscribe-email-compact' : 'subscribe-email';
 ---
 
 {username && (
@@ -14,15 +16,17 @@ const username = SITE.newsletter;
     class:list={['subscribe', compact && 'subscribe-compact']}
     action={`https://buttondown.com/api/emails/embed-subscribe/${username}`}
     method="post"
+    target={frame}
+    data-subscribe
   >
     <p class="subscribe-label">{compact ? 'New posts by email' : 'Get new posts by email'}</p>
     {!compact && (
       <p class="subscribe-dek">I send new posts when I publish. No extras.</p>
     )}
     <div class="subscribe-row">
-      <label class="visually-hidden" for={compact ? 'subscribe-email-compact' : 'subscribe-email'}>Email</label>
+      <label class="visually-hidden" for={emailId}>Email</label>
       <input
-        id={compact ? 'subscribe-email-compact' : 'subscribe-email'}
+        id={emailId}
         type="email"
         name="email"
         placeholder="you@example.com"
@@ -32,11 +36,42 @@ const username = SITE.newsletter;
       <input type="hidden" name="embed" value="1" />
       <button type="submit">Subscribe</button>
     </div>
+    <p class="subscribe-status" data-subscribe-status hidden></p>
+    <iframe class="subscribe-frame" name={frame} title="Newsletter signup" hidden></iframe>
   </form>
 )}
 
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-subscribe]')) {
+    if (form.dataset.subscribeBound === '1') continue;
+    form.dataset.subscribeBound = '1';
+
+    const status = form.querySelector<HTMLElement>('[data-subscribe-status]');
+    const iframe = form.querySelector('iframe');
+    let sent = false;
+
+    const show = (text: string) => {
+      if (!status) return;
+      status.hidden = false;
+      status.textContent = text;
+    };
+
+    form.addEventListener('submit', () => {
+      sent = true;
+      show('Sending…');
+    });
+
+    iframe?.addEventListener('load', () => {
+      if (!sent) return;
+      form.reset();
+      show('Check your inbox to confirm.');
+    });
+  }
+</script>
+
 <style>
   .subscribe {
+    position: relative;
     margin: 0;
   }
   .subscribe-label {
@@ -57,6 +92,20 @@ const username = SITE.newsletter;
     flex-wrap: wrap;
     gap: 0.5rem;
     max-width: 28rem;
+  }
+  .subscribe-status {
+    margin: 0.7rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--accent);
+  }
+  .subscribe-frame {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 0;
+    overflow: hidden;
   }
   .subscribe input[type='email'] {
     flex: 1 1 12rem;

@@ -4,8 +4,10 @@ import { getCollection, render } from 'astro:content';
 import { readingTime } from '../../lib/readingTime';
 import Subscribe from '../../components/Subscribe.astro';
 import LikeButton from '../../components/LikeButton.astro';
+import CopyLink from '../../components/CopyLink.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 import { SITE } from '../../config';
-import { tagPath } from '../../lib/tags';
+import { publishedPosts, relatedPosts, tagPath } from '../../lib/tags';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft);
@@ -18,6 +20,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const timeToRead = readingTime(post.body ?? '');
+const more = relatedPosts(post, await publishedPosts());
 
 function formatDate(d: Date) {
   return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -74,13 +77,40 @@ function formatDate(d: Date) {
     <div class="post-body">
       <Content />
     </div>
-    <div class="post-like">
+    <div class="post-actions">
       <LikeButton id={post.id} />
+      <CopyLink />
     </div>
+    <RelatedPosts posts={more} />
     <div class="post-subscribe">
       <Subscribe />
     </div>
   </article>
+
+  <script>
+    for (const pre of document.querySelectorAll<HTMLElement>('.post-body pre')) {
+      if (pre.querySelector('.copy-code')) continue;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy-code';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code');
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code') ?? pre;
+        const text = code.textContent ?? '';
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          return;
+        }
+        button.textContent = 'Copied';
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 1600);
+      });
+      pre.prepend(button);
+    }
+  </script>
 </BaseLayout>
 
 <style>
@@ -212,6 +242,12 @@ function formatDate(d: Date) {
   .post-body :global(.heading-anchor:focus-visible) {
     opacity: 1;
   }
+  @media (hover: none) {
+    .post-body :global(.heading-anchor) {
+      opacity: 0.45;
+      padding: 0.2em 0.15em;
+    }
+  }
   .post-body :global(.heading-anchor:hover) {
     color: var(--accent-warm);
   }
@@ -247,7 +283,34 @@ function formatDate(d: Date) {
     color: var(--ink-soft);
     margin-top: 0.55rem;
   }
-  .post-like {
+  .post-body :global(pre) {
+    position: relative;
+    padding-right: 4.25rem;
+  }
+  .post-body :global(.copy-code) {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #E8EFEA;
+    background: rgb(18 38 31 / 0.72);
+    border: 1px solid rgb(232 239 234 / 0.28);
+    border-radius: 2px;
+    padding: 0.28rem 0.5rem;
+    cursor: pointer;
+  }
+  .post-body :global(.copy-code:hover),
+  .post-body :global(.copy-code:focus-visible) {
+    color: #fff;
+    border-color: rgb(232 239 234 / 0.6);
+  }
+  .post-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
     margin-top: 2.25rem;
   }
   .post-subscribe {

@@ -1,0 +1,39 @@
+---
+import { allTags, tagPath } from '../lib/tags';
+
+const tags = await allTags();
+---
+
+{tags.length > 0 && (
+  <nav class="tags" aria-label="Tags">
+    <ul>
+      {tags.map(({ tag, count }) => (
+        <li>
+          <a class="tag" data-tag={tag} href={tagPath(tag)}>
+            {tag}
+            <span class="count">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .tags {
+    margin: 0 0 0.35rem;
+    padding-top: 1.15rem;
+  }
+  .tags ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+  }
+  .count {
+    margin-left: 0.3rem;
+    opacity: 0.7;
+  }
+</style>
