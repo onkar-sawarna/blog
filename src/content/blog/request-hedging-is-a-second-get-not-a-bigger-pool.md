@@ -3,7 +3,6 @@ title: "Request hedging is a second GET, not a bigger pool"
 description: "A homepage flood, a pool that reuses TCP, an empty Redis key, and a second GET that sits on the same pool."
 pubDate: 2026-09-06
 tags: ["systems"]
-draft: true
 ---
 
 A pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API for that one product.

@@ -81,6 +81,15 @@ const PANELS = {
     rightBot: 'two cursors',
     footer: 'The inbox belongs to a job, not to a repo.',
   },
+  'request-hedging-is-a-second-get-not-a-bigger-pool': {
+    leftTitle: 'page is slow',
+    leftMid: 'send the GET again',
+    leftBot: 'first answer wins',
+    rightTitle: 'Redis is still nil',
+    rightMid: 'both copies sit on the pool',
+    rightBot: 'one tap, two checkouts',
+    footer: 'A hedge is a second GET. It does not fill the key.',
+  },
   'why-i-started-writing': {
     leftTitle: 'in my head',
     leftMid: 'I already know this',
