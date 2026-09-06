@@ -46,8 +46,15 @@ On About and in posts, do not name products, internal tools, customers, or cowor
 
 A post must prove a thought, not announce a blog.
 
-- Prefer: wrong model → where it broke → model that stuck → how I notice the old model → what I would still get wrong.
-- Every systems post needs a real request path, not only definitions. Name the actors (user, API, database, the other job) and one concrete walk-through (checkout, a connect that fails, an agent on a host). Then the model.
+- The story is the spine, not an exhibit inside an argument. Open on one concrete scene with a clock and named actors (9:14, a buyer taps Buy; item 42 is a pair of shoes). Follow that one path the whole way down. State the wrong model in two sentences up top, let the story break it, and close with what the story taught me and what I still get wrong.
+- Introduce a term at the moment the story runs into it, never as a glossary up front. The reader should meet "partition" when an event lands on one, not two sections earlier. No vocabulary section before the walk-through.
+- Plain language. Use the real name (partition, broker, cursor, hash) and give it one ordinary-language sentence the first time, then use it normally. Say what `hash(key) % 3` actually does. Say a cursor is a bookmark. Say "one single sequence" before leaning on "total order". This is not baby-talk: the rule is no term left unexplained, not simpler words for their own sake.
+- Explain the mechanism the concept depends on, not only the concept. Reading not removing the event is why two consumer groups work at all, so it has to be on the page.
+- Write full sentences that carry the reader. Clipped fragments read as notes to myself and hide the reasoning.
+- Headings are narrative, not a template. "The Friday I added consumers", "Redis has no shoe". Not "The wrong model" / "Where it broke" / "The model that stuck" as fixed section names.
+- Still cover the same ground: the model I had, where it broke, the model that replaced it, and what I would still get wrong. Those are beats in the story, not headings to fill in.
+- Every systems post needs a real request path, not only definitions. Name the actors (user, API, database, the other job) and one concrete walk-through (checkout, a connect that fails, an agent on a host).
+- Do not borrow another post's props for an unrelated idea. A scene may recur across posts that are deliberately about the same system (the checkout runs through both the Kafka and the SNS-SQS posts), as long as they link to each other.
 - Every systems post needs original diagrams in `public/blog/` (SVG). Draw the path: boxes, lanes, arrows. Not two caption cards. No screenshots. No broken unicode in SVG text (use ASCII).
 - DSA: patterns and mental models, one example problem as proof. Never a solutions dump or "LeetCode #N." Still show the walk (the piles, the `ok` row), plus a diagram.
 - Do not ship a post that is only vocabulary (topic, partition, queue) with no scenario and no figure.

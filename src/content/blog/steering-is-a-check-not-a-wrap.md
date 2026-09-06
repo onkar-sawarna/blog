@@ -1,79 +1,70 @@
 ---
 title: "I thought wrapping the packet was the hard part"
-description: "Traffic steering looks like IP-in-IP. The useful work is what happens after you unwrap it: read the id, verify it, then decide whether the inner packet may continue."
+description: "My first traffic simulator unwrapped every packet perfectly and forwarded all of them. That is not steering, it is a hole. The work is what you prove after you open the envelope."
 pubDate: 2026-08-16
 tags: ["networking", "systems"]
 draft: true
 ---
 
-I used to think traffic steering was an encapsulation problem.
+I needed a simulator for a steered-traffic path: many clients at once, each one's traffic sent down a chosen route, running as an ordinary process with no root and no kernel network device to lean on.
 
-You take a packet. You put it inside another packet. You send the outer one toward a path you chose. If the wrap is correct, the network will do the rest. That is a comfortable picture. It is also incomplete.
+The first version worked on the second afternoon. Packets went in wrapped, came out unwrapped, and got forwarded. I was pleased with it for about a day, until I realised that what I had built was not a simulator. It was a machine that would forward anything.
 
-The part that mattered was not the wrap. It was the unwrap, the check, and the decision to let the inner packet continue.
+## Putting a packet inside a packet
+
+The mechanism is called encapsulation, and the specific flavour here is IP-in-IP. You take a finished IP packet, the one the client meant to send, and you treat the whole thing as payload inside a second IP packet with its own header on the front.
+
+The header is the small block of fields at the start of a packet that says where it came from and where it is going. So the outer header is addressed to wherever you decided this traffic should go, and the inner packet, untouched, is carried along inside. At the far end something strips the outer header off and you are left holding the original.
+
+Alongside the inner packet there is an identifier. Call it a traffic id. It says which session this flow belongs to, which client, and which path it was assigned. It has to ride inside the envelope, because the outer IP header has nowhere to put any of that. Addresses are all it knows about.
+
+My mental model of the whole system was: the wrap is the mechanism, the id is a label I might log somewhere, and forwarding is what IP does anyway. Get the encapsulation right and the network handles the rest.
 
 <figure>
-  <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." />
+  <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." width="720" height="240" />
   <figcaption>The wrap succeeded. The packet was still not allowed to continue.</figcaption>
 </figure>
 
-## The wrong model
+## The version that forwarded everything
 
-IP-in-IP looks like a pipe. Outer header says where this envelope is going. Inner header is the original packet. Strip the outer header, and the inner packet is "back on the network." A lot of tunnel diagrams stop there.
+Here is what my working simulator did with an arriving packet. Parse the outer header. Pull the inner packet out. Forward the inner packet.
 
-If you are steering traffic, the inner packet is not automatically yours to forward. Someone put an identifier in that envelope: which session, which client, which path this flow is supposed to be on. Call it a traffic id. It rides with the packet, inside the wrap, because the outer IP header does not know any of that.
+Read it back and the problem is right there in the middle. Nothing between step two and step three consulted anything. Any well-formed IP-in-IP frame from anywhere would be unwrapped and its contents released as a real flow. The id was in the envelope and I was not reading it.
 
-The wrong model treats that id as decoration. The wrap is the mechanism. The id is metadata you might log. Forwarding is what IP already does.
+That is not a simulator with a missing feature. It is a different program. Production would never let an inner flow continue just because the outer header parsed, and a simulator that does is not reproducing the path, it is reproducing a hole.
 
-## Where it broke
-
-I was building a simulator for this path: many clients, steered traffic, no kernel TUN, no root. Each flow had to look like production. That meant the packet could not just arrive. Something had to open it and decide.
-
-The shape is simple. The traffic id is wrapped inside IP-in-IP. A userspace netstack (gVisor) receives the outer packet, pulls the inner one out, and reads the id. Then it verifies. Is this an id we issued. Is this session still alive. Does this inner packet belong on this path. Only after that check does the stack let the packet pass.
+The step I had left out is a check against a session table, which is just the in-memory record of the sessions this system handed out: which ids are live, which client each belongs to, which addresses that client was permitted to send from. So the real sequence has four steps rather than three, and the third one is the point of the whole exercise.
 
 <figure>
-  <img src="/blog/steering-check.svg" alt="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop." />
+  <img src="/blog/steering-check.svg" alt="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop." width="720" height="240" />
   <figcaption>Wrap, open, verify, then pass or drop. The check is the steering.</figcaption>
 </figure>
 
-If you skip the verify step, the simulator is a decapsulator. Any well-formed IP-in-IP frame becomes a real inner packet. That is not steering. That is a hole. Production would not let a random inner flow continue because the outer header was valid. The simulator should not either.
+**Wrap** carries the original packet plus the id that explains why this packet is on this path.
 
-This is also why the work lived in userspace. A kernel interface will unwrap IP-in-IP and hand you a packet. It will not know your session table. The netstack is in-process, so the same code that allocated the id can see the packet, check it, and drop it before it ever looks like a normal IPv4 flow.
+**Open** is not "strip the outer header and continue." It is parse the outer packet, recover the inner one, and recover the id that came with it.
 
-I have watched a packet survive the wrap and die on the check: outer header fine, inner header fine, id missing or stale. From the wire it looked like a tunnel. From the stack it was a stranger.
+**Verify** is where the policy lives. Does this id match a session we issued. Is that session still alive. Do the addresses on the inner packet match what the session was allowed to send. A well-formed envelope is not consent.
 
-## The model that stuck
+**Pass** is a decision with a real alternative. If the check fails, the inner packet does not get released into the network as ordinary traffic. It ends there.
 
-Steering is a checkpoint that happens to use a tunnel.
+Once the check was in, I started seeing packets fail in a way I had not had a category for. Outer header fine. Inner header fine. Id present but belonging to a session that had already ended. From the wire that packet looked like a healthy tunnel. From inside the stack it was a stranger with an expired badge, and it got dropped.
 
-**Wrap** carries the original packet plus the id that says why this packet is on this path.
+## Why this could not live in the kernel
 
-**Open** is not "strip four bytes and continue." It is parse the outer packet, recover the inner one, recover the id.
+The no-root constraint turned out to be the smaller reason for the design.
 
-**Verify** is the actual policy. The id has to match a session you created. The inner addresses have to match what that session was allowed to send. A pretty envelope is not consent.
+If you ask the kernel to handle IP-in-IP, it will do the unwrapping for you and hand you a packet. What it cannot do is consult your session table, because that table lives in your process and means nothing to the kernel. You would end up unwrapping in one place and checking in another, with the packet already loose in between.
 
-**Pass** is a decision. If the check fails, the inner packet does not get a second life as ordinary IP. It ends there.
+So the network stack runs in the process instead, using gVisor's userspace networking, which implements the IP and TCP handling in ordinary Go rather than in the kernel. The code that issued the id and the code that receives the packet are in the same memory. The check happens before the inner packet is ever a routable thing. Not having to be root was a convenience. Sharing memory with the session table was the actual argument.
 
-Once I had that order in my head, a lot of "the tunnel is up" bugs got shorter. The tunnel being up means the outer path delivered a frame. It does not mean the inner flow was allowed.
+## What I ask now
 
-## How I recognize the old model now
+The question I ask about any tunnel is: after you opened the envelope, what did you prove. If the only answer is "it was well-formed IP-in-IP," nothing has been steered. Something has been forwarded.
 
-I am in the old model when:
+That question also fixed a category of bug report. "The tunnel is up" means the outer path delivered a frame. It does not mean the inner flow was allowed to continue, and those two are usually investigated by different people looking at different things.
 
-- The first test is "can we encapsulate," and we never assert on the id after decap.
-- A packet that unwraps cleanly is marked success.
-- The session table and the netstack are treated as two different programs that happen to share a process.
-- Someone says the path is down because IP-in-IP arrived, and we never ask whether the inner packet was allowed to leave.
-
-The replacement habit is one question: after you open the envelope, what did you prove. If the answer is only "it was IP-in-IP," you have not steered anything.
-
-## What I would still get wrong
-
-Verifying the id format and not the binding. A well-shaped token that does not map to a live session should not pass.
-
-Letting the inner packet into the stack before the check, then trying to filter it as a normal route. By then it already looks like traffic.
-
-Treating the userspace stack as a convenience for "no root." The reason it is useful is that the check and the unwrap share memory. That is the point.
+I still catch myself in the old version of this. Checking that an id parses rather than that it binds to a live session, which lets a well-shaped token through. Letting the inner packet into the stack first and planning to filter it later with ordinary routing rules, by which point it already looks like legitimate traffic. And describing the userspace stack as a workaround for not having root, when the reason it is the right answer is that the check and the unwrap can see the same memory.
 
 I am not done being wrong about tunnels. I am just done calling a wrap a steering decision.
 

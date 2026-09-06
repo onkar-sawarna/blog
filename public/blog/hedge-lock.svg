@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>A lock on the cache key lets one request fill the cache. The others wait, then read the cache.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <rect x="20" y="36" width="200" height="176" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="120" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">lock for key 42</text>
+  <rect x="40" y="80" width="160" height="48" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="120" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">w1 holds it</text>
+  <text x="120" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">fills the cache</text>
+  <rect x="40" y="140" width="160" height="52" rx="5" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="120" y="162" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">w2 w3 w4</text>
+  <text x="120" y="180" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">wait, then cache hit</text>
+
+  <path d="M220 124 H268" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M260 118 L270 124 L260 130" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="272" y="56" width="168" height="136" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="356" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">pool, size 4</text>
+  <rect x="292" y="108" width="128" height="36" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="356" y="132" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">1 busy on 42</text>
+  <text x="356" y="172" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">3 free for other keys</text>
+
+  <path d="M440 124 H488" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M480 118 L490 124 L480 130" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="492" y="56" width="204" height="136" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="594" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">database</text>
+  <text x="594" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">one read of row 42</text>
+  <text x="594" y="156" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">then cache has 42</text>
+
+  <text x="360" y="244" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The lock is for the fill. The pool is for the query.</text>
+</svg>

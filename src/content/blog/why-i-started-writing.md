@@ -1,43 +1,45 @@
 ---
 title: "Why I'm starting to write this down"
-description: "Four years at one company, a move to a startup, and the gap between using a system and being able to explain it."
+description: "Four years in one codebase, a move to a new team, and a question I could not answer about a thing I had already fixed twice."
 pubDate: 2026-08-15
 tags: ["career", "meta"]
 ---
 
-I spent four years at Menlo Security. I joined as an intern and left as a Senior Engineer, which means I learned the craft inside one codebase: deeply, but narrowly. You pick up an enormous amount that way. You also pick up habits you cannot see, because you have never worked anywhere that does it differently.
+Early on at the new job, someone asked me why adding a retry to a particular call had made a failure worse rather than better.
 
-Then I moved to Acceldata. Different pace, different domain, and a set of assumptions I did not know I was carrying until they stopped being true.
+I had fixed that exact failure before. Twice, in a previous codebase, confidently, and both times it stayed fixed. I opened my mouth to explain it and found that what I had was a memory of the incident rather than a reason. I knew the shape of the situation and the thing that worked. I could not say why it worked, which meant I could not tell that person whether it applied to what they were looking at.
 
 <figure>
-  <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." />
+  <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." width="720" height="220" />
   <figcaption>The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
 </figure>
 
+## Four years of learning by incident
+
+I spent four years at Menlo Security, joining as an intern and leaving as a Senior Engineer, which means I learned the craft inside a single codebase: deeply, and narrowly. You absorb an enormous amount that way. You also pick up assumptions you cannot see, because you have never worked anywhere that made different ones.
+
+Then I moved to Acceldata. Different pace, different domain, and a set of habits I did not know I was carrying until they stopped being true.
+
 <figure>
-  <img src="/blog/write-teams.svg" alt="One codebase, deep and narrow, then a new team where the old assumptions show." />
+  <img src="/blog/write-teams.svg" alt="One codebase, deep and narrow, then a new team where the old assumptions show." width="720" height="200" />
   <figcaption>The move did not create the gap. It made it visible.</figcaption>
 </figure>
 
-## The thing that pushed me to write
+Production teaches you a great deal, but it teaches by incident. You learn networking because a tunnel misbehaved at two in the morning. You learn observability because something broke and nobody could see why. The knowledge is real, and it is shaped like a list of things that have already happened to you rather than a set of principles you can point at a problem you have not met yet.
 
-Four years of production work teaches you a lot, but by osmosis. You learn networking because a tunnel misbehaved. You learn observability because something failed and nobody could see why. The knowledge is real, but it is shaped like a list of incidents rather than a set of principles, and you cannot reliably apply it to a problem you have not already been burned by.
-
-Changing teams made the gaps obvious. Not gaps in what I had done, but in what I could explain. There is a specific, uncomfortable feeling in realizing you have used a thing successfully for years and cannot articulate why it works.
+Changing teams did not create that gap. It just put me in rooms where I had to say things out loud, and the gap was not in what I had done. It was in what I could explain.
 
 <figure>
-  <img src="/blog/write-gap.svg" alt="Two boxes: used it, from incidents in one codebase, and can explain it, a model you can reuse." />
+  <img src="/blog/write-gap.svg" alt="Two boxes: used it, from incidents in one codebase, and can explain it, a model you can reuse." width="720" height="200" />
   <figcaption>The gap is not skill. It is a model you can say out loud.</figcaption>
 </figure>
 
-Writing is the fix. It is much harder to fool yourself in prose than in your own head.
+Writing is the fix I settled on, for a boring reason. It is much harder to fool yourself in a paragraph than in your own head. A sentence has to commit to something, and once it is written down you can look at it and notice that it does not actually follow.
 
 ## What this is going to be
 
-Notes on systems, networking, and observability. Mental models from DSA: the patterns, not the problem numbers. Write-ups of problems I have actually hit, while the details are still sharp. And occasionally the non-technical parts of this job: the transitions, the tradeoffs, the things that turn out to matter more than the tech stack.
+Notes on systems, networking, and observability. Mental models from data structures and algorithms: the patterns, not the problem numbers. Write-ups of things I have actually hit, while the details are still sharp enough to be checked. And occasionally the parts of this job that are not technical, which turn out to matter more than the stack does.
 
-## What it isn't
-
-Polished takes with a thesis I picked in advance. If a post changes its mind halfway through, that is the process showing, not something I forgot to edit out. I would rather publish something honest and be corrected than publish something safe and learn nothing.
+What it will not be is a set of polished takes with the conclusion picked in advance. If a post changes its mind partway through, that is the process showing rather than something I forgot to edit out. I would rather publish something honest and be corrected than publish something safe and learn nothing from it.
 
 More soon.

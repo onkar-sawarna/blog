@@ -1,63 +1,58 @@
 ---
 title: "I thought Kafka kept the order I published"
-description: "A topic is a named log sliced into partitions. The API writes the row, then publishes. Order lives on a partition, not on the topic."
+description: "One checkout, three lanes, and two jobs reading the same line. Order lives on a partition, not on the topic."
 pubDate: 2026-08-23
 tags: ["systems"]
 ---
 
-I used to treat Kafka like a durable queue with a nicer name. I borrowed queue rules for order. Publish 1, then 2, then 3, and they come back that way. If you need more throughput, you add consumers.
+I used to treat Kafka like a queue with a nicer name. My picture was simple. Messages go in one end, they come out the other end in the same order, and if a job falls behind you start more copies of it.
 
-That only makes sense if you already know what the cluster is. I did not write that down the first time. Here it is, then the order mistake.
+Both halves of that are wrong. One checkout is enough to show why.
 
-## What Kafka is
+## 9:14, a buyer taps Buy
 
-Kafka is a cluster that keeps events on disk and lets other processes read them later. You append. You poll. The events stay. Retention is time or size, not "someone already took this."
+A buyer, u1, checks out. The API does two things, in this order, and the order is deliberate.
 
-The names that matter:
+First it writes the order row to the database. That row is the fact. If the write fails there is no order, and the buyer gets an error.
 
-**Topic.** A named stream. `orders`. `payments`. `listing-events`. That is the inbox you publish to. It is not one pipe. It is a label on a set of logs.
+Then it announces what happened. It sends a small event, something like order id, user, total, and time, to a stream called `orders`. Announcing is not the same as asking. The API does not call the search service, and it does not call the dashboard. It returns a success response and the buyer sees a confirmation page.
 
-**Partition.** One of those logs. A topic has n partitions. A partition is append-only and ordered. Two partitions have no order between them. If you needed a total order for the whole topic, you wanted n = 1, and you also wanted the throughput of one log.
+That stream is a **topic**. A topic is a name, not a pipe. Sitting under the name is a set of files that Kafka keeps on disk, and someone chose how many of them there would be when the topic was created. This one has three.
 
-**Key.** How a message picks a partition. `hash(key) % n`. Same key, same partition, as long as n does not change. No key, and the producer scatters.
+Each of those files is a **partition**, and each one is a log in the plain sense of the word: new events only ever get added to the end. Nothing is inserted in the middle. Nothing is removed when somebody reads it. Events sit there until they age out, and how long that takes is a setting measured in days or in disk space. It is not "until a reader picks this up."
 
-**Consumer group.** A job with a cursor on each partition. Search is a group. Counter is a group. Each group sees every message. Two processes in the same group split partitions. They do not both see every message.
+Within one partition, the order is exactly the order things were added. Between two partitions there is no order at all. Nothing anywhere records that a line in one file happened before a line in another.
 
-That is the architecture. The rest of this post is what people get wrong about order once they have those words.
+So when the API sends u1's checkout, something has to choose which of the three files it goes in. The API does not choose by hand. It attaches a **key**, and the Kafka client library inside the API turns that key into a lane.
 
-## A real request
+It does this by hashing. A hash function takes any value and produces a number from it, and the same input always produces the same number. Take that number, divide by three, and keep the remainder. The remainder is 0, 1, or 2, which is exactly the set of lanes available. That is what `hash(key) % 3` means.
 
-A buyer hits checkout.
+I key by user id. For u1 the remainder comes out 0, so u1's checkout is appended to the end of partition 0. The Kafka server that holds that file, called a **broker**, writes it where it was told. The broker does not second-guess the lane.
 
-The API does two things on purpose, in this order.
+A second later, u2 checks out. For u2 the remainder is 2, so that event goes on the end of a different file entirely.
 
-First it writes the order row to the database. That is the fact. If this fails, there is no order. The request returns an error.
+At 9:15, u1 buys again. Same user id, so the same hash, so the same remainder, so the same lane. That second checkout lands directly after the first one on partition 0.
 
-Then it publishes an event to a Kafka topic, say `orders`. Someone created that topic with n partitions. The API does not invent n on the request. Ops (or you) set n when the topic was born.
+That is the only ordering anything ever promised me: one user's own checkouts, in the order the API sent them, within one file.
 
-The producer, the client library inside the API, picks the partition. You pass a key. The library does `hash(key) % n` and sends the bytes to that partition. The broker appends. It does not re-decide the lane.
+<figure>
+  <img src="/blog/kafka-key.svg" alt="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty." width="720" height="300" />
+  <figcaption>u1 goes to lane 0. Later u1 goes to lane 0 again. That is the only order you were promised.</figcaption>
+</figure>
 
-I key by `user_id`. Three partitions.
+If I leave the key off, the client spreads events across the lanes on its own, and then even one buyer's checkouts can end up in different files with no order between them.
 
-Buyer u1 checks out. `hash(u1) % 3` is 0. The event is the next line on partition 0.
+## Two jobs read the same line
 
-Buyer u2 checks out a second later. `hash(u2) % 3` is 2. That event is the next line on partition 2.
+Two other jobs care about that checkout. The search service wants the order in its index so support can look it up. A counter wants the running total of orders today written back to the database.
 
-u1 buys again. Same key, same 0. That second event sits after the first one on partition 0. That is the only order this path promised: u1's checkouts, in the order the API published them, on that one log.
+Each of these is a **consumer group**. A consumer group is one job, which may be running as several processes, and it keeps a bookmark on every partition recording how far it has read. That bookmark is called a cursor.
 
-The body is small: order id, user, total, created at. The API does not call search. It does not increment a dashboard. It returns 200.
+The important part is that the groups are independent. Kafka gives search all three partitions to read, and gives the counter all three partitions to read, and the two never interfere. Both see every checkout. Search reading u1's order does not take it away from the counter, because reading is just moving your own bookmark forward. The event is still sitting in the file afterwards.
 
-Now the groups.
+Inside a single group, the partitions get divided among the processes. If search is running three processes, each one takes a lane. The process on partition 0 sees u1's checkout. The process on partition 2 sees u2's. Neither sees the other's, unless one process happens to be holding two lanes.
 
-Search is a consumer group. Counter is a different consumer group. Kafka assigns every partition of `orders` to each group, independently. Both jobs see every event. They do not share a cursor. Search being behind does not stall the counter.
-
-If search has three live members, Kafka gives each member one partition. Member s0 polls only p0. s1 polls p1. s2 polls p2. s0 sees u1. s2 sees u2. Nobody in search sees both unless one member holds two partitions.
-
-Counter does the same math on its own members. c0 also polls p0. c0 also sees u1. s0 did not hand that event to c0. Two processes read the same line on the same log, because they belong to two groups.
-
-If search has one member, that one process polls p0, p1, and p2. It still sees every order. It just does the three lanes itself. If search has four members and three partitions, the fourth member is assigned nothing.
-
-Search writes the order into an index so support can find it. Counter writes "orders today" back to the database. If search is down for an hour, the events are still on the topic. Search catches up from its cursor. The database row was never waiting on search.
+The counter does the same division over its own processes. Its process on partition 0 also sees u1's checkout. Search did not pass it along. Two different processes read the same line out of the same file because they belong to two different groups with two separate bookmarks.
 
 <figure>
   <img src="/blog/kafka-job.svg" alt="A user hits the API. The API writes an order row to the database, then publishes to a Kafka topic named orders with three partitions. A search group and a counter group each poll that topic." width="720" height="300" />
@@ -69,123 +64,79 @@ Search writes the order into an index so support can find it. Counter writes "or
   <figcaption>The API hashes the key. Each group covers every partition. Same event, two jobs.</figcaption>
 </figure>
 
-If the API only wrote the row and then HTTP-called search and the counter, checkout is coupled to both. One of them slow, and the buyer waits. One of them down, and checkout fails for a side job. Kafka is the buffer. The API is done when the row is in and the event is on the topic.
+This is also why search can be down for an hour without anybody noticing. The events are still in the files. When search comes back it picks up from its bookmark and works through the backlog. The order row was never waiting on it. Had the API instead written the row and then made direct calls to search and to the counter, the buyer would be waiting on both of them, and a failure in either one would turn into a failed checkout.
 
-Three partitions means three parallel logs. That is how the cluster scales, and that is where my order model died.
+## The morning the order looked wrong
 
-## What n is for
+The break arrived as a question from support. Why did u2's order appear in the search index before u1's, when u1 checked out first?
 
-n = 1 works. A lot of systems should start there.
+Nothing was broken. u1's checkout was in lane 0 and u2's was in lane 2, and there is no ordering between two lanes. The search process working lane 2 simply got through its backlog faster than the one working lane 0. I had asked for per-user ordering and I had received exactly that. What I had assumed on top of it, that the whole topic came out in the sequence the API sent it, was never on offer, and there is no setting that turns it on.
 
-One partition is one log. Every checkout appends to the same line. Search has one member that actually works. You get a total order on `orders`: u1, then u2, then u1 again, in the order the API published, for the whole topic. The model I wanted is true. The cost is that one disk path and one reader are the ceiling.
+The drawing in my head had been a single cylinder with an arrow going in and an arrow coming out. Publish on the left, read on the right. Nothing in that picture tells you the cylinder is sliced into three.
 
-I add partitions when that ceiling shows up on a real Friday, not because three looks more serious.
+<figure>
+  <img src="/blog/kafka-pipe.svg" alt="A single queue with messages 1 2 3 4 in one line, next to three lanes where 1 and 3 sit on lane 0 and 2 and 4 sit on lane 2." width="720" height="280" />
+  <figcaption>I called this a queue. It is lanes. 1 can finish after 4.</figcaption>
+</figure>
 
-Checkout is 200 orders a second. Search does a fat write per event. One member cannot keep up. Lag grows. Launching four search processes does nothing. They have one partition to share, so three of them sit idle. I need more lanes so more members can work. That is the significance: **n is how many of this job can run at once, and how many appends can land at once.**
+If I had genuinely needed every checkout in one single sequence, the way to get it is one partition. One file, one line of events, and the model I had in my head becomes true. The price is that a single file and a single reader are then the ceiling on how fast the whole thing can go. That is a fine place for a lot of systems to start.
 
-n is three promises at once.
+## The Friday I added consumers
 
-**How hard you can write.** The API can append to three logs at the same time. One partition is one disk path. Checkout traffic that all hashes to one user sits on one partition and the other two sit idle. A bad key wastes n.
+The other half of the wrong model died on a Friday.
 
-**How hard one group can read.** Search can use at most three live members that actually work. The unit of parallelism is the partition. You do not get a fourth pair of hands on `orders` until you add a fourth partition.
+Checkout was running at about two hundred orders a second. Each event turned into a sizeable write into the search index, and one process could not keep up, so it fell further behind all afternoon. I started four more search processes.
 
-**Where order lives.** u1's checkouts stay in order only because they share a partition. n is how many independent ordered logs you asked for.
+Nothing moved.
 
-You can raise n on a live topic. The broker will add empty partitions. Old messages stay on 0, 1, and 2. New publishes use `hash(key) % 6`. u1 that always lived on 0 can start landing on 4. Going forward, same key still sticks. The old log and the new log are not one story. Support looking up "everything u1 did" now has to read two lanes.
+A partition can be handed to at most one process within a group. With three partitions and three processes already working, there was nothing left to give the new ones. They connected, asked for work, and were assigned no lanes. The partition count is the ceiling on how many processes in a group can do anything at all.
 
-You cannot lower n. There is no "make `orders` have one partition" on that topic. The messages already exist on three logs. The broker will not glue them back into one. If checkout is quiet and three search members are a waste, you still have three partitions. The extra members sit idle, or one member holds two lanes. n does not shrink to match the traffic.
+<figure>
+  <img src="/blog/kafka-consumers.svg" alt="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing." width="720" height="300" />
+  <figcaption>You added a consumer. Kafka did not add a lane. The fourth process is unemployed.</figcaption>
+</figure>
 
-The way out is a new topic, `orders-v2`, with the n you actually want. You publish new checkouts there. You replay the old topic into it if you need the history. That is a migration. It is not a setting.
+It works the same way in the other direction. Two processes and three partitions means one of them carries two lanes, and those two lanes still have no order between them. So even one process reading everything does not give you a single sequence. It gives you three ordered files that it reads from in whatever order it happens to ask.
 
-So I pick n for the peak I am willing to operate, not for today's lag graph. Too small, and search cannot catch up no matter how many processes I launch. Too big, and I live with empty lanes and a hash I cannot undo.
+Adding lanes was the only thing that would have helped, and that is a decision about the topic itself, not about how many processes I run.
+
+## Three promises, not a tuning knob
+
+So the number of partitions, usually written as n, is not a dial I get to turn on a bad afternoon. Choosing it makes three promises at once.
+
+**How hard you can write.** Three partitions means three files that can be appended to at the same time. If a bad key sends most traffic to one lane, that lane does all the work while the other two sit idle, and the extra lanes bought me nothing.
+
+**How hard one group can read.** Search can put at most three processes to work, because there are three lanes to hand out. There is no fourth pair of hands available until there is a fourth partition.
+
+**Where order lives.** u1's checkouts stay in sequence only because they share a lane. The partition count is really a count of how many independent ordered histories I asked for.
+
+I can raise it later on a live topic. Kafka adds the new empty partitions, everything already written stays where it is, and new events start dividing by the new number instead. A buyer who always landed in lane 0 can start landing in lane 4. From then on that user is consistent again, but support looking up everything that buyer ever did now has to read two lanes and merge them.
+
+I cannot lower it. The events already exist across three files and Kafka will not stitch them back into one. If traffic drops and three search processes are more than I need, the three partitions are still there.
+
+The way out is to create a new topic with the number I actually want, send new checkouts to it, and, if I need the history, read the old topic from the beginning and write it into the new one. That is a migration with a plan, not a setting I change.
 
 <figure>
   <img src="/blog/kafka-n.svg" alt="Three partitions on orders. A shrink to n equals 1 is crossed out. Grow keeps old lines. Fewer lanes means a new topic and a replay." width="720" height="280" />
   <figcaption>You can add lanes. You cannot remove them. A smaller n is a new topic.</figcaption>
 </figure>
 
-## The wrong model
+So I pick the number for the busiest day I am willing to run, not for this afternoon's lag graph. Too few and search can never catch up no matter how many processes I start. Too many and I pay for idle lanes and a division I cannot undo.
 
-A queue hands a message to one worker and the message is gone. Kafka looks close enough that you borrow the word. You say topic when you mean pipe. You say consumer when you mean worker. You assume the cluster remembers the order your API saw.
+## What the checkout taught me
 
-You publish. Something else polls. The messages come out in the order they went in. If you need more throughput, you add consumers. If that picture were true, most of the surprises would not exist.
+**The partition is the log.** Ordering, history, and how far each reader has got all attach to a single partition. The topic is just a name for a set of them. I can add lanes later and I cannot take them away.
 
-<figure>
-  <img src="/blog/kafka-pipe.svg" alt="A single queue with messages 1 2 3 4 in one line, next to three lanes where 1 and 3 sit on lane 0 and 2 and 4 sit on lane 2." />
-  <figcaption>I called this a queue. It is lanes. 1 can finish after 4.</figcaption>
-</figure>
+**The key decides which ordering I get.** Whatever I put in the key is the thing whose events stay in sequence. Key by user and I get per-user order. Leave it off and I have agreed to let events scatter.
 
-That model is what you get from a diagram with one cylinder and two arrows. Publish on the left. Poll on the right. Nothing in that drawing tells you the cylinder is sliced.
+**A group is a set of bookmarks, one per partition.** Another group is another independent reader of the same events. More processes inside one group buys more parallelism, but only up to the number of lanes, and after that they sit idle.
 
-## Where it broke
+I still draw the API on the left and the two services on the right. I just draw three lanes in the middle now instead of one pipe. Before I say Kafka will keep the order, I have to be able to answer three questions: which key, how many lanes, and which group. If I cannot answer all three, I am guessing.
 
-The useful picture is that cut, used as a promise.
+I still get this wrong. I pick a key so coarse that one lane burns while two idle. I pick one so fine that the ordering I wanted is gone. I add lanes to fix a lag graph and then wonder why one buyer's history is split across two of them. And I still catch myself treating an idle fourth process as a bug in Kafka, when it is the assignment rule doing exactly what it says.
 
-Messages in one partition are ordered. Messages in two partitions are not. There is no global order across `orders`. If you needed that, you wanted one partition, and you also wanted the throughput of one log.
+I am not done being wrong about logs that look like queues. I am just done asking a topic for an order it never had.
 
-A message lands in a partition by key. You hash the key and take it modulo n. Same key, same lane, every time, as long as n does not change.
-
-Take three partitions and a key that is a user id.
-
-- u1 hashes to 0
-- u2 hashes to 2
-- u3 hashes to 0
-- u4 hashes to 2
-- u1 again hashes to 0
-
-u1's events stay in order with each other. u1 and u2 can finish in any wall-clock order. The cluster did not break. You asked it for per-user order and it gave you that. You did not ask for a total order of the topic.
-
-<figure>
-  <img src="/blog/kafka-key.svg" alt="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty." />
-  <figcaption>u1 goes to lane 0. Later u1 goes to lane 0 again. That is the only order you were promised.</figcaption>
-</figure>
-
-Leave the key empty and the producer picks a partition. Then even one user's events can split.
-
-The queue picture dies again on the consumer side.
-
-In one consumer group, a partition is assigned to at most one live member. The unit of parallelism is the partition, not the process you launched. Three partitions, three members, each member has a lane. Three partitions, two members, one member holds two lanes. Three partitions, four members, one member sits idle and receives nothing.
-
-<figure>
-  <img src="/blog/kafka-consumers.svg" alt="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing." />
-  <figcaption>You added a consumer. Kafka did not add a lane. The fourth process is unemployed.</figcaption>
-</figure>
-
-If you have fewer consumers than partitions, one process reads more than one lane. Those lanes still have no order between them. So even a single process does not give you global order. It gives you two (or n) ordered logs that you interleave however you poll.
-
-## The model that stuck
-
-I keep three facts, in this order.
-
-**1. The partition is the log.** Order, replay, and "who is reading this" all attach here. The topic is how you name a set of those logs. n is how many of those logs you have. You can grow it. You cannot shrink it.
-
-**2. The key is which order you care about.** User, order id, host, whatever must stay in sequence. No key means you accepted scatter.
-
-**3. A consumer group is a cursor per partition, shared by members.** More groups means more independent readers of the same log. More members in one group means more parallelism, up to n, and then you are paying for idle processes.
-
-I still draw the API on the left and two services on the right. I label the middle as n lanes, not as a pipe.
-
-## How I recognize the old model now
-
-I am in the old model when:
-
-- I say "Kafka will keep the order" and I have not named a key or n.
-- I add a consumer because a lag graph is red, and I have not counted partitions.
-- I treat two consumer groups as two workers fighting over one SQS queue.
-- I plan to "just reduce partitions" after a bad launch.
-
-The replacement habit is one sentence: which key, how many lanes, which group. If I cannot say those, I am guessing.
-
-## What I would still get wrong
-
-A key that is too coarse. Everything hashes to a few users and three partitions sit idle while one burns.
-
-A key that is too fine. You wanted per-user order and you keyed on request id. The lane is random again.
-
-Growing n to fix lag and then wondering why a user's history split.
-
-Treating "the fourth consumer is idle" as a broker bug. It is the assignment rule doing what it says.
-
-I am not done being wrong about logs that look like queues. I am just done asking a topic for a total order it never had.
+The other half of this checkout is what happens when search and the counter share a queue instead of a log. I wrote that [separately](/blog/sns-sqs-vs-kafka/).
 
 If this is useful, wrong, or incomplete, write to me.

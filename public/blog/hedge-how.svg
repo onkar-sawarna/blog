@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Hedging: the user sent one GET. At 50ms there is no answer, so the API sends the same GET again. First to finish wins.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="20" y="88" width="72" height="44" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="56" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">user</text>
+  <text x="56" y="160" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">one click</text>
+
+  <path d="M92 110 H128" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M120 104 L130 110 L120 116" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="132" y="40" width="168" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="216" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">API</text>
+  <rect x="148" y="84" width="136" height="56" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="216" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">t=0  GET 42</text>
+  <text x="216" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">Redis nil, to DB</text>
+  <rect x="148" y="156" width="136" height="56" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="216" y="180" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">t=50ms GET 42</text>
+  <text x="216" y="200" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">same path again</text>
+
+  <path d="M300 112 H348" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M340 106 L350 112 L340 118" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M300 184 H348" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M340 178 L350 184 L340 190" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+
+  <rect x="352" y="40" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="428" y="76" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">first copy</text>
+  <text x="428" y="100" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">still on the pool</text>
+
+  <rect x="352" y="152" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="428" y="188" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">hedge copy</text>
+  <text x="428" y="212" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">another checkout</text>
+
+  <path d="M504 84 H548" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M504 196 H548" stroke="#B33A1A" stroke-width="1.4"/>
+
+  <rect x="552" y="72" width="148" height="136" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="626" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">first answer</text>
+  <text x="626" y="148" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">wins the page</text>
+  <text x="626" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">loser should cancel</text>
+
+  <text x="360" y="272" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Hedging is a second bet on the same GET. Redis is still empty for both.</text>
+</svg>

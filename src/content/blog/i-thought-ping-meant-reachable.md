@@ -1,94 +1,75 @@
 ---
 title: "I thought ping meant reachable"
-description: "ICMP coming back feels like the network is fine. It answers one question. The request you actually care about is usually a different path, a different port, and a different failure."
+description: "A reply came back in eleven milliseconds, so I said the network was fine. It was not. Ping answers one small question, and the request you care about is a different path and a different failure."
 pubDate: 2026-08-16
 tags: ["networking"]
 draft: true
 ---
 
-For a long time, when something could not connect, I pinged it.
+Someone reported that a client could not connect to a service. I did what I always did. I pinged the host.
 
-If echo came back, the network was fine and the bug was in the app. If echo did not come back, the network was down and I started traceroute. That was the whole decision tree. I would have called that knowing how networks work. I was wrong.
+The reply came back in eleven milliseconds. So I told them the network was fine and the bug was in their application, and I went and looked at the application, where I found nothing, for about an hour.
+
+## Eleven milliseconds of the wrong information
+
+Ping sends a small message called an ICMP echo request. ICMP is the protocol the network uses to talk about itself, for things like "this host is unreachable" or "your packet was too big." An echo request means, roughly, say something back. If the other machine is willing, it sends an echo reply, and ping prints how long the round trip took.
+
+That is genuinely useful. It is also a much smaller fact than I was treating it as. After enough years of broken boxes and dropped SSH sessions, a reply had come to mean "this host is on the network and healthy," and silence had come to mean "the path is dead." Both of those readings are wrong, and they are wrong in opposite directions.
+
+The echo reply told me that this host, at this address, was willing to answer that particular kind of probe, from where I was standing, at that moment. Nothing in it said anything about port 443.
 
 <figure>
-  <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." />
+  <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." width="720" height="240" />
   <figcaption>Echo is a small fact. Treating it as the outage is the old model.</figcaption>
 </figure>
 
-## The wrong model
+## What I should have typed second
 
-Ping is a gift. You send ICMP echo. You get ICMP echo reply. Round trip, one number, a yes or a no. After enough years of SSH and broken boxes, that yes starts to mean "the host is on the network." The no starts to mean "the path is dead."
+Eventually I stopped reading application code and tried to open a TCP connection to the port the client actually used. It hung. No refusal, no error, just nothing, until it timed out.
 
-That mapping is wrong in both directions.
-
-ICMP is a control message. It is not the TCP handshake. It is not TLS. It is not the HTTP GET. Firewalls drop ping and still pass 443. Middleboxes answer ping on a box that is not the thing you think you reached. A host can echo and still refuse the port. A host can refuse ping and still serve the app.
-
-Ping tells you whether that host, on that IP, was willing to answer that probe, from where you stood, right then. That is a real fact. It is a small fact.
-
-## Where it broke
-
-Networking work made this concrete. Tunnels, proxies, and anything that sits between a client and a service will happily lie to ping.
-
-I have had ICMP succeed to an address and the TCP connect hang. The box was up. The path for echo was open. The path for that port was not: a security group, a proxy ACL, a listener that was bound to localhost, a tunnel that forwarded ICMP and did not forward the session.
+That is a completely different signal from a failed ping, and it points somewhere completely different. A hang usually means a firewall rule is dropping the packets on the floor rather than answering, which is what a security group or a proxy access list does by default. A refusal, where the connection comes back immediately with a reset, means something answered and said no, which usually means nothing is listening on that port. In this case it was a listener bound to the loopback address, so the process was up and serving, but only to things running on that same machine. From outside, the port was a wall. From ping's point of view, the host was perfect.
 
 <figure>
-  <img src="/blog/ping-split-anim.svg" alt="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter." />
+  <img src="/blog/ping-split-anim.svg" alt="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter." width="720" height="260" />
   <figcaption>Echo comes back. The connect to 443 does not. Same IP.</figcaption>
 </figure>
 
-I have had ICMP fail and the service work. Someone blocked echo and left 443 alone. I spent time on a "down" host that was taking traffic.
+Once I started looking for it, the same gap showed up in both directions.
 
-I have had ping hit a different machine than the request. NAT, anycast, a load balancer that answers ICMP on a VIP and sends the real connection somewhere else. The echo reply was honest. It was honest about the wrong question.
+I have wasted time on a host that was "down" because echo failed, while it was quietly serving production traffic on 443 the whole time. Somebody had blocked ICMP and left the application port alone, which is a very common and entirely reasonable thing to do.
 
-The useful questions look like this:
+I have also had ping reach a different machine than the request did. When several servers sit behind one address, whether through a load balancer, a NAT device, or an anycast setup where the same address is announced from multiple locations, the thing that replies to echo is not necessarily the thing that will terminate your connection. The reply was honest. It was honest about a different machine.
 
-- Can I get an echo from this IP.
-- Can I complete a TCP handshake on this port.
-- Can I finish the handshake the app uses (TLS, a proxy CONNECT, a tunnel).
-- Can the request the user sent return a useful response.
+## Four questions that fail separately
 
-Those are four checks. They fail independently. Treating the first one as the last one is how you debug the wrong layer for an hour.
+What I had been doing was collapsing a stack of independent questions into a single yes or no. Written out, the questions a user's request has to pass are:
+
+- Can a packet reach this address and get a reply of any kind.
+- Can I complete a TCP connection to the specific port.
+- Can I complete whatever handshake sits on top, such as a TLS negotiation or a proxy accepting me.
+- Can the actual request come back with a useful answer.
+
+Each one can fail while the ones below it succeed. Ping only ever answers the first.
 
 <figure>
-  <img src="/blog/ping-layers.svg" alt="Four stacked checks: request, session, TCP port, and ICMP. Ping only lives on the bottom layer." />
+  <img src="/blog/ping-layers.svg" alt="Four stacked checks: request, session, TCP port, and ICMP. Ping only lives on the bottom layer." width="720" height="280" />
   <figcaption>Ping lives on L3. The user cares about the top of the stack.</figcaption>
 </figure>
 
-Traceroute has the same trap. It shows you where ICMP or UDP probes started getting lost. It does not show you the path the TCP session took, and it does not show you a middlebox that only interferes with the application protocol.
+The third one catches people more than it should. A TCP connection succeeding means the two machines agreed to talk. It does not mean TLS negotiated a cipher both sides accept, and it does not mean the proxy in the middle decided you were allowed through. A completed handshake is not a login.
 
-## The model that stuck
+Traceroute has the same trap in a longer form. It shows you where its own probes stopped getting answers, which is not necessarily where your connection stopped, and it will not show you a device that passes packets fine but interferes with the application protocol on top of them.
 
-Reachability is not one bit. It is a stack of questions, and you have to name which one you asked.
+## Saying which layer
 
-**L3.** Did a packet with this destination IP get a reply of some kind. Ping lives here. So does "the route exists."
+The habit that replaced the old one is mostly about language. "The network is down" is a feeling. It does not tell anyone where to look, and it does not commit me to anything I can be wrong about.
 
-**L4.** Did this port accept a connection from here. `connect()` hanging or resetting is a different outage than a missing echo.
+So now I try to say one of these instead. ICMP to that address fails from this host. TCP to 443 from this host times out. The connection completes and TLS never finishes. The request returns a 200 but the body is empty. Each of those sentences names a layer and suggests the next command, and each of them is specific enough that somebody can tell me I am wrong.
 
-**The session on top.** Did TLS finish. Did the proxy accept the user. Did the tunnel assign a session. A SYN-ACK is not a login.
+Ping is still the first thing I type. It is just a first check now, not a verdict, and when it comes back clean I keep going rather than closing the tab.
 
-**The request.** Did the thing we called the service do the work and respond. A 200, a reset, a timeout after the handshake: three different bugs.
+I still make the smaller versions of this mistake. I ping a name rather than an address and trust whatever DNS handed me, without asking which machine actually answered. I test from my own laptop and declare the path good, when the client that failed sits on a different network, behind a different proxy, with a different maximum packet size. And I still occasionally read "I got a reply" as "I reached the process," when a great deal of infrastructure will happily answer on behalf of a box that is not running the thing I wanted.
 
-When I say "the network is down" now, I try to replace it with one of those. "ICMP to that IP fails from this host." "TCP to 443 times out." "Handshake works, first byte never arrives." Those sentences point at a layer. "The network is down" points at a feeling.
-
-## How I recognize the old model now
-
-I am in the old model when:
-
-- The first command is ping, and I stop if it works.
-- I tell someone the host is up because echo returned, and I have not opened the port.
-- I tell someone the host is down because echo failed, and I have not tried the port the app uses.
-- Traceroute looks ugly and I treat that as proof the application path is the same.
-
-The replacement habit is small. Write the question: what has to succeed for this user. Then probe that. Ping is allowed. It is a first check, not a verdict.
-
-## What I would still get wrong
-
-Pinging a name and trusting the IP I get back without asking who answered. DNS and ping together can hide a stale record or a VIP.
-
-Checking from my laptop and calling the path good. The client that failed is often on a different network, behind a different proxy, with a different MTU.
-
-Confusing "I got a reply" with "I reached the process." A lot of infrastructure will answer for a box that is not running the thing you wanted.
-
-I am not done being wrong about this. I am just done treating echo reply as the whole path.
+I am not done being wrong about this. I am just done treating an echo reply as the whole path.
 
 If this is useful, wrong, or incomplete, write to me.

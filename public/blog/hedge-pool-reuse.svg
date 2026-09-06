@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>A pool pays the handshake once. Later requests check out a live connection, query, and return it. No teardown per page view.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="20" y="24" width="210" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="125" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">at process start</text>
+  <text x="125" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">SYN, SYN-ACK, ACK</text>
+  <text x="125" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">four times</text>
+  <rect x="40" y="128" width="170" height="72" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="125" y="158" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">pool of 4</text>
+  <text x="125" y="180" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">sockets stay up</text>
+
+  <path d="M230 124 H278" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M270 118 L280 124 L270 130" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="282" y="24" width="210" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="387" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">each GET</text>
+  <text x="387" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">checkout</text>
+  <text x="387" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">query 42</text>
+  <text x="387" y="144" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">return</text>
+  <text x="387" y="184" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">no FIN</text>
+  <text x="387" y="204" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">no new SYN</text>
+
+  <path d="M492 124 H540" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M532 118 L542 124 L532 130" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="544" y="48" width="156" height="152" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="622" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">database</text>
+  <text x="622" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">4 live sockets</text>
+  <text x="622" y="164" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">already accepted</text>
+
+  <text x="360" y="258" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">A thousand users reuse four handshakes.</text>
+  <text x="360" y="282" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">Teardown waits until the process dies, not until the page returns.</text>
+</svg>

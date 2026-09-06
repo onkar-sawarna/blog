@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img">
+  <title>Without a pool, each request pays a three-way TCP handshake before the query, then a four-way teardown after.</title>
+  <rect width="720" height="320" fill="#F7F7F5"/>
+
+  <text x="168" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">API</text>
+  <text x="552" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">database</text>
+  <line x1="168" y1="48" x2="168" y2="268" stroke="#C5D4CB" stroke-width="1.4"/>
+  <line x1="552" y1="48" x2="552" y2="268" stroke="#C5D4CB" stroke-width="1.4"/>
+
+  <path d="M176 64 H536" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M528 58 L538 64 L528 70" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="58" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">SYN</text>
+
+  <path d="M544 92 H184" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M192 86 L182 92 L192 98" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="86" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">SYN-ACK</text>
+
+  <path d="M176 120 H536" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M528 114 L538 120 L528 126" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="114" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">ACK</text>
+
+  <path d="M176 156 H536" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M528 150 L538 156 L528 162" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="150" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">query item 42</text>
+
+  <path d="M544 184 H184" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M192 178 L182 184 L192 190" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="360" y="178" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">row</text>
+
+  <path d="M176 216 H536" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M528 210 L538 216 L528 222" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="210" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">FIN</text>
+
+  <path d="M544 240 H184" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M192 234 L182 240 L192 246" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="234" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">ACK, then FIN</text>
+
+  <path d="M176 264 H536" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M528 258 L538 264 L528 270" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <text x="360" y="258" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">ACK</text>
+
+  <text x="360" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Handshake, then the query, then teardown. Every request.</text>
+</svg>

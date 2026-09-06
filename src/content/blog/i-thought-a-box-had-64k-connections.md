@@ -1,146 +1,125 @@
 ---
 title: "I thought a box could only hold 64k connections"
-description: "From one machine to one other machine, you often get about 64k TCP connections. That is a source-port limit, not a law of TCP. A server facing many clients is a different table."
+description: "A load test from one laptop stops near 64,000. That is a source-port limit, not a law of TCP. A server facing many clients is counting something else entirely."
 pubDate: 2026-08-16
 tags: ["networking", "systems"]
 ---
 
-I used to treat 65,535 as a hard ceiling on TCP.
+I used to think 65,535 was a hard ceiling on TCP. One machine, about 64,000 connections, and that was the end of the conversation.
 
-One machine, 64k connections, full stop. Then you hear a chat service talk about millions of connections on a single box and the number feels like a lie. It is not a lie. It is a different counting problem.
+Then I read that a chat service was holding millions of connections on a single server, and the number felt like a lie. So I tried to prove it was one.
+
+## The loop that stopped at 64,000
+
+I wrote the simplest test I could think of. A laptop, call it `m1`, opening connections in a loop to one server, call it `m2`, on port 443. Hold each one open. Count them.
+
+It climbed fast and then stopped a little short of 64,000. The next call to `connect()` came back with an error saying it could not assign the requested address.
+
+That looked like proof. A machine has 65,535 ports, I had used them all, and no amount of marketing was going to get anyone to five million.
+
+The reasoning underneath was this. A port number is a 16-bit field, so it can hold a value from 0 to 65,535. Take away the ones reserved for other purposes and you land near 64,000. When my laptop opens a connection, it has to put a source port on it so replies can find their way back to the right socket, and the kernel picks one automatically from a range set aside for this. That is called an ephemeral port, ephemeral because it belongs to that one connection and goes back in the pool afterwards. First connection gets 49152, next gets 49153, and so on up.
+
+So if a connection needs a port, and there are only 64,000 usable ports, then a machine gets 64,000 connections. The arithmetic is clean. It is also answering a question I had not thought to ask carefully.
 
 <figure>
-  <img src="/blog/64k-loadtest.svg" alt="One laptop looping connect hits 64k and calls the claim fake. The other box: you fixed src, they did not." />
+  <img src="/blog/64k-loadtest.svg" alt="One laptop looping connect hits 64k and calls the claim fake. The other box: you fixed src, they did not." width="720" height="240" />
   <figcaption>The load test did not disprove the server. It turned you into one client.</figcaption>
 </figure>
 
-## The wrong model
+## What the kernel is actually writing down
 
-A port is 16 bits. 0 to 65535. You subtract the reserved ones and you get "about 64k." If you think a connection *is* a port, the math is done. A machine has 64k ports, so it has 64k connections.
+A connection is not a port. When a packet arrives, the kernel has to work out which open socket it belongs to, and it does that by looking at four things together:
 
-That model is what you get from looking at a client. You open a socket to `m2:443`. The kernel picks an ephemeral source port, say 49152. The next connection to the same place gets 49153. When the ephemeral range is exhausted, `connect()` fails: cannot assign requested address. From `m1` to that one IP and port on `m2`, you really are in the 64k neighborhood. TIME_WAIT makes it worse. Ports sit occupied after you close.
+`source IP, source port, destination IP, destination port`
 
-The mistake is taking that local pain and calling it TCP.
+Those four together are called a 4-tuple, and the whole set has to be unique. Two connections are allowed to share a destination port. They are allowed to share a destination IP. They just cannot match on all four at once, because then the kernel would have no way to tell their packets apart.
 
-## Where it broke
-
-A TCP connection is not a port. It is a 4-tuple:
-
-`source IP, source port, dest IP, dest port`
-
-The kernel looks up a packet by all four. Two connections can share a dest port. They can share a dest IP. They cannot share the whole tuple.
-
-This whole argument assumes the NIC is fine, the CPU is fine, and the link is not full. No hardware ceiling. No bandwidth ceiling. We are only asking how many distinct TCP 4-tuples the stack will allow. In a real datacenter you often hit RAM, file descriptors, or the wire first. That is a different outage. Here those are off the table on purpose.
-
-So the 64k shows up in a specific shape: **one source IP, one dest IP, one dest port.** The only free variable is the source port. That is `m1` opening a pile of connections to `m2:443`. One client, one peer, one service port. About 64k live tuples, then you are done.
-
-<figure>
-  <img src="/blog/64k-one-client.svg" alt="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k." />
-  <figcaption>m1 to m2:443. Three fields fixed. Source port is the only knob.</figcaption>
-</figure>
-
-You can see the tuple on a Linux machine. Conntrack prints it. That is the point of the tool.
+You can watch this on a Linux box. Connection tracking keeps a row per flow, and `conntrack -L` prints them:
 
 ```
 conntrack -L
 ```
 
-Or, if the tool is not installed:
+If the tool is not installed, the same rows are readable as a file:
 
 ```
 cat /proc/net/nf_conntrack
 ```
 
-Each line is one 4-tuple: `src`, `sport`, `dst`, `dport`, plus a state. Same four fields the kernel uses to look up the packet. Point it at `m2` and port 443. You will watch `sport` climb while the other three stay put. ESTABLISHED lines are sockets you still hold. TIME_WAIT lines are sockets you already closed. Those still count. The port is not free for a new connect to the same dest until that line is gone.
-
-When `sport` has nowhere left to go, the next `connect()` from `m1` to `m2:443` fails. That is the 64k showing up in a command you can type.
-
-A NAT box is the same program, same command, one public source IP. `conntrack -L` on the NAT is how you watch it run out of ports for that dest.
+Every line is one 4-tuple, with a state on the end. Point the loop at `m2` on 443 and watch: the destination IP is the same on every line, the destination port is 443 on every line, my laptop's IP is the same on every line, and the only column moving is the source port. Three of the four fields were nailed down by the test I wrote. There was exactly one field left free, that field is 16 bits wide, and so the test ran out after about 64,000 rows.
 
 <figure>
-  <img src="/blog/conntrack-tuple.svg" alt="A Linux box and a conntrack -L listing. Each line is one 4-tuple: src, sport, dst, dport." />
+  <img src="/blog/64k-one-client.svg" alt="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k." width="720" height="280" />
+  <figcaption>m1 to m2:443. Three fields fixed. Source port is the only knob.</figcaption>
+</figure>
+
+Some of those rows say ESTABLISHED, which are connections I still hold open. Others say TIME_WAIT, which are ones I already closed. TIME_WAIT exists because after a close, stray packets from that connection may still be in flight, and the kernel keeps the tuple reserved for a while so a brand new connection does not receive somebody else's leftovers. The practical effect during a load test is that closing sockets does not immediately give the ports back. They sit unavailable for that same destination until the wait expires.
+
+<figure>
+  <img src="/blog/conntrack-tuple.svg" alt="A Linux box and a conntrack -L listing. Each line is one 4-tuple: src, sport, dst, dport." width="720" height="300" />
   <figcaption>conntrack -L is the 4-tuple, one line per flow. src, sport, dst, dport.</figcaption>
 </figure>
 
-Change any one field and the table grows.
+Once you can see which column is the bottleneck, the ways out are obvious, because any of the other three fields will do:
 
-- `m1` has a second address. You get another 64k to the same `m2:443`.
-- `m2` listens on a second port. Another 64k.
-- The dest is a VIP that fans out. You are no longer talking about one box in the way you thought.
+- Give `m1` a second IP address and there is another 64,000 to the same destination.
+- Have `m2` listen on a second port and there is another 64,000.
+- Point at a destination address that fans out to several machines and you are no longer talking about one server anyway.
 
-Now flip the roles. `m2` is a server. It listens on `443`. Clients are phones and laptops, each with their own IP, each picking their own source port. The tuples look like this:
+I should say what this argument is not about. I am assuming the network card, the CPU, and the link all have room to spare, and asking only how many distinct 4-tuples the stack will permit. On a real machine you will usually run into memory or file descriptors or a saturated link first. Those are real limits. They are just different limits.
+
+## Turning the test around
+
+Now put the server on the other side of the same rule.
+
+`m2` is listening on 443. The clients are phones and laptops out on the internet, each with its own address, each picking its own source port. The rows look like this:
 
 - `1.2.3.4:51000 → m2:443`
 - `5.6.7.8:51000 → m2:443`
 - `9.9.9.9:44321 → m2:443`
 
-Same dest IP. Same dest port. Different source IPs. The server is not spending its own ephemeral ports to accept these. It is holding a row per client tuple. The 16-bit port field lives on the client side of each row. It does not cap the number of rows.
+Same destination IP on every row. Same destination port on every row. But the source IP is different every time, and that is a 32-bit field with billions of possible values rather than a 16-bit one. Two of those clients even picked the same source port as each other, 51000, and it does not matter, because the tuples still differ.
 
-That is how a box can have millions of connections. Millions of peers, one listen port, one connection table, if the OS and the process can hold the sockets. Still assuming the NIC and the link are not the thing that gives out first.
+The server is not spending its own ephemeral ports to accept these. It never calls `connect()`. It accepts, and holds one row per client. The 16-bit port field that limited my laptop lives on the client's side of each row, and each client only needs one of its own.
 
 <figure>
-  <img src="/blog/64k-many-clients.svg" alt="Many phones and laptops connecting to one server on port 443. Each client has its own source IP, so the server table can grow past 64k." />
+  <img src="/blog/64k-many-clients.svg" alt="Many phones and laptops connecting to one server on port 443. Each client has its own source IP, so the server table can grow past 64k." width="720" height="300" />
   <figcaption>The server is m2. Each client is a different source IP. 64k is not the cap.</figcaption>
 </figure>
 
-The other ceiling is not 64k. It is file descriptors, memory per socket, and how the runtime waits on them. `ulimit -n` at 1024 will stop you long before ports do. A server that keeps a buffer and a timer per connection will run out of RAM. The interesting engineering is that, not the 16-bit myth.
+That is how a box holds millions of connections. Millions of separate peers, one listening port, one large connection table. My loop had five million connections' worth of ambition and one source IP to spend it from.
 
-## The WhatsApp number
+The real ceiling on the server is somewhere else entirely. Every open socket is a file descriptor, and the per-process limit on those is often 1024 by default, which will stop you long before ports would. Every socket also costs memory for its buffers, and anything keeping a timer per connection costs more. Getting to millions is an exercise in descriptors, memory, and how efficiently the process waits on all of them at once. None of that is about the size of a port field.
 
-WhatsApp has talked about millions of connections on a server. Read that as `m2`, not `m1`.
+## The load balancer that undoes it
 
-In simple words: the source IP is itself a variable. An IPv4 address is 32 bits. That is `2^32` possible source IPs, not one. Each phone is a different `src`. The dest IP and dest port on the server stay the same. The 64k only appears when `src` is fixed and only `sport` can change. Here `src` keeps changing, so the 64k cap never applies.
+There is one arrangement that quietly puts you back in my laptop's position.
 
-Five million users are five million source IPs (or fewer NATs, still many). Each opens one connection. The server holds five million tuples. `conntrack -L` on that box would show many different `src` values, not one host burning through ports.
+The reasoning above only holds while the server sees each client's own address. Put something in the middle that rewrites the source address, such as a load balancer doing source NAT, or a proxy that terminates the client connection and opens its own connection onward to the backend, and every user now arrives from that one machine's address.
 
-They still have to win RAM, file descriptors, and the runtime. That is a server problem. It is not a port-space problem. Same assumption as above: we are not talking about the NIC or the link giving out.
+Look at that hop as a 4-tuple. Source IP is the load balancer, fixed. Destination IP is the backend, fixed. Destination port is 443, fixed. The only column left free is the load balancer's source port. That is exactly the shape of my loop, with a different name on it. Around 64,000 connections to that backend and the load balancer cannot open another. People call it SNAT port exhaustion, and it is the same rule producing the same number for the same reason.
 
-That only holds if the phone talks straight to the server. The server sees the phone's own source IP. `src` stays a variable.
-
-Put a load balancer in the middle that SNATs, or a proxy that opens its own sockets to one backend IP:port, and you collapsed `src` again. Every user looks like the LB. Dest IP and dest port on the server are fixed. Only `sport` on the LB-to-server hop can change. That hop is `m1 → m2:443` with a new name. About 64k, then the LB cannot open another connection to that backend. People call it SNAT port exhaustion. It is the same 4-tuple rule.
-
-An LB that does not rewrite the client IP (the server still sees A, B, and C) does not put you back in 64k land. The dangerous LB is the one that makes everyone look like one address.
+A load balancer that preserves the client address does not do this, because the source IP keeps varying. The dangerous one is the one that makes everybody look like a single machine.
 
 <figure>
-  <img src="/blog/whatsapp-vs-lb.svg" alt="Left: phones A, B, and C connect straight to the server, each with its own source IP. Right: the same phones hit a load balancer that talks to the server as one IP, so that hop is limited to about 64k connections." />
+  <img src="/blog/direct-vs-lb.svg" alt="Left: phones A, B, and C connect straight to the server, each with its own source IP. Right: the same phones hit a load balancer that talks to the server as one IP, so that hop is limited to about 64k connections." width="720" height="280" />
   <figcaption>Straight to the server: src varies. Through a SNAT LB: src is one IP, 64k is back.</figcaption>
 </figure>
 
-If you try to reproduce "5 million connections" by looping `connect()` from one host to one host, you will hit ~64k and think the claim is fake. You fixed the source IP. They did not.
+## What the loop taught me
 
-## The model that stuck
+The question is never "how many connections can a machine have." It is which of the four fields are pinned down, and which one is left to vary.
 
-Ask which side you are on, and which fields are fixed.
+**One client to one service.** Source port is the only free column, so expect roughly 64,000. More local addresses or more destination ports if you genuinely need more.
 
-**One client to one service.** Source port is the scarce thing. Expect ~64k. Multiple local IPs or multiple dest ports if you actually need more.
+**One service to many clients.** Source IP is the free column, and it is enormous. The table can be huge, and the limits you meet will be descriptors and memory.
 
-**One service to many clients.** Source IP is the thing that multiplies. The listen port is shared. The table can be huge.
+**A connection is the whole 4-tuple.** The port is one column of four, and treating it as the identity of a connection is what caused all of this.
 
-**The 4-tuple is the identity of a connection.** A port is just one column.
+I still write load generators, and I still watch the ephemeral range when I do. I just do not use that number to argue about how many users a server can hold.
 
-I still ping. I still watch ephemeral ports when I write a load generator. I do not use that number to argue about how many users a server can hold.
+I still get pieces of this wrong. I forget that extra addresses and IPv6 change the arithmetic again. I forget that "one connection per user" is a product decision, and that the table is counted in sockets rather than in users. I raise the ephemeral port range and leave the file descriptor limit where it was, then hit the smaller wall and blame ports for it. And I tune settings on a box that is failing without ever running `conntrack -L` on it to see which column actually ran out.
 
-## How I recognize the old model now
-
-I am in the old model when:
-
-- I say "TCP only allows 64k connections" with no 4-tuple.
-- A load test from one box to one box is treated as the server's capacity.
-- TIME_WAIT is a mystery instead of a line that `conntrack -L` still prints after I close.
-- A million-connection claim sounds like a protocol violation instead of many peers.
-
-The replacement habit is one sentence: which three fields are fixed. If source IP, dest IP, and dest port are fixed, you are in 64k land. If the source IP keeps changing, you are not.
-
-## What I would still get wrong
-
-Forgetting IPv6 and extra addresses. More local IPs, more tuples.
-
-Forgetting that "one connection per user" is a product choice. Some clients open more. Some share. The server table is still counted in sockets, not in marketing users.
-
-Tuning the ephemeral range and never raising file descriptors. You will hit the smaller wall and blame ports.
-
-Tuning sysctls and never running `conntrack -L` on the box that is failing.
-
-I am not done being wrong about sockets. I am just done treating 64k as a property of TCP itself.
+I am not done being wrong about sockets. I am just done treating 64,000 as a property of TCP itself.
 
 If this is useful, wrong, or incomplete, write to me.
