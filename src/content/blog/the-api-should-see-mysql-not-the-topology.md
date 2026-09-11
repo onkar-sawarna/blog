@@ -1,6 +1,6 @@
 ---
-title: "The API should see MySQL, not the topology"
-description: "The shop grew more API boxes, then split into two services. Each one used to know the write server and the read server. A proxy answered as MySQL and kept that list itself."
+title: "ProxySQL: the API should see MySQL, not the topology"
+description: "ProxySQL sits in front of MySQL and answers like MySQL. The shop grew more API boxes, then split into two services, without teaching each one the write server and the read server."
 pubDate: 2026-09-11
 tags: ["systems"]
 ---
@@ -9,7 +9,7 @@ A buyer taps Buy. A thousand other people open the same pair of shoes, item 42. 
 
 Each box already keeps a few MySQL connections open and reuses them. I wrote that story when [a thousand clicks met four sockets](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). I thought more boxes would just mean more of those small pools, and the database would be fine.
 
-It was not fine. The database saw every box. And a dummy network hop in front of MySQL would not have fixed it. The hop had to read the SQL.
+It was not fine. The database saw every box. And a dummy network hop in front of MySQL would not have fixed it. I put ProxySQL there. It answers like MySQL and it reads the SQL, so the API does not have to know the map.
 
 ## Too many doors into MySQL
 
