@@ -3,7 +3,6 @@ title: "The API should see MySQL, not the topology"
 description: "The shop grew more API boxes, then split into two services. Each one used to know the write server and the read server. A proxy answered as MySQL and kept that list itself."
 pubDate: 2026-09-11
 tags: ["systems"]
-draft: true
 ---
 
 A buyer taps Buy. A thousand other people open the same pair of shoes, item 42. I add more API boxes so the shop can take the load.
