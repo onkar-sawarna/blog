@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Three ProxySQL processes. The API can use any of them. Each keeps its own backend pool. MySQL sees the sum of those pools.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="20" y="88" width="100" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="70" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">API</text>
+
+  <path d="M120 104 H168" stroke="#1A3D32" stroke-width="1.4"/>
+  <path d="M160 98 L170 104 L160 110" fill="none" stroke="#1A3D32" stroke-width="1.4"/>
+  <path d="M120 128 H168" stroke="#1A3D32" stroke-width="1.4"/>
+
+  <rect x="172" y="20" width="200" height="52" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="272" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">ProxySQL a, 40</text>
+  <rect x="172" y="88" width="200" height="52" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="272" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">ProxySQL b, 40</text>
+  <rect x="172" y="156" width="200" height="52" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="272" y="188" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">ProxySQL c, 40</text>
+
+  <path d="M372 46 H428" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M372 114 H428" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M372 182 H428" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M420 40 L430 46 L420 52" fill="none" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M420 108 L430 114 L420 120" fill="none" stroke="#B33A1A" stroke-width="1.4"/>
+  <path d="M420 176 L430 182 L420 188" fill="none" stroke="#B33A1A" stroke-width="1.4"/>
+
+  <rect x="436" y="72" width="260" height="100" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="566" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">MySQL</text>
+  <text x="566" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#B33A1A">sees up to 120</text>
+
+  <text x="360" y="248" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Scale the proxy. Keep one budget on the database.</text>
+  <text x="360" y="276" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">Three copies of a pool of 40 is not still 40.</text>
+</svg>

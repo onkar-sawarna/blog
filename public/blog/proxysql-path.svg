@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>A buyer hits the API. The API connects to ProxySQL. ProxySQL holds a small pool to MySQL.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+
+  <rect x="16" y="100" width="72" height="44" rx="5" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="52" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">buyer</text>
+  <path d="M88 122 H120" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M112 116 L122 122 L112 128" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="124" y="92" width="88" height="60" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="168" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">API</text>
+  <text x="168" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">GET item 42</text>
+
+  <path d="M212 122 H248" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M240 116 L250 122 L240 128" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <text x="230" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" fill="#5C5C59">query</text>
+
+  <rect x="252" y="80" width="176" height="84" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="340" y="114" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">ProxySQL</text>
+  <text x="340" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">40 backend sockets</text>
+
+  <path d="M428 122 H468" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M460 116 L470 122 L460 128" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+
+  <rect x="472" y="92" width="228" height="60" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="586" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">MySQL</text>
+  <text x="586" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">sees 40 clients</text>
+
+  <text x="360" y="212" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The API still speaks MySQL. It talks to the proxy.</text>
+  <text x="360" y="240" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">The database only sees the sockets the proxy kept open.</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Left: the API knows the primary and the replica. Right: the API knows one host. ProxySQL knows the topology and routes.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="16" y="20" width="336" height="220" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="184" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">API knows the topology</text>
+  <rect x="36" y="64" width="296" height="40" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.4"/>
+  <text x="184" y="90" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">writes: primary:3306</text>
+  <rect x="36" y="116" width="296" height="40" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.4"/>
+  <text x="184" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">reads: replica:3306</text>
+  <text x="184" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">every new service copies this</text>
+  <text x="184" y="212" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">a failover is an app change</text>
+
+  <rect x="368" y="20" width="336" height="220" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="536" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">proxy knows the topology</text>
+  <rect x="388" y="64" width="296" height="40" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="536" y="90" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">API: proxy:3306</text>
+  <rect x="388" y="116" width="296" height="40" rx="5" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.4"/>
+  <text x="536" y="142" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">proxy: primary + replicas</text>
+  <text x="536" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">catalog and checkout share it</text>
+  <text x="536" y="212" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1A3D32">a failover is a proxy change</text>
+
+  <text x="360" y="272" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Same SQL. The question is who owns the map of servers.</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img">
+  <title>The API opens a MySQL connection to a host and port. ProxySQL answers the MySQL handshake. The API does not know it is talking to a proxy.</title>
+  <rect width="720" height="260" fill="#F7F7F5"/>
+
+  <rect x="24" y="48" width="200" height="120" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="124" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">API</text>
+  <text x="124" y="116" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">user, password</text>
+  <text x="124" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">host:3306</text>
+
+  <path d="M224 108 H280" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M272 102 L282 108 L272 114" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="252" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">MySQL protocol</text>
+
+  <rect x="284" y="48" width="200" height="120" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="384" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">ProxySQL</text>
+  <text x="384" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">answers as MySQL</text>
+  <text x="384" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">looks like MySQL</text>
+
+  <path d="M484 108 H540" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M532 102 L542 108 L532 114" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+
+  <rect x="544" y="64" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="620" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">MySQL</text>
+  <text x="620" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">real servers</text>
+
+  <text x="360" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">One connection string. The topology stays behind the handshake.</text>
+</svg>

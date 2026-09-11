@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Many API processes each hold their own MySQL connections. The database sees every worker as a client.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <rect x="20" y="28" width="280" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="160" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">API processes</text>
+  <rect x="40" y="72" width="240" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.4"/>
+  <text x="160" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">p1, pool of 10</text>
+  <rect x="40" y="116" width="240" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.4"/>
+  <text x="160" y="140" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">p2, pool of 10</text>
+  <rect x="40" y="160" width="240" height="36" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.4"/>
+  <text x="160" y="184" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">p200, pool of 10</text>
+  <text x="160" y="212" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B33A1A">2000 sockets to MySQL</text>
+
+  <path d="M300 128 H360" stroke="#B33A1A" stroke-width="1.6"/>
+  <path d="M352 122 L362 128 L352 134" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+
+  <rect x="368" y="72" width="328" height="112" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="532" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">MySQL</text>
+  <text x="532" y="144" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#B33A1A">max_connections = 400</text>
+  <text x="532" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">too many clients</text>
+
+  <text x="360" y="264" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Each process brought its own pool. MySQL saw all of them.</text>
+</svg>
