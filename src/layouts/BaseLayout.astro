@@ -39,6 +39,7 @@ const path = Astro.url.pathname;
 const onWriting = path === '/' || path.startsWith('/blog');
 const onAbout = path.startsWith('/about');
 const onNotes = path.startsWith('/notes');
+const onStudy = path.startsWith('/study');
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 const ogImage = ogImageUrl(image, Astro.site ?? SITE.url);
 const published = pubDate?.toISOString();
@@ -141,6 +142,7 @@ const jsonLd = type === 'article' && published
         <nav class="site-nav" aria-label="Primary">
           <a href="/" aria-current={onWriting ? 'page' : undefined}>Writing</a>
           <a href="/notes" aria-current={onNotes ? 'page' : undefined}>Notes</a>
+          <a href="/study" aria-current={onStudy ? 'page' : undefined}>Study</a>
           <a href="/about" aria-current={onAbout ? 'page' : undefined}>About</a>
           <a href={SITE.resume} target="_blank" rel="noopener noreferrer">Resume</a>
         </nav>

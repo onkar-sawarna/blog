@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { loadStudyNotes, STUDY_REPO } from '../lib/study-notes';
+
+const { folders } = await loadStudyNotes();
+const count = folders.reduce((n, f) => n + f.notes.length, 0);
+---
+<BaseLayout
+  title="Study"
+  description="Scratch notes I keep while I study systems. They live on GitHub. This page is the index."
+>
+  <PageHero eyebrow="Study" title="Scratch notes, one topic at a time.">
+    <p class="hero-dek">
+      These are working notes, not the paid PDFs. The files live in
+      <a href={STUDY_REPO}>a public GitHub repo</a>.
+      Add a markdown file there, then rebuild this site, and the link shows up here.
+    </p>
+  </PageHero>
+
+  <section class="study">
+    {folders.length === 0 ? (
+      <p class="empty">
+        The list did not load. Open <a href={STUDY_REPO}>{STUDY_REPO.replace('https://', '')}</a>.
+      </p>
+    ) : (
+      <>
+        <p class="count">{count} notes in {folders.length} folders.</p>
+        {folders.map((folder) => (
+          <section class="folder">
+            <h2 id={folder.id}>{folder.label}</h2>
+            <ul>
+              {folder.notes.map((note) => (
+                <li>
+                  <a href={note.href} target="_blank" rel="noopener noreferrer">{note.title}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-dek {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 36rem;
+    margin: 1.2rem 0 0;
+  }
+  .hero-dek a {
+    color: inherit;
+  }
+  .study {
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding: 1.25rem var(--gutter) 5rem;
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 2rem;
+  }
+  .empty {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    padding-top: 1rem;
+  }
+  .folder {
+    padding: 0 0 2.1rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 2.1rem;
+  }
+  .folder:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .folder h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0 0 0.85rem;
+    letter-spacing: -0.02em;
+  }
+  .folder ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    gap: 0 2.5rem;
+  }
+  .folder li {
+    break-inside: avoid;
+    padding: 0.28rem 0;
+  }
+  .folder a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .folder a:hover {
+    color: var(--accent-warm);
+    border-bottom-color: var(--accent-warm);
+  }
+
+  @media (max-width: 40rem) {
+    .study { padding: 0 var(--gutter) 3.5rem; }
+    .folder ul { columns: 1; }
+  }
+</style>
