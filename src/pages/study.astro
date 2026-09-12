@@ -25,23 +25,98 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
       </p>
     ) : (
       <>
-        <p class="count">{count} notes in {folders.length} folders.</p>
-        {folders.map((folder) => (
-          <section class="folder">
-            <h2 id={folder.id}>{folder.label}</h2>
-            <ul>
-              {folder.notes.map((note) => (
-                <li>
-                  <a href={note.href} target="_blank" rel="noopener noreferrer">{note.title}</a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+        <div class="study-toolbar">
+          <label class="search">
+            <span class="visually-hidden">Search notes</span>
+            <input
+              type="search"
+              id="study-search"
+              name="q"
+              placeholder="Search notes"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+          <p class="count" id="study-count" data-total={count} data-folders={folders.length}>
+            {count} notes in {folders.length} folders.
+          </p>
+        </div>
+
+        <div id="study-list">
+          {folders.map((folder) => (
+            <section class="folder" data-folder={folder.label}>
+              <h2 id={folder.id}>{folder.label}</h2>
+              <ul>
+                {folder.notes.map((note) => (
+                  <li data-title={`${note.title} ${folder.label} ${note.file}`}>
+                    <a href={note.href} target="_blank" rel="noopener noreferrer">{note.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+
+        <p class="empty search-empty" id="study-empty" hidden>
+          No notes match that search.
+        </p>
       </>
     )}
   </section>
 </BaseLayout>
+
+<script>
+  const input = document.getElementById('study-search');
+  const countEl = document.getElementById('study-count');
+  const emptyEl = document.getElementById('study-empty');
+
+  if (input instanceof HTMLInputElement && countEl && emptyEl) {
+    const folders = Array.from(document.querySelectorAll('.folder'));
+    const total = Number(countEl.dataset.total ?? '0');
+    const folderTotal = Number(countEl.dataset.folders ?? '0');
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let visibleNotes = 0;
+      let visibleFolders = 0;
+
+      for (const folder of folders) {
+        if (!(folder instanceof HTMLElement)) continue;
+        const items = Array.from(folder.querySelectorAll('li'));
+        let folderHits = 0;
+        for (const li of items) {
+          if (!(li instanceof HTMLElement)) continue;
+          const hay = (li.dataset.title ?? '').toLowerCase();
+          const show = !q || hay.includes(q);
+          li.hidden = !show;
+          if (show) folderHits += 1;
+        }
+        folder.hidden = folderHits === 0;
+        if (folderHits > 0) {
+          visibleFolders += 1;
+          visibleNotes += folderHits;
+        }
+      }
+
+      if (!q) {
+        countEl.textContent = `${total} notes in ${folderTotal} folders.`;
+      } else if (visibleNotes === 1) {
+        countEl.textContent = `1 note in ${visibleFolders} folder${visibleFolders === 1 ? '' : 's'}.`;
+      } else {
+        countEl.textContent = `${visibleNotes} notes in ${visibleFolders} folder${visibleFolders === 1 ? '' : 's'}.`;
+      }
+      emptyEl.hidden = visibleNotes > 0;
+    };
+
+    input.addEventListener('input', apply);
+
+    const initial = new URLSearchParams(window.location.search).get('q');
+    if (initial) {
+      input.value = initial;
+      apply();
+    }
+  }
+</script>
 
 <style>
   .hero-dek {
@@ -59,18 +134,52 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
     margin-inline: auto;
     padding: 1.25rem var(--gutter) 5rem;
   }
+  .study-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+    margin: 0 0 2rem;
+  }
+  .search {
+    flex: 1 1 14rem;
+    max-width: 22rem;
+  }
+  .search input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.65rem 0.8rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search input::placeholder {
+    color: var(--ink-soft);
+  }
+  .search input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
   .count {
     font-family: var(--font-mono);
     font-size: 0.78rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    margin: 0 0 2rem;
+    margin: 0;
   }
   .empty {
     color: var(--ink-soft);
     font-size: 1.08rem;
     padding-top: 1rem;
+  }
+  .search-empty {
+    padding-top: 0.25rem;
   }
   .folder {
     padding: 0 0 2.1rem;
@@ -108,9 +217,25 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
     color: var(--accent-warm);
     border-bottom-color: var(--accent-warm);
   }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
   @media (max-width: 40rem) {
     .study { padding: 0 var(--gutter) 3.5rem; }
     .folder ul { columns: 1; }
+    .search input {
+      font-size: 16px;
+      min-height: 2.5rem;
+      padding: 0.5rem 0.65rem;
+    }
   }
 </style>
