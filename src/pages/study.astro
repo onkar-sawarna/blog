@@ -12,8 +12,8 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
 >
   <PageHero eyebrow="Study" title="Scratch notes, one topic at a time.">
     <p class="hero-dek">
-      These are working notes, not the paid PDFs. The files live in
-      <a href={STUDY_REPO}>a public GitHub repo</a>.
+      These are working notes, not the paid PDFs. The files live in a public
+      <a href={STUDY_REPO}>GitHub repo</a>.
       Add a markdown file there, then rebuild this site, and the link shows up here.
     </p>
   </PageHero>
@@ -128,6 +128,9 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
   }
   .hero-dek a {
     color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
   .study {
     max-width: var(--shell);
@@ -144,8 +147,12 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
   .search {
     flex: 1 1 14rem;
     max-width: 22rem;
+    min-width: 0;
+    display: block;
   }
   .search input {
+    display: block;
+    box-sizing: border-box;
     width: 100%;
     font-family: var(--font-body);
     font-size: 1rem;
@@ -154,6 +161,11 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
     border: 1px solid var(--rule);
     border-radius: 3px;
     padding: 0.65rem 0.8rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search input::-webkit-search-decoration,
+  .search input::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
   }
@@ -230,7 +242,19 @@ const count = folders.reduce((n, f) => n + f.notes.length, 0);
   }
 
   @media (max-width: 40rem) {
-    .study { padding: 0 var(--gutter) 3.5rem; }
+    .study {
+      padding: 1rem var(--gutter) 3.5rem;
+    }
+    .study-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.65rem;
+    }
+    .search {
+      flex: none;
+      max-width: none;
+      width: 100%;
+    }
     .folder ul { columns: 1; }
     .search input {
       font-size: 16px;
