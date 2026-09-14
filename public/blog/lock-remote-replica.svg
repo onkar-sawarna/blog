@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>A Redis lock does not book the seat. A FOR UPDATE on a replica does not stop a write on the primary.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+  <rect x="16" y="24" width="336" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="184" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">remote lock</text>
+  <text x="184" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">Redis: lock seat:12A</text>
+  <text x="184" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">MySQL: write booked</text>
+  <text x="184" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">lock dies, write still runs</text>
+  <text x="184" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">two places to be right</text>
+  <rect x="368" y="24" width="336" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="536" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#B33A1A">lock on a replica</text>
+  <text x="536" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">FOR UPDATE on replica</text>
+  <text x="536" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">write goes to primary</text>
+  <text x="536" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">you locked a copy</text>
+  <text x="536" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">the seat row did not</text>
+  <text x="360" y="264" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The lock has to sit where the write happens.</text>
+</svg>

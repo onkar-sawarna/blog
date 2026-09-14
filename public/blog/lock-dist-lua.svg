@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+  <title>Two API boxes use Redis SET NX for a lock. Unlock is a Lua script that deletes only if the token matches. Redlock asks several Redis boxes.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+  <rect x="20" y="28" width="150" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="95" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">API box 1</text>
+  <rect x="20" y="100" width="150" height="56" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="95" y="134" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">API box 2</text>
+  <path d="M170 56 H220" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M212 50 L222 56 L212 62" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M170 128 H220" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M212 122 L222 128 L212 134" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="224" y="40" width="248" height="132" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="348" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">Redis</text>
+  <text x="348" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">SET seat:12A token NX</text>
+  <text x="348" y="136" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">Lua: delete if token</text>
+  <rect x="500" y="28" width="200" height="160" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="600" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">Redlock</text>
+  <text x="600" y="96" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">Redis 1</text>
+  <text x="600" y="120" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">Redis 2</text>
+  <text x="600" y="144" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">Redis 3</text>
+  <text x="600" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1A3D32">majority, then work</text>
+  <text x="360" y="232" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Two boxes cannot share a mutex in memory.</text>
+  <text x="360" y="260" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">The seat row is still the source of truth.</text>
+</svg>

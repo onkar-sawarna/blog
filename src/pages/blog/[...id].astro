@@ -283,6 +283,57 @@ function formatDate(d: Date) {
     color: var(--ink-soft);
     margin-top: 0.55rem;
   }
+  .post-body :global(.compare-wrap) {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+  }
+  .post-body :global(table) {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .post-body :global(th),
+  .post-body :global(td) {
+    padding: 0.7rem 0.85rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+  .post-body :global(thead th) {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-tint);
+  }
+  .post-body :global(tbody th) {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    width: 8.5rem;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  .post-body :global(tr:last-child th),
+  .post-body :global(tr:last-child td) {
+    border-bottom: none;
+  }
+  .post-body :global(th:last-child),
+  .post-body :global(td:last-child) {
+    border-right: none;
+  }
+  .post-body :global(td.is-low) {
+    color: var(--accent-warm);
+    font-weight: 600;
+  }
   .post-body :global(pre) {
     position: relative;
     padding-right: 4.25rem;

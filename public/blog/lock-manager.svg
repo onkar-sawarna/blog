@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>The lock manager is a table inside the database. Row 12A is exclusive, held by A. B is on the wait list. Commit wakes B.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <rect x="20" y="48" width="120" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="80" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">txn A</text>
+  <text x="80" y="102" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">holds 12A</text>
+  <rect x="20" y="148" width="120" height="72" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+  <text x="80" y="180" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">txn B</text>
+  <text x="80" y="202" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">asks for 12A</text>
+  <path d="M140 84 H196" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M188 78 L198 84 L188 90" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M140 184 H196" stroke="#B33A1A" stroke-width="1.5"/>
+  <path d="M188 178 L198 184 L188 190" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <rect x="200" y="36" width="300" height="196" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="350" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#1A3D32">lock manager</text>
+  <text x="350" y="100" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">row 12A</text>
+  <text x="350" y="124" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">mode: exclusive</text>
+  <text x="350" y="148" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">holder: A</text>
+  <text x="350" y="172" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#B33A1A">wait: B</text>
+  <text x="350" y="204" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">grant, wait, wake</text>
+  <path d="M500 134 H552" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M544 128 L554 134 L544 140" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="556" y="88" width="144" height="92" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+  <text x="628" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">row 12A</text>
+  <text x="628" y="152" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">the data</text>
+  <text x="360" y="256" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The lock is not the seat. It is an entry in that table.</text>
+</svg>

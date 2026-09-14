@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>FOR UPDATE waits. NOWAIT errors. SKIP LOCKED takes the next free seat.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <rect x="20" y="28" width="220" height="180" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="130" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">FOR UPDATE</text>
+  <text x="130" y="108" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">12A is locked</text>
+  <text x="130" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">B waits</text>
+  <text x="130" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">same seat</text>
+  <rect x="250" y="28" width="220" height="180" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="360" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">NOWAIT</text>
+  <text x="360" y="108" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">12A is locked</text>
+  <text x="360" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">B gets an error</text>
+  <text x="360" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">try again later</text>
+  <rect x="480" y="28" width="220" height="180" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="590" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">SKIP LOCKED</text>
+  <text x="590" y="108" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#161616">12A is locked</text>
+  <text x="590" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">B takes 12B</text>
+  <text x="590" y="176" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">next free seat</text>
+  <text x="360" y="244" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Wait, fail, or skip. Same lock, three answers.</text>
+</svg>
