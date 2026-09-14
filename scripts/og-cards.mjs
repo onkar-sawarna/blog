@@ -90,15 +90,6 @@ const PANELS = {
     rightBot: 'one tap, two checkouts',
     footer: 'A hedge is a second GET. It does not fill the key.',
   },
-  'two-passengers-one-seat': {
-    leftTitle: 'Redis key',
-    leftMid: 'seat:12A',
-    leftBot: 'hint plus timeout',
-    rightTitle: 'MySQL row',
-    rightMid: 'user_id is null',
-    rightBot: 'this is the seat',
-    footer: 'Redis can hold a key. MySQL holds the seat.',
-  },
   'why-i-started-writing': {
     leftTitle: 'in my head',
     leftMid: 'I already know this',
@@ -178,6 +169,49 @@ function ellipsize(lines, limit) {
   const kept = lines.slice(0, limit);
   kept[limit - 1] = `${kept[limit - 1].replace(/[\s,;:.]+$/, '')}...`;
   return kept;
+}
+
+function lockSeatOgSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="${PAPER}"/>
+  <rect width="18" height="${HEIGHT}" fill="${ACCENT}"/>
+  <text x="80" y="72" font-family="${SERIF}" font-size="22" fill="${INK_SOFT}">onkarsawarna.dev</text>
+
+  <rect x="70" y="118" width="168" height="88" rx="8" fill="${PAPER_RAISED}" stroke="${ACCENT}" stroke-width="2"/>
+  <text x="154" y="156" text-anchor="middle" font-family="${SERIF}" font-size="22" fill="${INK}">A taps Book</text>
+  <text x="154" y="184" text-anchor="middle" font-family="${MONO}" font-size="16" fill="${INK_SOFT}">seat 12A</text>
+
+  <rect x="70" y="228" width="168" height="88" rx="8" fill="${PAPER_RAISED}" stroke="${ACCENT_WARM}" stroke-width="2"/>
+  <text x="154" y="266" text-anchor="middle" font-family="${SERIF}" font-size="22" fill="${ACCENT_WARM}">B taps Book</text>
+  <text x="154" y="294" text-anchor="middle" font-family="${MONO}" font-size="16" fill="${INK_SOFT}">seat 12A</text>
+
+  <path d="M238 162 H292" stroke="${ACCENT}" stroke-width="2"/>
+  <path d="M282 156 L294 162 L282 168" fill="none" stroke="${ACCENT}" stroke-width="2"/>
+  <path d="M238 272 H292" stroke="${ACCENT_WARM}" stroke-width="2"/>
+  <path d="M282 266 L294 272 L282 278" fill="none" stroke="${ACCENT_WARM}" stroke-width="2"/>
+
+  <rect x="296" y="168" width="148" height="116" rx="10" fill="${PAPER_RAISED}" stroke="${ACCENT}" stroke-width="2.5"/>
+  <text x="370" y="220" text-anchor="middle" font-family="${SERIF}" font-size="26" fill="${INK}">API</text>
+  <text x="370" y="252" text-anchor="middle" font-family="${MONO}" font-size="15" fill="${INK_SOFT}">two requests</text>
+
+  <path d="M444 200 H500" stroke="${ACCENT_WARM}" stroke-width="2"/>
+  <path d="M490 194 L502 200 L490 206" fill="none" stroke="${ACCENT_WARM}" stroke-width="2"/>
+  <path d="M444 252 H500" stroke="${ACCENT}" stroke-width="2"/>
+  <path d="M490 246 L502 252 L490 258" fill="none" stroke="${ACCENT}" stroke-width="2"/>
+
+  <rect x="504" y="112" width="330" height="130" rx="10" fill="${PAPER_RAISED}" stroke="${ACCENT_WARM}" stroke-width="2.5"/>
+  <text x="669" y="158" text-anchor="middle" font-family="${SERIF}" font-size="24" fill="${ACCENT_WARM}">Redis</text>
+  <text x="669" y="194" text-anchor="middle" font-family="${MONO}" font-size="18" fill="${INK}">SET seat:12A</text>
+  <text x="669" y="222" text-anchor="middle" font-family="${SERIF}" font-size="18" fill="${INK_SOFT}">a key, not the seat</text>
+
+  <rect x="504" y="268" width="330" height="130" rx="10" fill="${PAPER_TINT}" stroke="${ACCENT}" stroke-width="2.5"/>
+  <text x="669" y="314" text-anchor="middle" font-family="${SERIF}" font-size="24" fill="${ACCENT}">MySQL</text>
+  <text x="669" y="350" text-anchor="middle" font-family="${MONO}" font-size="18" fill="${INK}">row 12A</text>
+  <text x="669" y="378" text-anchor="middle" font-family="${SERIF}" font-size="18" fill="${ACCENT}">empty. this is the seat</text>
+
+  <text x="80" y="500" font-family="${SERIF}" font-size="28" fill="${INK}">Redis can hold a key.</text>
+  <text x="80" y="542" font-family="${SERIF}" font-size="28" fill="${INK}">MySQL holds the seat.</text>
+</svg>`;
 }
 
 function panelSvg(card) {
@@ -281,14 +315,17 @@ for (const file of files) {
 
   const data = frontmatter(await readFile(join(postsDir, file), 'utf8'));
   const panel = PANELS[slug];
-  const svg = panel
-    ? panelSvg(panel)
-    : titleSvg({
-        title: data.title ?? slug,
-        description: data.description ?? '',
-        tags: data.tags ?? [],
-        pubDate: monthYear(data.pubDate),
-      });
+  const svg =
+    slug === 'two-passengers-one-seat'
+      ? lockSeatOgSvg()
+      : panel
+        ? panelSvg(panel)
+        : titleSvg({
+            title: data.title ?? slug,
+            description: data.description ?? '',
+            tags: data.tags ?? [],
+            pubDate: monthYear(data.pubDate),
+          });
 
   await sharp(Buffer.from(svg))
     .png()
@@ -299,7 +336,9 @@ for (const file of files) {
     .toFile(target);
 
   drawn += 1;
-  console.log(`og: ${slug}.png${panel ? '' : ' (title card)'}`);
+  console.log(
+    `og: ${slug}.png${slug === 'two-passengers-one-seat' ? '' : panel ? '' : ' (title card)'}`,
+  );
 }
 
 console.log(drawn ? `og: drew ${drawn} card(s)` : 'og: all cards present');
