@@ -90,6 +90,15 @@ const PANELS = {
     rightBot: 'one tap, two checkouts',
     footer: 'A hedge is a second GET. It does not fill the key.',
   },
+  'two-passengers-one-seat': {
+    leftTitle: 'Redis key',
+    leftMid: 'seat:12A',
+    leftBot: 'hint plus timeout',
+    rightTitle: 'MySQL row',
+    rightMid: 'user_id is null',
+    rightBot: 'this is the seat',
+    footer: 'Redis can hold a key. MySQL holds the seat.',
+  },
   'why-i-started-writing': {
     leftTitle: 'in my head',
     leftMid: 'I already know this',
