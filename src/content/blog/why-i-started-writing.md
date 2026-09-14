@@ -11,7 +11,7 @@ I had fixed that exact failure before. Twice, in a previous codebase, confidentl
 
 <figure>
   <img src="/blog/write-head.svg" alt="Two boxes: in my head, I already know this, versus in a sentence, where does it actually start." width="720" height="220" />
-  <figcaption>The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
+  <figcaption>Figure 1. The comfortable version lives in your head. The real one has to survive a sentence.</figcaption>
 </figure>
 
 ## Four years of learning by incident
@@ -22,7 +22,7 @@ Then I moved to Acceldata. Different pace, different domain, and a set of habits
 
 <figure>
   <img src="/blog/write-teams.svg" alt="One codebase, deep and narrow, then a new team where the old assumptions show." width="720" height="200" />
-  <figcaption>The move did not create the gap. It made it visible.</figcaption>
+  <figcaption>Figure 2. The move did not create the gap. It made it visible.</figcaption>
 </figure>
 
 Production teaches you a great deal, but it teaches by incident. You learn networking because a tunnel misbehaved at two in the morning. You learn observability because something broke and nobody could see why. The knowledge is real, and it is shaped like a list of things that have already happened to you rather than a set of principles you can point at a problem you have not met yet.
@@ -31,7 +31,7 @@ Changing teams did not create that gap. It just put me in rooms where I had to s
 
 <figure>
   <img src="/blog/write-gap.svg" alt="Two boxes: used it, from incidents in one codebase, and can explain it, a model you can reuse." width="720" height="200" />
-  <figcaption>The gap is not skill. It is a model you can say out loud.</figcaption>
+  <figcaption>Figure 3. The gap is not skill. It is a model you can say out loud.</figcaption>
 </figure>
 
 Writing is the fix I settled on, for a boring reason. It is much harder to fool yourself in a paragraph than in your own head. A sentence has to commit to something, and once it is written down you can look at it and notice that it does not actually follow.

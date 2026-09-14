@@ -21,7 +21,7 @@ Closing costs more. A clean shutdown is four packets, a FIN and an ACK in each d
   <object class="figure-svg" data="/blog/hedge-handshake.svg" type="image/svg+xml" width="720" height="320" style="aspect-ratio: 720 / 320" aria-label="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK.">
     <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
   </object>
-  <figcaption>Handshake, then the query, then teardown. Every request. That is the phone-call model.</figcaption>
+  <figcaption>Figure 1. Handshake, then the query, then teardown. Every request. That is the phone-call model.</figcaption>
 </figure>
 
 One buyer, one handshake, one query, one teardown. That is fine for a demo. A thousand taps in a minute means a thousand handshakes into the database and a thousand teardowns, plus a heap of sockets on both machines sitting in TIME-WAIT, which is a state a closed connection lingers in for a while so that stray packets from it do not get delivered to some unlucky new connection reusing the same port. The query itself was a few bytes. The ceremony around it was the load.
@@ -42,7 +42,7 @@ What the pool does not do is make the database faster. It removes the handshake 
   <object class="figure-svg" data="/blog/hedge-pool-reuse.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN.">
     <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN." width="720" height="300" />
   </object>
-  <figcaption>A thousand users reuse four handshakes. Teardown waits until the process dies.</figcaption>
+  <figcaption>Figure 2. A thousand users reuse four handshakes. Teardown waits until the process dies.</figcaption>
 </figure>
 
 ## Redis has never heard of item 42
@@ -57,14 +57,14 @@ The pool saved me the handshake. It did nothing about a thousand identical reads
 
 <figure>
   <img src="/blog/hedge-redis-miss.svg" alt="Many users send GET 42 to the API. Redis returns nil for item 42. The pool and database run the same row many times and pages get slow." width="720" height="300" />
-  <figcaption>Redis had nothing. Every GET became a database read.</figcaption>
+  <figcaption>Figure 3. Redis had nothing. Every GET became a database read.</figcaption>
 </figure>
 
 The fix here is a lock, which is worth naming clearly because it is not what the next section is about. When a request finds `item:42` missing, it tries to claim the right to fill it, and only the first one succeeds. That one worker borrows a connection, reads the row, writes it into Redis, and releases the claim. The other requests, having failed to claim it, wait briefly and then ask Redis again, and by that point the value is there. One read of the database instead of a thousand, and the other three pool connections stay available for everything else.
 
 <figure>
   <img src="/blog/hedge-lock.svg" alt="A lock for key 42. Worker w1 holds it and fills the cache. Workers w2, w3, and w4 wait and then get a cache hit. The pool has one connection busy on 42 and three free for other keys." width="720" height="280" />
-  <figcaption>The lock is for the fill. The pool is for the query.</figcaption>
+  <figcaption>Figure 4. The lock is for the fill. The pool is for the query.</figcaption>
 </figure>
 
 If I skip the lock, the page stays slow, and a slow page is exactly the situation where the third idea starts to look like courage.
@@ -83,7 +83,7 @@ The reason the first request was slow was the empty cache key. The hedge did not
   <object class="figure-svg" data="/blog/hedge-how.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool.">
     <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
   </object>
-  <figcaption>Hedging is a second bet on the same GET. Redis is still empty for both.</figcaption>
+  <figcaption>Figure 5. Hedging is a second bet on the same GET. Redis is still empty for both.</figcaption>
 </figure>
 
 Hedging earns its keep when the second attempt can land somewhere genuinely different, on another host or another replica, and when the losing copy is actually cancelled so it gives its connection back promptly. Neither of those was true here. And in no arrangement does a hedge write a value into Redis, which is what this page needed.

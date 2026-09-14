@@ -19,7 +19,7 @@ Every one of those is a question somebody would have had to anticipate months ea
 
 <figure>
   <img src="/blog/logs-diary.svg" alt="A wall of timeout, retry, accept, deny next to a blank box for the question is this getting worse." width="720" height="260" />
-  <figcaption>The pile can look complete and still leave the only useful question empty.</figcaption>
+  <figcaption>Figure 1. The pile can look complete and still leave the only useful question empty.</figcaption>
 </figure>
 
 That guess is usually good, because most incidents rhyme with an earlier one. The guess fails the first time something breaks in a shape nobody had in mind, which is exactly when you need help most.
@@ -42,7 +42,7 @@ If the agent's only job were to ship log files, that screen would be a search bo
 
 <figure>
   <img src="/blog/logs-agent.svg" alt="A customer host feeds an agent. The useful path is a UI that can say which host and since when. The failure path is a search box over shipped logs." width="720" height="260" />
-  <figcaption>Same host. If the agent only ships logs, the UI is grep with a nicer font.</figcaption>
+  <figcaption>Figure 2. Same host. If the agent only ships logs, the UI is grep with a nicer font.</figcaption>
 </figure>
 
 The questions that come up in a real incident are all of this kind. Is this one host or every host. Is the cluster manager healthy while the workers are not. Did this begin ten minutes ago, or have we been sliding for an hour. Is the box out of disk, or is a service simply restarting in a loop.
@@ -63,7 +63,7 @@ Then there is a fourth thing that is not a signal at all. **Context** is the lab
 
 <figure>
   <img src="/blog/logs-signals.svg" alt="Four boxes: logs for one process once, metrics for shape over time, traces for which hop ate time, and context to cut the other three." width="720" height="220" />
-  <figcaption>Three signals, three jobs. Context is how you cut. It is not a fourth pile of text.</figcaption>
+  <figcaption>Figure 3. Three signals, three jobs. Context is how you cut. It is not a fourth pile of text.</figcaption>
 </figure>
 
 I still want logs. I want them after a metric or a host list has pointed me at a neighbourhood, and I want more detail on each one because I will be reading far fewer of them. Opening the raw stream first is walking every street in a city because nobody handed me a map.
@@ -74,7 +74,7 @@ The change in habit is smaller than the change in thinking. Before typing anythi
 
 <figure>
   <img src="/blog/logs-grep.svg" alt="Two boxes: grep first, then invent the question, versus write the question first, then pick the signal." width="720" height="220" />
-  <figcaption>The old move starts at grep. The new one starts at the question.</figcaption>
+  <figcaption>Figure 4. The old move starts at grep. The new one starts at the question.</figcaption>
 </figure>
 
 I know I am back in the old model when the first thing I do is search rather than ask, when a new kind of failure gets answered with a new log line shipped in a hurry as though the next incident will be considerate enough to look the same, or when I can prove a process died and cannot say whether anything else in the cluster noticed.

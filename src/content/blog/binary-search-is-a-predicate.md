@@ -19,7 +19,7 @@ That picture is correct. It is also one application of something smaller, and be
 
 <figure>
   <img src="/blog/dsa-sorted.svg" alt="Two boxes: sorted array, find this number, versus a predicate ok of k, then search the first yes." width="720" height="240" />
-  <figcaption>The array was never the point. The predicate was.</figcaption>
+  <figcaption>Figure 1. The array was never the point. The predicate was.</figcaption>
 </figure>
 
 ## The sorted thing was the answers
@@ -40,7 +40,7 @@ That property has a name, monotonic, which just means the sequence only moves on
   <object class="figure-svg" data="/blog/dsa-predicate.svg" type="image/svg+xml" width="720" height="220" style="aspect-ratio: 720 / 220" aria-label="A row of no, no, no, then yes, yes, yes. The first yes is the answer.">
     <img src="/blog/dsa-predicate.svg" alt="A row of no, no, no, then yes, yes, yes. The first yes is the answer." width="720" height="220" />
   </object>
-  <figcaption>You are not hunting an index. You are hunting the first yes.</figcaption>
+  <figcaption>Figure 2. You are not hunting an index. You are hunting the first yes.</figcaption>
 </figure>
 
 Once you can see that row, the job is no longer "find the slowest workable speed." It is "find where the row turns from no to yes," and that is a binary search.

@@ -23,7 +23,7 @@ So if a connection needs a port, and there are only 64,000 usable ports, then a 
 
 <figure>
   <img src="/blog/64k-loadtest.svg" alt="One laptop looping connect hits 64k and calls the claim fake. The other box: you fixed src, they did not." width="720" height="240" />
-  <figcaption>The load test did not disprove the server. It turned you into one client.</figcaption>
+  <figcaption>Figure 1. The load test did not disprove the server. It turned you into one client.</figcaption>
 </figure>
 
 ## What the kernel is actually writing down
@@ -52,14 +52,14 @@ Every line is one 4-tuple, with a state on the end. Point the loop at `m2` on 44
   <object class="figure-svg" data="/blog/64k-one-client.svg" type="image/svg+xml" width="720" height="280" style="aspect-ratio: 720 / 280" aria-label="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k.">
     <img src="/blog/64k-one-client.svg" alt="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k." width="720" height="280" />
   </object>
-  <figcaption>m1 to m2:443. Three fields fixed. Source port is the only knob.</figcaption>
+  <figcaption>Figure 2. m1 to m2:443. Three fields fixed. Source port is the only knob.</figcaption>
 </figure>
 
 Some of those rows say ESTABLISHED, which are connections I still hold open. Others say TIME_WAIT, which are ones I already closed. TIME_WAIT exists because after a close, stray packets from that connection may still be in flight, and the kernel keeps the tuple reserved for a while so a brand new connection does not receive somebody else's leftovers. The practical effect during a load test is that closing sockets does not immediately give the ports back. They sit unavailable for that same destination until the wait expires.
 
 <figure>
   <img src="/blog/conntrack-tuple.svg" alt="A Linux box and a conntrack -L listing. Each line is one 4-tuple: src, sport, dst, dport." width="720" height="300" />
-  <figcaption>conntrack -L is the 4-tuple, one line per flow. src, sport, dst, dport.</figcaption>
+  <figcaption>Figure 3. conntrack -L is the 4-tuple, one line per flow. src, sport, dst, dport.</figcaption>
 </figure>
 
 Once you can see which column is the bottleneck, the ways out are obvious, because any of the other three fields will do:
@@ -86,7 +86,7 @@ The server is not spending its own ephemeral ports to accept these. It never cal
 
 <figure>
   <img src="/blog/64k-many-clients.svg" alt="Many phones and laptops connecting to one server on port 443. Each client has its own source IP, so the server table can grow past 64k." width="720" height="300" />
-  <figcaption>The server is m2. Each client is a different source IP. 64k is not the cap.</figcaption>
+  <figcaption>Figure 4. The server is m2. Each client is a different source IP. 64k is not the cap.</figcaption>
 </figure>
 
 That is how a box holds millions of connections. Millions of separate peers, one listening port, one large connection table. My loop had five million connections' worth of ambition and one source IP to spend it from.
@@ -105,7 +105,7 @@ A load balancer that preserves the client address does not do this, because the 
 
 <figure>
   <img src="/blog/direct-vs-lb.svg" alt="Left: phones A, B, and C connect straight to the server, each with its own source IP. Right: the same phones hit a load balancer that talks to the server as one IP, so that hop is limited to about 64k connections." width="720" height="280" />
-  <figcaption>Straight to the server: src varies. Through a SNAT LB: src is one IP, 64k is back.</figcaption>
+  <figcaption>Figure 5. Straight to the server: src varies. Through a SNAT LB: src is one IP, 64k is back.</figcaption>
 </figure>
 
 ## What the loop taught me

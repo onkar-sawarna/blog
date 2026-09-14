@@ -19,7 +19,7 @@ Two other jobs care about that announcement. Search wants `o1` written into its 
 
 <figure>
   <img src="/blog/checkout-o1.svg" alt="Buyer hits the API. The API writes row o1, publishes event o1, and returns 200. Search and the counter are not on that path." width="720" height="280" />
-  <figcaption>The row is the fact. The event is the news. Search and count are later.</figcaption>
+  <figcaption>Figure 1. The row is the fact. The event is the news. Search and count are later.</figcaption>
 </figure>
 
 ## The dashboard that stayed at zero
@@ -32,7 +32,7 @@ Only one of them did.
   <object class="figure-svg" data="/blog/two-consumers.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing.">
     <img src="/blog/two-consumers.svg" alt="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing." width="720" height="300" />
   </object>
-  <figcaption>Two consumers is a sentence. The queue only heard one job.</figcaption>
+  <figcaption>Figure 2. Two consumers is a sentence. The queue only heard one job.</figcaption>
 </figure>
 
 A queue of this kind is a work inbox, and the rules it plays by are worth stating plainly, because everything that went wrong follows from them. A worker asks the queue for work, a step called polling. The queue hands it a message and hides that message from everybody else for a while. The worker does the job and then explicitly deletes the message, and at that point the message is gone for good. If the worker crashes before deleting, the hidden message reappears after a timeout and somebody else picks it up. That reappearance is why the deletion is a separate step: it is how the queue knows the work finished rather than just started.
@@ -41,7 +41,7 @@ Read those rules back and the outcome is forced. Search polled first and was han
 
 <figure>
   <img src="/blog/dashboard-zero.svg" alt="Support search finds order o1. The orders-today dashboard still shows 0." width="720" height="240" />
-  <figcaption>Same checkout. One job ran. One did not.</figcaption>
+  <figcaption>Figure 3. Same checkout. One job ran. One did not.</figcaption>
 </figure>
 
 Nothing malfunctioned. The queue behaved exactly as documented. My mistake was in what I thought a consumer was.
@@ -58,7 +58,7 @@ It is also worth being clear that leaving the message in the queue does not help
 
 <figure>
   <img src="/blog/kafka-sqs.svg" alt="API publishes to one SQS queue. Worker A got event 1 and deleted it. Worker B never saw it. On the Kafka side, a search group and a counter group both read event 1." width="720" height="300" />
-  <figcaption>One queue, two tasks, one of them loses the event.</figcaption>
+  <figcaption>Figure 4. One queue, two tasks, one of them loses the event.</figcaption>
 </figure>
 
 ## Giving each job its own inbox
@@ -73,7 +73,7 @@ Adding a third job later, email say, means another subscription and another queu
 
 <figure>
   <img src="/blog/sns-sqs-kafka.svg" alt="Left: API to SNS, then a copy into an SQS search queue and an SQS count queue. Right: API to one Kafka log, search and counter each keep a cursor." width="720" height="300" />
-  <figcaption>Same publish. Same two jobs. SNS copies. Kafka lets both read.</figcaption>
+  <figcaption>Figure 5. Same publish. Same two jobs. SNS copies. Kafka lets both read.</figcaption>
 </figure>
 
 ## Keeping one copy and two bookmarks
@@ -90,7 +90,7 @@ That last part buys something the copies do not. If search is down for an hour, 
   <object class="figure-svg" data="/blog/kafka-search-down.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At t=0 checkout returns 200 and search is down. In the same hour the counter reads o1. After an hour search is back and indexes o1 from its cursor.">
     <img src="/blog/kafka-search-down.svg" alt="At t=0 checkout returns 200 and search is down. In the same hour the counter reads o1. After an hour search is back and indexes o1 from its cursor." width="720" height="300" />
   </object>
-  <figcaption>Checkout did not wait on search. The log held o1.</figcaption>
+  <figcaption>Figure 6. Checkout did not wait on search. The log held o1.</figcaption>
 </figure>
 
 How long `o1` survives is set by time or by disk space, not by whether anybody has read it. And within a group, several processes still split the work between them, exactly as two search workers would on a queue of their own: only one of them indexes this particular order. The group is the job. A process inside it is another pair of hands on that job.
@@ -99,14 +99,14 @@ Kafka also slices a topic into partitions, which is how it scales and where its 
 
 <figure>
   <img src="/blog/kafka-job.svg" alt="A user hits the API. The API writes an order row, then publishes. A search job and a counter job each poll the same log with their own cursor." width="720" height="300" />
-  <figcaption>One publish. Two jobs. Same checkout, twice. The log stays.</figcaption>
+  <figcaption>Figure 7. One publish. Two jobs. Same checkout, twice. The log stays.</figcaption>
 </figure>
 
 ## Which one I reach for
 
 <figure>
   <img src="/blog/which-inbox.svg" alt="Three paths for o1: one SQS with one winner, SNS copying into two queues, Kafka with one log and two cursors." width="720" height="300" />
-  <figcaption>Same o1. The inbox is what changes.</figcaption>
+  <figcaption>Figure 8. Same o1. The inbox is what changes.</figcaption>
 </figure>
 
 A queue on its own when `o1` is a task and exactly one worker should perform it. Index this order, once. Extra workers just share the load.
@@ -121,14 +121,14 @@ I still find new ways to make the same mistake. A filter on an SNS subscription 
 
 <figure>
   <img src="/blog/sns-filter-drop.svg" alt="API publishes to SNS. A filter drops o1 from the count queue. Search still gets a copy. The dashboard stays 0." width="720" height="260" />
-  <figcaption>Fan-out with a filter is still a delete for one job.</figcaption>
+  <figcaption>Figure 9. Fan-out with a filter is still a delete for one job.</figcaption>
 </figure>
 
 Giving two Kafka services the same group id does it too. Same group means one job, so the two of them divide the partitions between themselves and each sees roughly half the events. That is the single-queue bug rebuilt on top of a log.
 
 <figure>
   <img src="/blog/shared-group-id.svg" alt="Topic orders holds o1. Search and the counter share group id search. Search got o1. The counter is split away." width="720" height="260" />
-  <figcaption>Same group id. Same steal as one SQS queue.</figcaption>
+  <figcaption>Figure 10. Same group id. Same steal as one SQS queue.</figcaption>
 </figure>
 
 And reading "the log keeps everything" as "we do not need backups" only holds until retention expires, at which point `o1` is gone for every job at once.

@@ -20,7 +20,7 @@ The echo reply told me that this host, at this address, was willing to answer th
 
 <figure>
   <img src="/blog/ping-verdict.svg" alt="Ping ok leads to the verdict that the network is fine, while the user is still broken. The other box names the layer: ICMP is not port 443." width="720" height="240" />
-  <figcaption>Echo is a small fact. Treating it as the outage is the old model.</figcaption>
+  <figcaption>Figure 1. Echo is a small fact. Treating it as the outage is the old model.</figcaption>
 </figure>
 
 ## What I should have typed second
@@ -33,7 +33,7 @@ That is a completely different signal from a failed ping, and it points somewher
   <object class="figure-svg" data="/blog/ping-split-anim.svg" type="image/svg+xml" width="720" height="260" style="aspect-ratio: 720 / 260" aria-label="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter.">
     <img src="/blog/ping-split-anim.svg" alt="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter." width="720" height="260" />
   </object>
-  <figcaption>Echo comes back. The connect to 443 does not. Same IP.</figcaption>
+  <figcaption>Figure 2. Echo comes back. The connect to 443 does not. Same IP.</figcaption>
 </figure>
 
 Once I started looking for it, the same gap showed up in both directions.
@@ -55,7 +55,7 @@ Each one can fail while the ones below it succeed. Ping only ever answers the fi
 
 <figure>
   <img src="/blog/ping-layers.svg" alt="Four stacked checks: request, session, TCP port, and ICMP. Ping only lives on the bottom layer." width="720" height="280" />
-  <figcaption>Ping lives on L3. The user cares about the top of the stack.</figcaption>
+  <figcaption>Figure 3. Ping lives on L3. The user cares about the top of the stack.</figcaption>
 </figure>
 
 The third one catches people more than it should. A TCP connection succeeding means the two machines agreed to talk. It does not mean TLS negotiated a cipher both sides accept, and it does not mean the proxy in the middle decided you were allowed through. A completed handshake is not a login.

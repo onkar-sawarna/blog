@@ -39,7 +39,7 @@ That is the only ordering anything ever promised me: one user's own checkouts, i
   <object class="figure-svg" data="/blog/kafka-key.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty.">
     <img src="/blog/kafka-key.svg" alt="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty." width="720" height="300" />
   </object>
-  <figcaption>u1 goes to lane 0. Later u1 goes to lane 0 again. That is the only order you were promised.</figcaption>
+  <figcaption>Figure 1. u1 goes to lane 0. Later u1 goes to lane 0 again. That is the only order you were promised.</figcaption>
 </figure>
 
 If I leave the key off, the client spreads events across the lanes on its own, and then even one buyer's checkouts can end up in different files with no order between them.
@@ -58,12 +58,12 @@ The counter does the same division over its own processes. Its process on partit
 
 <figure>
   <img src="/blog/kafka-job.svg" alt="A user hits the API. The API writes an order row to the database, then publishes to a Kafka topic named orders with three partitions. A search group and a counter group each poll that topic." width="720" height="300" />
-  <figcaption>The row is the fact. The topic is the news. Two groups, two cursors, same topic.</figcaption>
+  <figcaption>Figure 2. The row is the fact. The topic is the news. Two groups, two cursors, same topic.</figcaption>
 </figure>
 
 <figure>
   <img src="/blog/kafka-groups.svg" alt="The API hashes user ids onto partitions. Search members s0 s1 s2 each take one partition. Counter members c0 c1 c2 take the same three partitions again." width="720" height="300" />
-  <figcaption>The API hashes the key. Each group covers every partition. Same event, two jobs.</figcaption>
+  <figcaption>Figure 3. The API hashes the key. Each group covers every partition. Same event, two jobs.</figcaption>
 </figure>
 
 This is also why search can be down for an hour without anybody noticing. The events are still in the files. When search comes back it picks up from its bookmark and works through the backlog. The order row was never waiting on it. Had the API instead written the row and then made direct calls to search and to the counter, the buyer would be waiting on both of them, and a failure in either one would turn into a failed checkout.
@@ -78,7 +78,7 @@ The drawing in my head had been a single cylinder with an arrow going in and an 
 
 <figure>
   <img src="/blog/kafka-pipe.svg" alt="A single queue with messages 1 2 3 4 in one line, next to three lanes where 1 and 3 sit on lane 0 and 2 and 4 sit on lane 2." width="720" height="280" />
-  <figcaption>I called this a queue. It is lanes. 1 can finish after 4.</figcaption>
+  <figcaption>Figure 4. I called this a queue. It is lanes. 1 can finish after 4.</figcaption>
 </figure>
 
 If I had genuinely needed every checkout in one single sequence, the way to get it is one partition. One file, one line of events, and the model I had in my head becomes true. The price is that a single file and a single reader are then the ceiling on how fast the whole thing can go. That is a fine place for a lot of systems to start.
@@ -97,7 +97,7 @@ A partition can be handed to at most one process within a group. With three part
   <object class="figure-svg" data="/blog/kafka-consumers.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing.">
     <img src="/blog/kafka-consumers.svg" alt="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing." width="720" height="300" />
   </object>
-  <figcaption>You added a consumer. Kafka did not add a lane. The fourth process is unemployed.</figcaption>
+  <figcaption>Figure 5. You added a consumer. Kafka did not add a lane. The fourth process is unemployed.</figcaption>
 </figure>
 
 It works the same way in the other direction. Two processes and three partitions means one of them carries two lanes, and those two lanes still have no order between them. So even one process reading everything does not give you a single sequence. It gives you three ordered files that it reads from in whatever order it happens to ask.
@@ -122,7 +122,7 @@ The way out is to create a new topic with the number I actually want, send new c
 
 <figure>
   <img src="/blog/kafka-n.svg" alt="Three partitions on orders. A shrink to n equals 1 is crossed out. Grow keeps old lines. Fewer lanes means a new topic and a replay." width="720" height="280" />
-  <figcaption>You can add lanes. You cannot remove them. A smaller n is a new topic.</figcaption>
+  <figcaption>Figure 6. You can add lanes. You cannot remove them. A smaller n is a new topic.</figcaption>
 </figure>
 
 So I pick the number for the busiest day I am willing to run, not for this afternoon's lag graph. Too few and search can never catch up no matter how many processes I start. Too many and I pay for idle lanes and a division I cannot undo.

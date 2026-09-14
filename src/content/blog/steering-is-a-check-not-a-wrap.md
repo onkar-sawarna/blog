@@ -22,7 +22,7 @@ My mental model of the whole system was: the wrap is the mechanism, the id is a 
 
 <figure>
   <img src="/blog/steering-stranger.svg" alt="Tunnel is up, outer header fine, id stale or missing. After the unwrap you prove the session or it is a stranger." width="720" height="240" />
-  <figcaption>The wrap succeeded. The packet was still not allowed to continue.</figcaption>
+  <figcaption>Figure 1. The wrap succeeded. The packet was still not allowed to continue.</figcaption>
 </figure>
 
 ## The version that forwarded everything
@@ -39,7 +39,7 @@ The step I had left out is a check against a session table, which is just the in
   <object class="figure-svg" data="/blog/steering-check.svg" type="image/svg+xml" width="720" height="240" style="aspect-ratio: 720 / 240" aria-label="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop.">
     <img src="/blog/steering-check.svg" alt="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop." width="720" height="240" />
   </object>
-  <figcaption>Wrap, open, verify, then pass or drop. The check is the steering.</figcaption>
+  <figcaption>Figure 2. Wrap, open, verify, then pass or drop. The check is the steering.</figcaption>
 </figure>
 
 **Wrap** carries the original packet plus the id that explains why this packet is on this path.
