@@ -7,7 +7,9 @@
   <rect x="24" y="148" width="200" height="88" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
   <text x="124" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">B holds 12B</text>
   <text x="124" y="208" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">wants 12A</text>
-  <rect x="260" y="36" width="200" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <rect x="260" y="36" width="200" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2">
+    <animate attributeName="stroke-opacity" values="1;0.35;1" dur="1.6s" repeatCount="indefinite"/>
+  </rect>
   <text x="360" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">cycle</text>
   <text x="360" y="120" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">A waits on B</text>
   <text x="360" y="148" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#161616">B waits on A</text>

@@ -18,22 +18,37 @@
   <path d="M278 140 L348 186" stroke="#1A3D32" stroke-width="1.4"/>
 
   <rect x="348" y="36" width="344" height="44" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="1.8"/>
-  <rect x="364" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
-  <text x="386" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u1</text>
-  <rect x="416" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
-  <text x="438" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u3</text>
-  <rect x="468" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
-  <text x="490" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u1</text>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;1;1" keyTimes="0;0.12;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="364" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
+    <text x="386" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u1</text>
+  </g>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.22;0.34;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="416" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
+    <text x="438" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u3</text>
+  </g>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.55;0.7;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="468" y="46" width="44" height="24" rx="3" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.2"/>
+    <text x="490" y="63" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#1A3D32">u1</text>
+  </g>
   <text x="668" y="64" text-anchor="end" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">lane 0</text>
 
   <rect x="348" y="102" width="344" height="44" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4" stroke-dasharray="5 4"/>
   <text x="520" y="130" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">nobody landed here</text>
 
   <rect x="348" y="168" width="344" height="44" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.8"/>
-  <rect x="364" y="178" width="44" height="24" rx="3" fill="#F7F7F5" stroke="#1A3D32" stroke-width="1.2"/>
-  <text x="386" y="195" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">u2</text>
-  <rect x="416" y="178" width="44" height="24" rx="3" fill="#F7F7F5" stroke="#1A3D32" stroke-width="1.2"/>
-  <text x="438" y="195" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">u4</text>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.14;0.26;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="364" y="178" width="44" height="24" rx="3" fill="#F7F7F5" stroke="#1A3D32" stroke-width="1.2"/>
+    <text x="386" y="195" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">u2</text>
+  </g>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.36;0.48;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="416" y="178" width="44" height="24" rx="3" fill="#F7F7F5" stroke="#1A3D32" stroke-width="1.2"/>
+    <text x="438" y="195" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">u4</text>
+  </g>
   <text x="668" y="196" text-anchor="end" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">lane 2</text>
 
   <text x="360" y="248" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">u1 goes to lane 0. Later u1 goes to lane 0 again.</text>

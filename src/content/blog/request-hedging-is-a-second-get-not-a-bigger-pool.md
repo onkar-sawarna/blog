@@ -18,7 +18,9 @@ Opening is not free, because TCP will not carry a query until a connection exist
 Closing costs more. A clean shutdown is four packets, a FIN and an ACK in each direction, because each side has to say it is finished sending and have that acknowledged. Some stacks combine two of those. Either way it is a conversation, not a single packet, and when it is over the next request starts from nothing.
 
 <figure>
-  <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
+  <object class="figure-svg" data="/blog/hedge-handshake.svg" type="image/svg+xml" width="720" height="320" style="aspect-ratio: 720 / 320" aria-label="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK.">
+    <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
+  </object>
   <figcaption>Handshake, then the query, then teardown. Every request. That is the phone-call model.</figcaption>
 </figure>
 
@@ -37,7 +39,9 @@ A thousand buyers share those four sockets. If all four are busy when a fifth re
 What the pool does not do is make the database faster. It removes the handshake and the teardown from every tap, and nothing else.
 
 <figure>
-  <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN." width="720" height="300" />
+  <object class="figure-svg" data="/blog/hedge-pool-reuse.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN.">
+    <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN." width="720" height="300" />
+  </object>
   <figcaption>A thousand users reuse four handshakes. Teardown waits until the process dies.</figcaption>
 </figure>
 
@@ -76,7 +80,9 @@ Now apply it to my morning. Both copies of the request look in the same Redis, a
 The reason the first request was slow was the empty cache key. The hedge did not address that. It doubled the number of requests piling onto it.
 
 <figure>
-  <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
+  <object class="figure-svg" data="/blog/hedge-how.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool.">
+    <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
+  </object>
   <figcaption>Hedging is a second bet on the same GET. Redis is still empty for both.</figcaption>
 </figure>
 

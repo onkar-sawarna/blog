@@ -14,25 +14,34 @@
   <rect x="148" y="84" width="136" height="56" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
   <text x="216" y="108" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">t=0  GET 42</text>
   <text x="216" y="128" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">Redis nil, to DB</text>
-  <rect x="148" y="156" width="136" height="56" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
-  <text x="216" y="180" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">t=50ms GET 42</text>
-  <text x="216" y="200" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">same path again</text>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.35;0.5;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="148" y="156" width="136" height="56" rx="5" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+    <text x="216" y="180" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">t=50ms GET 42</text>
+    <text x="216" y="200" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">same path again</text>
+  </g>
 
   <path d="M300 112 H348" stroke="#B33A1A" stroke-width="1.5"/>
   <path d="M340 106 L350 112 L340 118" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
-  <path d="M300 184 H348" stroke="#B33A1A" stroke-width="1.5"/>
-  <path d="M340 178 L350 184 L340 190" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.35;0.5;1" dur="5s" repeatCount="indefinite"/>
+    <path d="M300 184 H348" stroke="#B33A1A" stroke-width="1.5"/>
+    <path d="M340 178 L350 184 L340 190" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+  </g>
 
   <rect x="352" y="40" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
   <text x="428" y="76" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">first copy</text>
   <text x="428" y="100" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">still on the pool</text>
 
-  <rect x="352" y="152" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
-  <text x="428" y="188" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">hedge copy</text>
-  <text x="428" y="212" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">another checkout</text>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.35;0.5;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="352" y="152" width="152" height="88" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+    <text x="428" y="188" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#B33A1A">hedge copy</text>
+    <text x="428" y="212" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">another checkout</text>
+    <path d="M504 196 H548" stroke="#B33A1A" stroke-width="1.4"/>
+  </g>
 
   <path d="M504 84 H548" stroke="#B33A1A" stroke-width="1.4"/>
-  <path d="M504 196 H548" stroke="#B33A1A" stroke-width="1.4"/>
 
   <rect x="552" y="72" width="148" height="136" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
   <text x="626" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">first answer</text>

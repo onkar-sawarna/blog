@@ -1,6 +1,6 @@
 ---
-title: "ProxySQL: the API should see MySQL, not the topology"
-description: "ProxySQL sits in front of MySQL and answers like MySQL. The shop grew more API boxes, then split into two services, without teaching each one the write server and the read server."
+title: "The API should see MySQL, not the topology"
+description: "A proxy sits in front of MySQL and answers like MySQL. The shop grew more API boxes, then split into two services, without teaching each one the write server and the read server."
 pubDate: 2026-09-11
 tags: ["systems"]
 ---
@@ -106,7 +106,9 @@ A TCP-only proxy cannot tell them apart. ProxySQL can, because it reads the SQL.
 The lists it chooses from are just named groups of servers. People call a group a hostgroup. One group is the primary. Another is the replicas. A rule says: this kind of SQL goes to that group.
 
 <figure>
-  <img src="/blog/proxysql-route.svg" alt="API to ProxySQL. SELECT item 42 goes to a replica. INSERT order o1 goes to the primary." width="720" height="300" />
+  <object class="figure-svg" data="/blog/proxysql-route.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="API to ProxySQL. SELECT item 42 goes to a replica. INSERT order o1 goes to the primary.">
+    <img src="/blog/proxysql-route.svg" alt="API to ProxySQL. SELECT item 42 goes to a replica. INSERT order o1 goes to the primary." width="720" height="300" />
+  </object>
   <figcaption>Figure 7. A TCP load balancer cannot make this split. It never sees the query.</figcaption>
 </figure>
 

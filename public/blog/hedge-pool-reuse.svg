@@ -15,9 +15,15 @@
 
   <rect x="282" y="24" width="210" height="200" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
   <text x="387" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">each GET</text>
-  <text x="387" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">checkout</text>
-  <text x="387" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">query 42</text>
-  <text x="387" y="144" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">return</text>
+  <text x="387" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">checkout
+    <animate attributeName="fill" values="#1A3D32;#B33A1A;#1A3D32;#1A3D32" keyTimes="0;0.2;0.35;1" dur="4s" repeatCount="indefinite"/>
+  </text>
+  <text x="387" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">query 42
+    <animate attributeName="fill" values="#1A3D32;#1A3D32;#B33A1A;#1A3D32;#1A3D32" keyTimes="0;0.3;0.45;0.6;1" dur="4s" repeatCount="indefinite"/>
+  </text>
+  <text x="387" y="144" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">return
+    <animate attributeName="fill" values="#1A3D32;#1A3D32;#B33A1A;#1A3D32" keyTimes="0;0.55;0.7;1" dur="4s" repeatCount="indefinite"/>
+  </text>
   <text x="387" y="184" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">no FIN</text>
   <text x="387" y="204" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">no new SYN</text>
 

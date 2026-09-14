@@ -36,7 +36,9 @@ A moment later, u1 buys again. Same user id, so the same hash, so the same remai
 That is the only ordering anything ever promised me: one user's own checkouts, in the order the API sent them, within one file.
 
 <figure>
-  <img src="/blog/kafka-key.svg" alt="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty." width="720" height="300" />
+  <object class="figure-svg" data="/blog/kafka-key.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty.">
+    <img src="/blog/kafka-key.svg" alt="An API publishes into a hash funnel. u1 and u3 land on lane 0, including a later u1. u2 and u4 land on lane 2. Lane 1 is empty." width="720" height="300" />
+  </object>
   <figcaption>u1 goes to lane 0. Later u1 goes to lane 0 again. That is the only order you were promised.</figcaption>
 </figure>
 
@@ -92,7 +94,9 @@ Nothing moved.
 A partition can be handed to at most one process within a group. With three partitions and three processes already working, there was nothing left to give the new ones. They connected, asked for work, and were assigned no lanes. The partition count is the ceiling on how many processes in a group can do anything at all.
 
 <figure>
-  <img src="/blog/kafka-consumers.svg" alt="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing." width="720" height="300" />
+  <object class="figure-svg" data="/blog/kafka-consumers.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing.">
+    <img src="/blog/kafka-consumers.svg" alt="Three lanes feed c1, c2, and c3. A dashed box for c4 sits aside and polls nothing." width="720" height="300" />
+  </object>
   <figcaption>You added a consumer. Kafka did not add a lane. The fourth process is unemployed.</figcaption>
 </figure>
 

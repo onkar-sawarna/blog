@@ -262,7 +262,8 @@ function formatDate(d: Date) {
     margin: 0.4em 0;
   }
   .post-body :global(img),
-  .post-body :global(video) {
+  .post-body :global(video),
+  .post-body :global(object.figure-svg) {
     width: 100%;
     height: auto;
     border: 1px solid var(--rule);
@@ -270,11 +271,15 @@ function formatDate(d: Date) {
     background: var(--paper-raised);
     margin: 1.5rem 0 0.4rem;
   }
+  .post-body :global(object.figure-svg) {
+    display: block;
+  }
   .post-body :global(figure) {
     margin: 1.75rem 0;
   }
   .post-body :global(figure img),
-  .post-body :global(figure video) {
+  .post-body :global(figure video),
+  .post-body :global(figure object.figure-svg) {
     margin: 0;
   }
   .post-body :global(figcaption) {

@@ -36,7 +36,9 @@ That is not a simulator with a missing feature. It is a different program. Produ
 The step I had left out is a check against a session table, which is just the in-memory record of the sessions this system handed out: which ids are live, which client each belongs to, which addresses that client was permitted to send from. So the real sequence has four steps rather than three, and the third one is the point of the whole exercise.
 
 <figure>
-  <img src="/blog/steering-check.svg" alt="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop." width="720" height="240" />
+  <object class="figure-svg" data="/blog/steering-check.svg" type="image/svg+xml" width="720" height="240" style="aspect-ratio: 720 / 240" aria-label="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop.">
+    <img src="/blog/steering-check.svg" alt="Four steps: wrap the packet with a traffic id in IP-in-IP, open it in a netstack, verify against a session table, then pass or drop." width="720" height="240" />
+  </object>
   <figcaption>Wrap, open, verify, then pass or drop. The check is the steering.</figcaption>
 </figure>
 

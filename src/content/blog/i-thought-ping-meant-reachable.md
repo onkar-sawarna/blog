@@ -30,7 +30,9 @@ Eventually I stopped reading application code and tried to open a TCP connection
 That is a completely different signal from a failed ping, and it points somewhere completely different. A hang usually means a firewall rule is dropping the packets on the floor rather than answering, which is what a security group or a proxy access list does by default. A refusal, where the connection comes back immediately with a reset, means something answered and said no, which usually means nothing is listening on that port. In this case it was a listener bound to the loopback address, so the process was up and serving, but only to things running on that same machine. From outside, the port was a wall. From ping's point of view, the host was perfect.
 
 <figure>
-  <img src="/blog/ping-split-anim.svg" alt="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter." width="720" height="260" />
+  <object class="figure-svg" data="/blog/ping-split-anim.svg" type="image/svg+xml" width="720" height="260" style="aspect-ratio: 720 / 260" aria-label="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter.">
+    <img src="/blog/ping-split-anim.svg" alt="A packet completing an ICMP echo to the host while a TCP connection to port 443 stops at a filter." width="720" height="260" />
+  </object>
   <figcaption>Echo comes back. The connect to 443 does not. Same IP.</figcaption>
 </figure>
 

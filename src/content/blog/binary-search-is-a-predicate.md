@@ -37,7 +37,9 @@ Now the part I had walked straight past. If speed 4 works, speed 5 works too, be
 That property has a name, monotonic, which just means the sequence only moves one way: once it turns to yes it stays yes. And a monotonic sequence of yes and no is exactly what a sorted array is, viewed through the question "is this element at least the target." The sorted structure I had been waiting to be handed was sitting in the answers to my own loop the whole time.
 
 <figure>
-  <img src="/blog/dsa-predicate.svg" alt="A row of no, no, no, then yes, yes, yes. The first yes is the answer." width="720" height="220" />
+  <object class="figure-svg" data="/blog/dsa-predicate.svg" type="image/svg+xml" width="720" height="220" style="aspect-ratio: 720 / 220" aria-label="A row of no, no, no, then yes, yes, yes. The first yes is the answer.">
+    <img src="/blog/dsa-predicate.svg" alt="A row of no, no, no, then yes, yes, yes. The first yes is the answer." width="720" height="220" />
+  </object>
   <figcaption>You are not hunting an index. You are hunting the first yes.</figcaption>
 </figure>
 

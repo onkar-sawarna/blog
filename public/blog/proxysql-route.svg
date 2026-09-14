@@ -12,21 +12,25 @@
   <text x="244" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">ProxySQL</text>
   <text x="244" y="152" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">looks at the SQL</text>
 
-  <path d="M244 88 V56 H500" stroke="#1A3D32" stroke-width="1.5"/>
-  <path d="M492 50 L502 56 L492 62" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
-  <text x="360" y="48" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">SELECT item 42</text>
+  <g>
+    <animate attributeName="opacity" values="0.25;1;1;0.25" keyTimes="0;0.15;0.45;1" dur="5s" repeatCount="indefinite"/>
+    <path d="M244 88 V56 H500" stroke="#1A3D32" stroke-width="1.5"/>
+    <path d="M492 50 L502 56 L492 62" fill="none" stroke="#1A3D32" stroke-width="1.5"/>
+    <text x="360" y="48" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">SELECT item 42</text>
+    <rect x="508" y="28" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
+    <text x="604" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">replica</text>
+    <text x="604" y="78" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">reads</text>
+  </g>
 
-  <path d="M244 180 V220 H500" stroke="#B33A1A" stroke-width="1.5"/>
-  <path d="M492 214 L502 220 L492 226" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
-  <text x="360" y="244" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">INSERT order o1</text>
-
-  <rect x="508" y="28" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>
-  <text x="604" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#161616">replica</text>
-  <text x="604" y="78" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#5C5C59">reads</text>
-
-  <rect x="508" y="188" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
-  <text x="604" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">primary</text>
-  <text x="604" y="238" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">writes</text>
+  <g>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.45;0.6;1" dur="5s" repeatCount="indefinite"/>
+    <path d="M244 180 V220 H500" stroke="#B33A1A" stroke-width="1.5"/>
+    <path d="M492 214 L502 220 L492 226" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
+    <text x="360" y="244" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">INSERT order o1</text>
+    <rect x="508" y="188" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+    <text x="604" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#B33A1A">primary</text>
+    <text x="604" y="238" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#B33A1A">writes</text>
+  </g>
 
   <text x="360" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">A TCP load balancer cannot make this split. It never sees the query.</text>
 </svg>

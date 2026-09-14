@@ -49,7 +49,9 @@ cat /proc/net/nf_conntrack
 Every line is one 4-tuple, with a state on the end. Point the loop at `m2` on 443 and watch: the destination IP is the same on every line, the destination port is 443 on every line, my laptop's IP is the same on every line, and the only column moving is the source port. Three of the four fields were nailed down by the test I wrote. There was exactly one field left free, that field is 16 bits wide, and so the test ran out after about 64,000 rows.
 
 <figure>
-  <img src="/blog/64k-one-client.svg" alt="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k." width="720" height="280" />
+  <object class="figure-svg" data="/blog/64k-one-client.svg" type="image/svg+xml" width="720" height="280" style="aspect-ratio: 720 / 280" aria-label="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k.">
+    <img src="/blog/64k-one-client.svg" alt="m1 opening many connections to m2 on port 443. Only the source port changes, so the table tops out around 64k." width="720" height="280" />
+  </object>
   <figcaption>m1 to m2:443. Three fields fixed. Source port is the only knob.</figcaption>
 </figure>
 

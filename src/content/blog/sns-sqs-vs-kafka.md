@@ -29,7 +29,9 @@ The thing in the middle was a single queue: SQS, the Simple Queue Service. Both 
 Only one of them did.
 
 <figure>
-  <img src="/blog/two-consumers.svg" alt="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing." width="720" height="300" />
+  <object class="figure-svg" data="/blog/two-consumers.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing.">
+    <img src="/blog/two-consumers.svg" alt="Left: I said two consumers, so search and the counter both see o1. Right: the queue gave o1 to search. The counter got nothing." width="720" height="300" />
+  </object>
   <figcaption>Two consumers is a sentence. The queue only heard one job.</figcaption>
 </figure>
 
@@ -85,7 +87,9 @@ Both groups read `o1`, because reading is only moving your own bookmark forward.
 That last part buys something the copies do not. If search is down for an hour, checkout keeps returning success, because the API was never calling search in the first place. The row is in the database and the event is on the topic. When search comes back, it reads on from its cursor and works through everything it missed. The counter, meanwhile, never waited for it.
 
 <figure>
-  <img src="/blog/kafka-search-down.svg" alt="At t=0 checkout returns 200 and search is down. In the same hour the counter reads o1. After an hour search is back and indexes o1 from its cursor." width="720" height="300" />
+  <object class="figure-svg" data="/blog/kafka-search-down.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At t=0 checkout returns 200 and search is down. In the same hour the counter reads o1. After an hour search is back and indexes o1 from its cursor.">
+    <img src="/blog/kafka-search-down.svg" alt="At t=0 checkout returns 200 and search is down. In the same hour the counter reads o1. After an hour search is back and indexes o1 from its cursor." width="720" height="300" />
+  </object>
   <figcaption>Checkout did not wait on search. The log held o1.</figcaption>
 </figure>
 
