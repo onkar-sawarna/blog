@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img">
+<style>
+@media (prefers-reduced-motion: reduce) {
+  animate, animateMotion, animateTransform { display: none !important; }
+  [opacity="0"] { opacity: 1 !important; }
+}
+</style>
+
   <title>Passenger A taps Book on 12A. Then B taps the same seat. Two requests, one empty row.</title>
   <rect width="720" height="260" fill="#F7F7F5"/>
 

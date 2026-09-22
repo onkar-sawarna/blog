@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img" aria-labelledby="t1">
+<style>
+@media (prefers-reduced-motion: reduce) {
+  animate, animateMotion, animateTransform { display: none !important; }
+  [opacity="0"] { opacity: 1 !important; }
+}
+</style>
+
   <title id="t1">One client to one service: only the source port changes</title>
   <rect width="720" height="280" fill="#F7F7F5"/>
   <rect x="36" y="80" width="150" height="88" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>

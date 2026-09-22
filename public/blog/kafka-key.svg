@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img">
+<style>
+@media (prefers-reduced-motion: reduce) {
+  animate, animateMotion, animateTransform { display: none !important; }
+  [opacity="0"] { opacity: 1 !important; }
+}
+</style>
+
   <title>Same user key always drops into the same lane. A later event for that user follows.</title>
   <rect width="720" height="300" fill="#F7F7F5"/>
 

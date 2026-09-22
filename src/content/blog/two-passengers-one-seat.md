@@ -125,4 +125,6 @@ A Redis key is a hint. A lock on a replica is a picture. Two API boxes still hav
 
 I still get this wrong. I lock in Redis and skip the version on the row. I `FOR UPDATE` a replica. I `DEL` a lock without checking the token. I `SKIP LOCKED` when the passenger asked for 12A. I treat a deadlock error as a bug instead of retry, and lock 12A then 12B every time.
 
+The same Redis-is-not-the-row mistake showed up when a homepage click found `item:42` missing. I wrote that [when a second GET sat on the pool](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). The shop that grew more API boxes around that pool is [the proxy post](/blog/the-api-should-see-mysql-not-the-topology/).
+
 If this is useful, wrong, or incomplete, write to me.

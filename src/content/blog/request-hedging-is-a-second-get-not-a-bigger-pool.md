@@ -100,4 +100,6 @@ Hedging is a third thing again. It duplicates a slow request, which is a reasona
 
 I still get this wrong in the usual ways. Sizing the pool by how many users I expect rather than by how many concurrent queries the database can actually serve. Letting the losing copy of a hedged request keep running after the winner returns, so it holds a connection nobody is waiting on. And reading a nil from Redis as "try again" when it means "somebody should write this key, once."
 
+More API boxes do not turn those four sockets into a safe MySQL budget. I wrote that [when the shop outgrew one process](/blog/the-api-should-see-mysql-not-the-topology/). And a Redis lock that fills `item:42` is still not the row. I wrote that [when two people booked the same seat](/blog/two-passengers-one-seat/).
+
 If this is useful, wrong, or incomplete, write to me.

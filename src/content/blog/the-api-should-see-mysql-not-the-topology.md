@@ -146,4 +146,6 @@ MySQL should see a limited number of clients, not one connection per API worker.
 
 I still get this wrong. I size the proxy pool to "how many API workers I have." I leave a transaction open while I call Redis. I send every `SELECT` to a replica and then cannot find the order on the confirmation page. I treat the proxy like a dumb load balancer on the MySQL port. I add three proxies and hit `max_connections` anyway. I change a rule on one box and debug the other two for an hour.
 
+A Redis lock on `item:42` is the same split: the key is a hint, the MySQL row is the fact. I wrote that [when two passengers booked 12A](/blog/two-passengers-one-seat/).
+
 If this is useful, wrong, or incomplete, write to me.
