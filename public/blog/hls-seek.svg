@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
+<style>
+@media (prefers-reduced-motion: reduce) {
+  animate, animateMotion, animateTransform { display: none !important; }
+  [opacity="0"] { opacity: 1 !important; }
+}
+</style>
+  <title>Seek to 18:00 walks six-second durations and GETs seg180.ts. Earlier segments stay on the origin.</title>
+  <rect width="720" height="300" fill="#F7F7F5"/>
+
+  <text x="360" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#1A3D32">720p.m3u8, finished list</text>
+
+  <rect x="24" y="56" width="72" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4"/>
+  <text x="60" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">seg0</text>
+  <text x="60" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5C5C59">0:00</text>
+
+  <rect x="104" y="56" width="72" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4"/>
+  <text x="140" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">seg1</text>
+  <text x="140" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5C5C59">0:06</text>
+
+  <text x="200" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#C5D4CB">...</text>
+
+  <rect x="224" y="56" width="80" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4"/>
+  <text x="264" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">seg179</text>
+  <text x="264" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5C5C59">17:54</text>
+
+  <g>
+    <animate attributeName="opacity" values="0.35;1;1" keyTimes="0;0.25;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="316" y="48" width="96" height="80" rx="6" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+    <text x="364" y="80" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#1A3D32">seg180</text>
+    <text x="364" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1A3D32">18:00</text>
+  </g>
+
+  <rect x="424" y="56" width="80" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4"/>
+  <text x="464" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">seg181</text>
+  <text x="464" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5C5C59">18:06</text>
+
+  <text x="528" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#C5D4CB">...</text>
+
+  <rect x="548" y="56" width="148" height="64" rx="6" fill="#FFFFFF" stroke="#C5D4CB" stroke-width="1.4"/>
+  <text x="622" y="84" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">seg399</text>
+  <text x="622" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5C5C59">39:54  ENDLIST</text>
+
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.2;0.4;1" dur="5s" repeatCount="indefinite"/>
+    <path d="M364 128 V168" stroke="#B33A1A" stroke-width="1.6"/>
+    <path d="M358 160 L364 170 L370 160" fill="none" stroke="#B33A1A" stroke-width="1.6"/>
+    <rect x="248" y="172" width="232" height="52" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
+    <text x="364" y="194" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#B33A1A">GET seg180.ts</text>
+    <text x="364" y="214" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#B33A1A">not seg0 through seg179</text>
+  </g>
+
+  <text x="360" y="256" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">1080 seconds / 6 seconds per line = segment 180.</text>
+  <text x="360" y="282" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">The bar can jump because the list already had an end.</text>
+</svg>

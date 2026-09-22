@@ -5,101 +5,91 @@ pubDate: 2026-09-06
 tags: ["systems"]
 ---
 
-A pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API for that one product.
+A pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API.
 
-My API reads from Redis and from the database. Three things go wrong on that path, one after another. The fix for the third one makes the second one worse.
+My API reads Redis, then the database. Three things go wrong on that path. The fix for the third one makes the second one worse.
 
 ## Opening a socket per page
 
-The first version of this API did the obvious thing. A request arrives, it opens a connection to the database, it reads the row, it closes the connection.
+The first version opened a database connection, read the row, and closed it.
 
-Opening is not free, because TCP will not carry a query until a connection exists. Establishing one takes three packets going back and forth, known as the three-way handshake: the API sends a SYN meaning "I would like to start a connection," the database replies SYN-ACK meaning "yes, and likewise," and the API sends an ACK. Only after that round trip completes does the actual query leave the machine.
+Opening is not free. TCP will not carry a query until a connection exists. That takes three packets: the API sends SYN ("I want to start"), the database replies SYN-ACK ("yes"), the API sends ACK. Only then does the query leave.
 
-Closing costs more. A clean shutdown is four packets, a FIN and an ACK in each direction, because each side has to say it is finished sending and have that acknowledged. Some stacks combine two of those. Either way it is a conversation, not a single packet, and when it is over the next request starts from nothing.
+Closing is four packets: FIN and ACK both ways. When that is over, the next request starts from nothing.
 
 <figure>
   <object class="figure-svg" data="/blog/hedge-handshake.svg" type="image/svg+xml" width="720" height="320" style="aspect-ratio: 720 / 320" aria-label="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK.">
     <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
   </object>
-  <figcaption>Figure 1. Handshake, then the query, then teardown. Every request. That is the phone-call model.</figcaption>
+  <figcaption>Figure 1. Handshake, then the query, then teardown. Every request.</figcaption>
 </figure>
 
-One buyer, one handshake, one query, one teardown. That is fine for a demo. A thousand taps in a minute means a thousand handshakes into the database and a thousand teardowns, plus a heap of sockets on both machines sitting in TIME-WAIT, which is a state a closed connection lingers in for a while so that stray packets from it do not get delivered to some unlucky new connection reusing the same port. The query itself was a few bytes. The ceremony around it was the load.
+One buyer, one handshake, one query, one teardown. A thousand taps means a thousand of those. Closed sockets also linger in TIME-WAIT so leftover packets do not hit a new connection on the same port. The query was a few bytes. The ceremony was the load.
 
 ## Four connections that never hang up
 
-So the API stopped dialling per request.
+So the process opens four connections at startup and keeps them. Those four pay the handshake once. That set is the connection pool.
 
-When the process starts, it opens four connections to the database and simply keeps them. Those four pay for their handshakes once, at startup, and then stay in the state TCP calls ESTABLISHED, meaning open and idle and ready to carry data. That set of four is the connection pool.
+A request borrows one, runs the query, and hands it back. No FIN, no new SYN.
 
-A request now borrows one of them, runs its query, and hands it back. No FIN, no new SYN. The buyer still gets a page and the database still sees a query, but the handshake is no longer on the path the user waits on.
+A thousand buyers share those four. If all four are busy, the fifth waits. That wait is the point: at most four queries at once, so a spike cannot become a thousand simultaneous reads.
 
-A thousand buyers share those four sockets. If all four are busy when a fifth request arrives, that request waits for one to come back rather than opening a fifth connection. That waiting is the point rather than a flaw: a pool of four means four queries may run at once, and it is how you stop a traffic spike from turning into a thousand simultaneous queries against a database that cannot serve them.
-
-What the pool does not do is make the database faster. It removes the handshake and the teardown from every tap, and nothing else.
+The pool does not make the database faster. It only removes the handshake from the tap.
 
 <figure>
   <object class="figure-svg" data="/blog/hedge-pool-reuse.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN.">
     <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN." width="720" height="300" />
   </object>
-  <figcaption>Figure 2. A thousand users reuse four handshakes. Teardown waits until the process dies.</figcaption>
+  <figcaption>Figure 2. A thousand users reuse four handshakes.</figcaption>
 </figure>
 
 ## Redis has never heard of item 42
 
-Four connections are still four connections, so the page will be slow if every request reaches the database at all. That is what the cache is for. The API looks in Redis first, under a key like `item:42`. If the value is there, the request is answered from memory and the pool is never touched. If it is not, Redis returns nil, and the API has to read the row and then write it back into Redis so the next request stops at the cache.
+The page is still slow if every request hits the database. The API looks in Redis first, under `item:42`. Hit: answer from memory, pool untouched. Miss: Redis returns nil, the API reads the row and writes it back.
 
-The homepage flips. Redis has never seen `item:42`, or the key expired. A thousand requests arrive for the same URL within a few seconds.
+The homepage flips. Redis has no `item:42`. A thousand requests arrive.
 
-Every one of them does exactly the same thing. Ask Redis, get nil, borrow a connection from the pool, run the identical query. The pool I was pleased with fills up entirely with a thousand copies of one read. Requests for other products, which have perfectly good cache entries, now queue behind item 42 waiting for a connection to come free. Pages that should have been instant are slow because of a product they have nothing to do with.
+Every one asks Redis, gets nil, borrows a pool connection, runs the same query. The pool fills with copies of one read. Other products wait behind item 42.
 
-The pool saved me the handshake. It did nothing about a thousand identical reads.
+The pool saved the handshake. It did nothing about a thousand identical reads.
 
 <figure>
   <img src="/blog/hedge-redis-miss.svg" alt="Many users send GET 42 to the API. Redis returns nil for item 42. The pool and database run the same row many times and pages get slow." width="720" height="300" />
   <figcaption>Figure 3. Redis had nothing. Every GET became a database read.</figcaption>
 </figure>
 
-The fix here is a lock, which is worth naming clearly because it is not what the next section is about. When a request finds `item:42` missing, it tries to claim the right to fill it, and only the first one succeeds. That one worker borrows a connection, reads the row, writes it into Redis, and releases the claim. The other requests, having failed to claim it, wait briefly and then ask Redis again, and by that point the value is there. One read of the database instead of a thousand, and the other three pool connections stay available for everything else.
+The fix is a lock. The first request to see the miss claims the right to fill `item:42`. It reads the row, writes Redis, lets go. The others wait, then ask Redis again. One database read. Three pool connections stay free.
 
 <figure>
   <img src="/blog/hedge-lock.svg" alt="A lock for key 42. Worker w1 holds it and fills the cache. Workers w2, w3, and w4 wait and then get a cache hit. The pool has one connection busy on 42 and three free for other keys." width="720" height="280" />
   <figcaption>Figure 4. The lock is for the fill. The pool is for the query.</figcaption>
 </figure>
 
-If I skip the lock, the page stays slow, and a slow page is exactly the situation where the third idea starts to look like courage.
+Skip the lock and the page stays slow. A slow page is when the third idea looks like courage.
 
 ## Sending the same request twice
 
-Hedging is easy to describe. The user tapped once. The API started reading item 42 at time zero, found nothing in Redis, borrowed a connection, and is now waiting on the database. Fifty milliseconds later there is still no answer, so the API fires off a second copy of the same read, hoping this one comes back sooner. Whichever answer arrives first becomes the page, and the loser is supposed to be cancelled.
+Hedging: the user tapped once. The API is waiting on the database. Fifty milliseconds later it fires a second copy of the same read. First answer wins. The loser should be cancelled.
 
-It is a reasonable technique and it is aimed at a real problem. Sometimes one request out of a hundred is slow for a reason that has nothing to do with the request: a machine that is briefly overloaded, a disk that is having a bad second, a connection that landed on an unhappy replica. Retrying that one early, rather than waiting for it, pulls in the slowest few percent of response times, which is usually what people mean by tail latency.
+That helps when one path is sick: a bad host, a bad disk. It pulls in the slowest few percent, the tail.
 
-Now apply it to my morning. Both copies of the request look in the same Redis, and both find the same nil. Both then borrow a connection from the same pool. A single tap is now holding two of my four connections. A thousand slow taps become two thousand borrowings against a pool of four.
+On this flood both copies see the same nil. Both borrow from the same pool. One tap holds two of four connections. A thousand slow taps become two thousand borrowings.
 
-The reason the first request was slow was the empty cache key. The hedge did not address that. It doubled the number of requests piling onto it.
+The first request was slow because the key was empty. The hedge doubled the pile.
 
 <figure>
   <object class="figure-svg" data="/blog/hedge-how.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool.">
     <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
   </object>
-  <figcaption>Figure 5. Hedging is a second bet on the same GET. Redis is still empty for both.</figcaption>
+  <figcaption>Figure 5. Hedging is a second GET. Redis is still empty for both.</figcaption>
 </figure>
 
-Hedging earns its keep when the second attempt can land somewhere genuinely different, on another host or another replica, and when the losing copy is actually cancelled so it gives its connection back promptly. Neither of those was true here. And in no arrangement does a hedge write a value into Redis, which is what this page needed.
+Hedging only helps if the second attempt can land somewhere different, and if the loser actually gives the connection back. Neither was true here. And a hedge never writes Redis, which is what the page needed.
 
-## What I took from this
+The handshake is why the pool exists. The empty key is why the lock exists. Hedging is a second GET. It does not fill the key.
 
-Three problems, three tools, and they do not substitute for each other.
+I still size the pool by user count instead of by how many queries the database can run at once. I still let the losing hedge keep running.
 
-The handshake and the teardown are why the pool exists. Many users should share a few connections that stay open, rather than each opening and closing their own conversation with the database.
-
-The empty cache key is a different problem entirely, and the pool cannot help with it. A crowd of identical requests should fill that key once, and a lock is what makes "once" true. The lock governs the fill; the pool governs the query.
-
-Hedging is a third thing again. It duplicates a slow request, which is a reasonable answer to a sick path and a terrible answer to a missing cache entry. Hedge into a stampede and you drain the pool you built to avoid the handshake in the first place.
-
-I still get this wrong in the usual ways. Sizing the pool by how many users I expect rather than by how many concurrent queries the database can actually serve. Letting the losing copy of a hedged request keep running after the winner returns, so it holds a connection nobody is waiting on. And reading a nil from Redis as "try again" when it means "somebody should write this key, once."
-
-More API boxes do not turn those four sockets into a safe MySQL budget. I wrote that [when the shop outgrew one process](/blog/the-api-should-see-mysql-not-the-topology/). And a Redis lock that fills `item:42` is still not the row. I wrote that [when two people booked the same seat](/blog/two-passengers-one-seat/).
+More API boxes do not turn those four sockets into a safe MySQL budget. I wrote that [when the shop outgrew one process](/blog/the-api-should-see-mysql-not-the-topology/). A Redis lock that fills `item:42` is still not the row. I wrote that [when two people booked the same seat](/blog/two-passengers-one-seat/).
 
 If this is useful, wrong, or incomplete, write to me.

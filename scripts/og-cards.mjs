@@ -99,6 +99,15 @@ const PANELS = {
     rightBot: 'the gap has to survive prose',
     footer: 'Prose is where the gap stops hiding.',
   },
+  'how-livestream-and-video-rendering-work': {
+    leftTitle: 'one file',
+    leftMid: 'skip inside it',
+    leftBot: 'live means still writing',
+    rightTitle: 'a playlist',
+    rightMid: 'seek is a GET',
+    rightBot: 'live appends a line',
+    footer: 'The player never had the whole talk.',
+  },
 };
 
 function esc(text) {
