@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
-  <title>An encoder reads talk7.mp4 and writes 720p.m3u8 plus numbered segment files.</title>
+  <title>An encoder reads samay.mp4 and writes 720p.m3u8 plus numbered segment files.</title>
   <rect width="720" height="300" fill="#F7F7F5"/>
 
   <rect x="16" y="88" width="132" height="72" rx="6" fill="#FFFFFF" stroke="#161616" stroke-width="1.6"/>
-  <text x="82" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">talk7.mp4</text>
+  <text x="82" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">samay.mp4</text>
   <text x="82" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">one recording</text>
 
   <path d="M148 124 H188" stroke="#1A3D32" stroke-width="1.5"/>

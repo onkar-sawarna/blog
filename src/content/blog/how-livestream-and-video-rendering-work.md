@@ -1,11 +1,11 @@
 ---
 title: "How livestream and video rendering work"
-description: "A recorded talk, a drag on the bar, a drop in quality, then a live feed that never writes a last line."
+description: "A Samay Raina episode, a drag on the bar, a drop in quality, then a live feed that never writes a last line."
 pubDate: 2026-09-22
 tags: ["systems"]
 ---
 
-I tap Play on a recorded talk. Call it talk 7. Forty minutes. I already know the first twelve minutes are setup, so I drag the bar to eighteen minutes.
+I tap Play on a Samay Raina episode. Forty minutes. I already know the first twelve minutes are setup, so I drag the bar to eighteen minutes.
 
 I used to think Play meant the browser downloaded one video file, the way it downloads a PDF. Seek was skip-ahead inside that file. Quality was a smaller copy of the same file. Live was the same file still being written.
 
@@ -13,7 +13,7 @@ None of that is what the player actually does.
 
 ## The first fetch is a menu
 
-The player does not ask for `talk.mp4`. It asks for a small text file, usually named `master.m3u8`. That file is a menu. It lists 360p and 720p, each pointing at another text file. That menu is the master playlist. On this recording it does not change.
+The player does not ask for `samay.mp4`. It asks for a small text file, usually named `master.m3u8`. That file is a menu. It lists 360p and 720p, each pointing at another text file. That menu is the master playlist. On this recording it does not change.
 
 The player picks 720p and fetches `720p.m3u8`. This one is the media playlist: a list of slices, not the video itself. Each entry has a duration and a URL.
 
@@ -32,17 +32,17 @@ seg399.ts
 
 A segment is a few seconds of encoded video at its own URL. Mine are six seconds each. Four hundred of them. `#EXT-X-ENDLIST` is how the player knows this list is finished. Add the durations: 2400 seconds, forty minutes. That is how the scrubber knows the length before a single frame has been decoded.
 
-Play starts by downloading `seg0.ts`, drawing it, and fetching a couple ahead. The talk is still four hundred files on the origin. The player is holding three of them.
+Play starts by downloading `seg0.ts`, drawing it, and fetching a couple ahead. The episode is still four hundred files on the origin. The player is holding three of them.
 
 <figure>
-  <img src="/blog/hls-not-one-file.svg" alt="Left: a player asks for one talk.mp4. Right: the player fetches a master menu, then a 720p playlist, then a few six-second segments." width="720" height="300" />
-  <figcaption>Figure 1. Talk 7 is a menu, a list, and a pile of short files.</figcaption>
+  <img src="/blog/hls-not-one-file.svg" alt="Left: a player asks for one samay.mp4. Right: the player fetches a master menu, then a 720p playlist, then a few six-second segments." width="720" height="300" />
+  <figcaption>Figure 1. The episode is a menu, a list, and a pile of short files.</figcaption>
 </figure>
 
-Those files came from an encoder. The command reads `talk7.mp4` and writes the playlist plus the slices. The last argument is the path of the `.m3u8` file.
+Those files came from an encoder. The command reads `samay.mp4` and writes the playlist plus the slices. The last argument is the path of the `.m3u8` file.
 
 ```
-ffmpeg -i talk7.mp4 \
+ffmpeg -i samay.mp4 \
   -codec:v libx264 \
   -codec:a aac \
   -hls_time 6 \
@@ -57,7 +57,7 @@ ffmpeg -i talk7.mp4 \
 The master is not that last argument. I run the same command again for `360p.m3u8`. Then I write `master.m3u8` by hand, two lines pointing at those playlists. That menu is what does not change.
 
 <figure>
-  <img src="/blog/hls-cut.svg" alt="talk7.mp4 goes into an encoder with hls_time 6 and playlist_type vod. Out come 720p.m3u8 and numbered 720p/seg files." width="720" height="300" />
+  <img src="/blog/hls-cut.svg" alt="samay.mp4 goes into an encoder with hls_time 6 and playlist_type vod. Out come 720p.m3u8 and numbered 720p/seg files." width="720" height="300" />
   <figcaption>Figure 2. The last argument is the playlist path. The segments are the other files.</figcaption>
 </figure>
 
@@ -93,7 +93,7 @@ The player is a few seconds into segment 180. It downloads the 360p copy of that
 
 ## The live playlist has no last line
 
-Someone in the room says the live room is up. I switch to that feed.
+Someone in the room says he is live. I switch to that feed.
 
 The master still lists 360p and 720p. The master still does not change. The media playlist is the thing that is different.
 
@@ -116,6 +116,6 @@ On this feed the old lines stay. A late joiner can rewind to `seg0.ts` the same 
 
 I still talk about "the video" when the CDN log is four hundred objects and two playlists. Seek worked because the playlist was finished. Quality worked because a second finished playlist covered the same timestamps. Live works because that list has no end, so the player has to keep asking.
 
-Plenty of live playlists do not only grow. They drop the oldest line when they add a new one, and they bump a sequence number so `seg0` in this fetch is not the `seg0` from ten minutes ago. Talk 7 was the append-only kind. The other kind looks like the same `.m3u8` until you notice the top of the list moving.
+Plenty of live playlists do not only grow. They drop the oldest line when they add a new one, and they bump a sequence number so `seg0` in this fetch is not the `seg0` from ten minutes ago. The episode was the append-only kind. The other kind looks like the same `.m3u8` until you notice the top of the list moving.
 
 If this is useful, wrong, or incomplete, write to me.

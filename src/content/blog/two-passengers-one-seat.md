@@ -1,17 +1,17 @@
 ---
 title: "Redis can hold a key. MySQL holds the seat."
-description: "Two people tap Book on seat 12A. Lock the row, check a version, or take a key in Redis. The seat row is still the truth."
+description: "Two fans tap Book on seat 12A for the IPL final. Lock the row, check a version, or take a key in Redis. The seat row is still the truth."
 pubDate: 2026-09-14
 tags: ["systems"]
 ---
 
-Passenger A taps Book on seat 12A. Passenger B taps Book on the same seat. Two requests hit my API. The row still says empty.
+The IPL final is open. Fan A taps Book on seat 12A. Fan B taps Book on the same seat. Two requests hit my API. The row still says empty.
 
 I used to think a lock was one move: grab 12A, write booked, let go. That is one kind. The same two taps need the others.
 
 <figure>
-  <object class="figure-svg" data="/blog/lock-two-taps.svg" type="image/svg+xml" width="720" height="260" style="aspect-ratio: 720 / 260" aria-label="Passenger A taps Book on 12A. Then B taps the same seat. Two requests hit one empty row.">
-    <img src="/blog/lock-two-taps.svg" alt="Passenger A taps Book on 12A. Then B taps the same seat. Two requests hit one empty row." width="720" height="260" />
+  <object class="figure-svg" data="/blog/lock-two-taps.svg" type="image/svg+xml" width="720" height="260" style="aspect-ratio: 720 / 260" aria-label="Fan A taps Book on 12A for the final. Then B taps the same seat. Two requests hit one empty row.">
+    <img src="/blog/lock-two-taps.svg" alt="Fan A taps Book on 12A for the final. Then B taps the same seat. Two requests hit one empty row." width="720" height="260" />
   </object>
   <figcaption>Figure 1. One seat. Then a second tap.</figcaption>
 </figure>
@@ -22,7 +22,7 @@ Pessimistic locking means I assume a fight. A starts a transaction, locks the ro
 
 I pay the wait so 12A is not sold twice.
 
-Optimistic locking means I assume they usually do not fight. A and B both read 12A empty. The row has a version, say 3. A writes booked and sets version to 4 where version is still 3. That update changes one row. B runs the same update. Zero rows change. B tells the passenger the seat is gone.
+Optimistic locking means I assume they usually do not fight. A and B both read 12A empty. The row has a version, say 3. A writes booked and sets version to 4 where version is still 3. That update changes one row. B runs the same update. Zero rows change. B tells the fan the seat is gone.
 
 No one waited. The second writer lost at the update, not at a lock.
 
@@ -54,7 +54,7 @@ MySQL looks for that cycle soon. If an edge will close a loop, it kills one tran
 
 Postgres lets them wait. After a timeout it builds a wait-for graph: who is waiting on whom. If it finds a cycle, it kills one. If it does not, they keep waiting.
 
-Same two passengers. Same pair. MySQL fails fast. Postgres waits, then looks.
+Same two fans. Same pair. MySQL fails fast. Postgres waits, then looks.
 
 <figure>
   <object class="figure-svg" data="/blog/lock-deadlock.svg" type="image/svg+xml" width="720" height="280" style="aspect-ratio: 720 / 280" aria-label="A holds 12A and wants 12B. B holds 12B and wants 12A. MySQL kills one now. Postgres waits then walks the wait-for graph.">
@@ -115,7 +115,7 @@ One Redis can die, and then nobody can take `seat:12A`. Redlock is the same `SET
 
 A Redis key is a hint. A lock on a replica is a picture. Two API boxes still have to write 12A on the primary.
 
-I still lock in Redis and skip the version on the row. I still `FOR UPDATE` a replica. I still `SKIP LOCKED` when the passenger asked for 12A.
+I still lock in Redis and skip the version on the row. I still `FOR UPDATE` a replica. I still `SKIP LOCKED` when the fan asked for 12A.
 
 The same Redis-is-not-the-row mistake showed up when a homepage click found `item:42` missing. I wrote that [when a second GET sat on the pool](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). The shop that grew more API boxes around that pool is [the proxy post](/blog/the-api-should-see-mysql-not-the-topology/).
 

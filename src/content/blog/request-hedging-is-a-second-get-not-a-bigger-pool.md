@@ -1,11 +1,11 @@
 ---
 title: "Request hedging is a second GET, not a bigger pool"
-description: "A homepage flood, a pool that reuses TCP, an empty Redis key, and a second GET that sits on the same pool."
+description: "The festival sale, a phone that floods the homepage, a pool that reuses TCP, an empty Redis key, and a second GET that sits on the same pool."
 pubDate: 2026-09-06
 tags: ["systems"]
 ---
 
-A pair of shoes goes on the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API.
+The festival sale goes live. A phone hits the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API.
 
 My API reads Redis, then the database. Three things go wrong on that path. The fix for the third one makes the second one worse.
 
@@ -47,7 +47,7 @@ The pool does not make the database faster. It only removes the handshake from t
 
 The page is still slow if every request hits the database. The API looks in Redis first, under `item:42`. Hit: answer from memory, pool untouched. Miss: Redis returns nil, the API reads the row and writes it back.
 
-The homepage flips. Redis has no `item:42`. A thousand requests arrive.
+The sale flips the homepage. Redis has no `item:42`. A thousand requests arrive.
 
 Every one asks Redis, gets nil, borrows a pool connection, runs the same query. The pool fills with copies of one read. Other products wait behind item 42.
 

@@ -83,7 +83,7 @@ What I write down now, before touching any bounds:
 
 Finding a number in a sorted array is this same frame with the predicate left unnamed: `ok(i)` is "is `a[i]` at least the target." The array was one way of getting monotonicity, not the requirement.
 
-The shape shows up outside puzzles too. The smallest timeout that still covers the slowest one percent of requests. The fewest workers that still finish a batch before a deadline, provided adding a worker never makes it later. Whenever you can name the yes-or-no question and argue that a yes stays a yes, you can search the answer instead of walking to it.
+The shape shows up outside puzzles too. The smallest timeout that still covers the slowest one percent of requests. The fewest workers that still finish a batch before a deadline, provided adding a worker never makes it later. The cheapest delivery slot that still arrives before the festival sale ends. Whenever you can name the yes-or-no question and argue that a yes stays a yes, you can search the answer instead of walking to it.
 
 I still only reach for binary search after seeing something sorted. I still force the frame onto something that is not monotonic, like "does this cache size improve the slow tail," because that answer can get worse before it gets better.
 

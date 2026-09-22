@@ -5,9 +5,9 @@ pubDate: 2026-08-15
 tags: ["observability", "systems"]
 ---
 
-A service in a customer's cluster would not stay running. It started, it ran for a minute or two, it exited, and something started it again.
+Festival sale night. A service in a customer's cluster would not stay running. It started, it ran for a minute or two, it exited, and something started it again. The homepage was still taking taps.
 
-I had the logs. I had all of them, shipped off the machines and searchable. I found the line within a minute: the service exiting, over and over. And then I sat there, unable to say the one thing anyone actually wanted to know: was this one machine having a bad night, or the whole cluster coming apart.
+I had the logs. I had all of them, shipped off the machines and searchable. I found the line within a minute: the service exiting, over and over. And then I sat there, unable to say the one thing anyone actually wanted to know: was this one machine having a bad night, or the whole sale coming apart.
 
 ## Why the logs could not tell me
 

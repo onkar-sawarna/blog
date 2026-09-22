@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img">
-  <title>A player does not fetch one talk file. It fetches a master menu, a playlist, then short segments.</title>
+  <title>A player does not fetch one episode file. It fetches a master menu, a playlist, then short segments.</title>
   <rect width="720" height="300" fill="#F7F7F5"/>
 
   <rect x="16" y="20" width="200" height="200" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
@@ -9,7 +9,7 @@
   <path d="M116 116 V140" stroke="#B33A1A" stroke-width="1.5"/>
   <path d="M110 132 L116 142 L122 132" fill="none" stroke="#B33A1A" stroke-width="1.5"/>
   <rect x="36" y="144" width="160" height="48" rx="6" fill="#FFFFFF" stroke="#B33A1A" stroke-width="1.6"/>
-  <text x="116" y="166" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">talk.mp4</text>
+  <text x="116" y="166" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#B33A1A">samay.mp4</text>
   <text x="116" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#B33A1A">one file</text>
   <line x1="48" y1="156" x2="184" y2="180" stroke="#B33A1A" stroke-width="1.6"/>
 
@@ -40,6 +40,6 @@
   <text x="536" y="174" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#161616">seg0.ts   seg1.ts   seg2.ts</text>
   <text x="536" y="194" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#5C5C59">six seconds each</text>
 
-  <text x="360" y="254" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">Talk 7 is a menu, a list, and a pile of short files.</text>
+  <text x="360" y="254" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">The episode is a menu, a list, and a pile of short files.</text>
   <text x="360" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C5C59">The master does not change. The recording playlist already has an end.</text>
 </svg>

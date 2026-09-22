@@ -1,15 +1,15 @@
 ---
 title: "SNS-SQS and Kafka, are they the same?"
-description: "Support could find the order. The dashboard said zero orders today. Both jobs were reading the same checkout, and one queue quietly decided only one of them would get it."
+description: "Support could find the sale order. The dashboard said zero orders today. Both jobs were reading the same checkout, and one queue quietly decided only one of them would get it."
 pubDate: 2026-08-28
 tags: ["systems"]
 ---
 
-Support could look up the order. The dashboard said zero orders today. Both jobs were reading the same checkout, and I had written both of them myself.
+Support could look up the order. The dashboard said zero phones sold today. Both jobs were reading the same festival-sale checkout, and I had written both of them myself.
 
-## A buyer taps Buy
+## A phone in the sale
 
-The buyer checks out. The API does two things, in this order.
+The buyer checks out the phone. The API does two things, in this order.
 
 First it writes the order row, `o1`, to the database. That row is the fact. If that write fails there is no order.
 

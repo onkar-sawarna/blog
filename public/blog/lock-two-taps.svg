@@ -6,7 +6,7 @@
 }
 </style>
 
-  <title>Passenger A taps Book on 12A. Then B taps the same seat. Two requests, one empty row.</title>
+  <title>Fan A taps Book on 12A for the final. Then B taps the same seat. Two requests, one empty row.</title>
   <rect width="720" height="260" fill="#F7F7F5"/>
 
   <rect x="24" y="48" width="140" height="72" rx="6" fill="#FFFFFF" stroke="#1A3D32" stroke-width="1.6"/>

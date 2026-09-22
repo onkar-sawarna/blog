@@ -1,17 +1,17 @@
 ---
 title: "I thought Kafka kept the order I published"
-description: "One checkout, three lanes, and two jobs reading the same line. Order lives on a partition, not on the topic."
+description: "One phone checkout in the festival sale, three lanes, and two jobs reading the same line. Order lives on a partition, not on the topic."
 pubDate: 2026-08-23
 tags: ["systems"]
 ---
 
 I used to treat Kafka like a queue with a nicer name. Messages go in one end, they come out the other end in the same order, and if a job falls behind you start more copies of it.
 
-Both halves of that are wrong. One checkout is enough to show why.
+Both halves of that are wrong. One checkout in the festival sale is enough to show why.
 
-## A buyer taps Buy
+## A phone in the sale
 
-A buyer, u1, checks out. The API does two things, in this order.
+A buyer, u1, checks out a phone. The API does two things, in this order.
 
 First it writes the order row to the database. That row is the fact. If the write fails there is no order.
 

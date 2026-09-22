@@ -1,13 +1,13 @@
 ---
 title: "I thought a box could only hold 64k connections"
-description: "A load test from one laptop stops near 64,000. That is a source-port limit, not a law of TCP. A server facing many clients is counting something else entirely."
+description: "A cricket-final chat is supposed to hold millions of sockets. A load test from one laptop stops near 64,000. That is a source-port limit, not a law of TCP."
 pubDate: 2026-08-16
 tags: ["networking", "systems"]
 ---
 
 I used to think 65,535 was a hard ceiling on TCP. One machine, about 64,000 connections, and that was the end of the conversation.
 
-Then I read that a chat service was holding millions of connections on a single server, and the number felt like a lie. So I tried to prove it was one.
+Then I read that a cricket-final chat was holding millions of connections on a single server, and the number felt like a lie. So I tried to prove it was one.
 
 ## The loop that stopped at 64,000
 
@@ -89,7 +89,7 @@ The server is not spending its own ephemeral ports to accept these. It never cal
   <figcaption>Figure 4. The server is m2. Each client is a different source IP. 64k is not the cap.</figcaption>
 </figure>
 
-That is how a box holds millions of connections. Millions of separate peers, one listening port, one large table. My loop had five million connections' worth of ambition and one source IP to spend it from.
+That is how a cricket-final chat holds millions of connections. Millions of separate phones, one listening port, one large table. My loop had five million connections' worth of ambition and one source IP to spend it from.
 
 The real ceiling on the server is somewhere else. Every open socket is a file descriptor, often capped at 1024 by default. Every socket costs memory. Getting to millions is descriptors, memory, and how efficiently the process waits on all of them. None of that is the size of a port field.
 

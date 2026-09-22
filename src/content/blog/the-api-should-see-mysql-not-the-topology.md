@@ -1,11 +1,11 @@
 ---
 title: "The API should see MySQL, not the topology"
-description: "A proxy sits in front of MySQL and answers like MySQL. The shop grew more API boxes, then split into two services, without teaching each one the write server and the read server."
+description: "A proxy sits in front of MySQL and answers like MySQL. The festival sale grew more API boxes, then the shop split into two services, without teaching each one the write server and the read server."
 pubDate: 2026-09-11
 tags: ["systems"]
 ---
 
-A buyer taps Buy. A thousand other people open the same pair of shoes, item 42. I add more API boxes so the shop can take the load.
+The festival sale is on. A thousand people open the same phone, item 42, and tap Buy. I add more API boxes so the shop can take the load.
 
 Each box already keeps a few MySQL connections open and reuses them. I wrote that story when [a thousand clicks met four sockets](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). I thought more boxes would just mean more of those small pools, and the database would be fine.
 
@@ -87,11 +87,11 @@ One MySQL connection still runs one query at a time. Sharing does not make one q
 
 A transaction is different. `BEGIN` means the next statements must run on the same server, in the same session, so they see their own writes. ProxySQL then sticks that API to one MySQL connection until `COMMIT`. If I start a transaction and then wait on Redis, I am holding a MySQL connection for no query.
 
-## The shoe is a read. Buy is a write.
+## The phone is a read. Buy is a write.
 
 Item 42 is a read. Buy is a write. Those should not hit the same machine if I have a primary and a replica.
 
-A TCP-only proxy cannot tell them apart. ProxySQL can, because it reads the SQL. A `SELECT` for the shoe can go to a replica. An `INSERT` for `o1` can go to the primary.
+A TCP-only proxy cannot tell them apart. ProxySQL can, because it reads the SQL. A `SELECT` for the phone can go to a replica. An `INSERT` for `o1` can go to the primary.
 
 The lists it chooses from are named groups of servers. People call a group a hostgroup. A rule says: this kind of SQL goes to that group.
 
