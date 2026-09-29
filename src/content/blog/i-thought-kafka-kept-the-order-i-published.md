@@ -11,7 +11,7 @@ Both halves of that are wrong. One checkout in the festival sale is enough to sh
 
 ## A phone in the sale
 
-A buyer, u1, checks out a phone. The API does two things, in this order.
+A buyer, u1, checks out a phone, and the API does two things, in this order.
 
 First it writes the order row to the database. That row is the fact. If the write fails there is no order.
 

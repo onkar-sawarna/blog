@@ -5,11 +5,11 @@ pubDate: 2026-08-28
 tags: ["systems"]
 ---
 
-Support could look up the order. The dashboard said zero phones sold today. Both jobs were reading the same festival-sale checkout, and I had written both of them myself.
+Support could look up the order, and the dashboard still said zero phones sold today. Both jobs were reading the same festival-sale checkout, and I had written both of them myself.
 
 ## A phone in the sale
 
-The buyer checks out the phone. The API does two things, in this order.
+The buyer checks out the phone, and the API does two things, in this order.
 
 First it writes the order row, `o1`, to the database. That row is the fact. If that write fails there is no order.
 

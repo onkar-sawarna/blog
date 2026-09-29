@@ -5,9 +5,9 @@ pubDate: 2026-09-06
 tags: ["systems"]
 ---
 
-The festival sale goes live. A phone hits the homepage. Call it item 42. A thousand people tap it inside a minute. Every tap is one request to my API.
+The festival sale goes live and a thousand people open the same homepage inside a minute: a pair of size-8 white sneakers. Every tap is one request to my API.
 
-My API reads Redis, then the database. Three things go wrong on that path. The fix for the third one makes the second one worse.
+The API reads Redis, then the database. Three things go wrong on that path, and the fix for the third one makes the second one worse.
 
 ## Opening a socket per page
 
@@ -18,8 +18,8 @@ Opening is not free. TCP will not carry a query until a connection exists. That 
 Closing is four packets: FIN and ACK both ways. When that is over, the next request starts from nothing.
 
 <figure>
-  <object class="figure-svg" data="/blog/hedge-handshake.svg" type="image/svg+xml" width="720" height="320" style="aspect-ratio: 720 / 320" aria-label="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK.">
-    <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for item 42 and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
+  <object class="figure-svg" data="/blog/hedge-handshake.svg" type="image/svg+xml" width="720" height="320" style="aspect-ratio: 720 / 320" aria-label="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for the sneakers and the row, then FIN, ACK and FIN, then ACK.">
+    <img src="/blog/hedge-handshake.svg" alt="Time diagram from the API to the database: SYN, SYN-ACK, ACK, then the query for the sneakers and the row, then FIN, ACK and FIN, then ACK." width="720" height="320" />
   </object>
   <figcaption>Figure 1. Handshake, then the query, then teardown. Every request.</figcaption>
 </figure>
@@ -37,31 +37,31 @@ A thousand buyers share those four. If all four are busy, the fifth waits. That 
 The pool does not make the database faster. It only removes the handshake from the tap.
 
 <figure>
-  <object class="figure-svg" data="/blog/hedge-pool-reuse.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN.">
-    <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries item 42, and returns the connection. No FIN and no new SYN." width="720" height="300" />
+  <object class="figure-svg" data="/blog/hedge-pool-reuse.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="At process start the API does four handshakes and holds a pool. Each GET checks out, queries the sneakers, and returns the connection. No FIN and no new SYN.">
+    <img src="/blog/hedge-pool-reuse.svg" alt="At process start the API does four handshakes and holds a pool. Each GET checks out, queries the sneakers, and returns the connection. No FIN and no new SYN." width="720" height="300" />
   </object>
   <figcaption>Figure 2. A thousand users reuse four handshakes.</figcaption>
 </figure>
 
-## Redis has never heard of item 42
+## Redis has never heard of the sneakers
 
-The page is still slow if every request hits the database. The API looks in Redis first, under `item:42`. Hit: answer from memory, pool untouched. Miss: Redis returns nil, the API reads the row and writes it back.
+The page is still slow if every request hits the database. The API looks in Redis first, under `sneakers:8-white`. Hit: answer from memory, pool untouched. Miss: Redis returns nil, the API reads the row and writes it back.
 
-The sale flips the homepage. Redis has no `item:42`. A thousand requests arrive.
+The sale flips the homepage. Redis has no `sneakers:8-white`. A thousand requests arrive.
 
-Every one asks Redis, gets nil, borrows a pool connection, runs the same query. The pool fills with copies of one read. Other products wait behind item 42.
+Every one asks Redis, gets nil, borrows a pool connection, runs the same query. The pool fills with copies of one read. Other products wait behind the sneakers.
 
 The pool saved the handshake. It did nothing about a thousand identical reads.
 
 <figure>
-  <img src="/blog/hedge-redis-miss.svg" alt="Many users send GET 42 to the API. Redis returns nil for item 42. The pool and database run the same row many times and pages get slow." width="720" height="300" />
+  <img src="/blog/hedge-redis-miss.svg" alt="Many users send GET sneakers to the API. Redis returns nil. The pool and database run the same row many times and pages get slow." width="720" height="300" />
   <figcaption>Figure 3. Redis had nothing. Every GET became a database read.</figcaption>
 </figure>
 
-The fix is a lock. The first request to see the miss claims the right to fill `item:42`. It reads the row, writes Redis, lets go. The others wait, then ask Redis again. One database read. Three pool connections stay free.
+The fix is a lock. The first request to see the miss claims the right to fill `sneakers:8-white`. It reads the row, writes Redis, lets go. The others wait, then ask Redis again. One database read. Three pool connections stay free.
 
 <figure>
-  <img src="/blog/hedge-lock.svg" alt="A lock for key 42. Worker w1 holds it and fills the cache. Workers w2, w3, and w4 wait and then get a cache hit. The pool has one connection busy on 42 and three free for other keys." width="720" height="280" />
+  <img src="/blog/hedge-lock.svg" alt="A lock for the sneakers key. Worker w1 holds it and fills the cache. Workers w2, w3, and w4 wait and then get a cache hit. The pool has one connection busy on sneakers and three free for other keys." width="720" height="280" />
   <figcaption>Figure 4. The lock is for the fill. The pool is for the query.</figcaption>
 </figure>
 
@@ -78,8 +78,8 @@ On this flood both copies see the same nil. Both borrow from the same pool. One 
 The first request was slow because the key was empty. The hedge doubled the pile.
 
 <figure>
-  <object class="figure-svg" data="/blog/hedge-how.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool.">
-    <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs item 42, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
+  <object class="figure-svg" data="/blog/hedge-how.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="One user click. At t=0 the API GETs the sneakers, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool.">
+    <img src="/blog/hedge-how.svg" alt="One user click. At t=0 the API GETs the sneakers, Redis is nil, goes to the database. At 50ms it sends the same GET again. First answer wins. Both copies sit on the pool." width="720" height="300" />
   </object>
   <figcaption>Figure 5. Hedging is a second GET. Redis is still empty for both.</figcaption>
 </figure>
@@ -90,6 +90,6 @@ The handshake is why the pool exists. The empty key is why the lock exists. Hedg
 
 I still size the pool by user count instead of by how many queries the database can run at once. I still let the losing hedge keep running.
 
-More API boxes do not turn those four sockets into a safe MySQL budget. I wrote that [when the shop outgrew one process](/blog/the-api-should-see-mysql-not-the-topology/). A Redis lock that fills `item:42` is still not the row. I wrote that [when two people booked the same seat](/blog/two-passengers-one-seat/).
+More API boxes do not turn those four sockets into a safe MySQL budget. I wrote that [when the shop outgrew one process](/blog/the-api-should-see-mysql-not-the-topology/). A Redis lock that fills `sneakers:8-white` is still not the row. I wrote that [when two people booked the same seat](/blog/two-passengers-one-seat/).
 
 If this is useful, wrong, or incomplete, write to me.

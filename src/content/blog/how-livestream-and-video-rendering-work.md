@@ -5,11 +5,9 @@ pubDate: 2026-09-22
 tags: ["systems"]
 ---
 
-I tap Play on a Samay Raina episode. Forty minutes. I already know the first twelve minutes are setup, so I drag the bar to eighteen minutes.
+I tap Play on a Samay Raina episode that runs about forty minutes. I already know the first twelve minutes are setup, so I drag the bar to eighteen.
 
-I used to think Play meant the browser downloaded one video file, the way it downloads a PDF. Seek was skip-ahead inside that file. Quality was a smaller copy of the same file. Live was the same file still being written.
-
-None of that is what the player actually does.
+I used to think Play meant the browser downloaded one video file, the way it downloads a PDF. Seek would be a skip inside that file, quality would be a smaller copy of the same file, and live would be that file still being written. None of that is what the player actually does.
 
 ## The first fetch is a menu
 

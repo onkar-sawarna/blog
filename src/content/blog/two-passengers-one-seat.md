@@ -5,7 +5,7 @@ pubDate: 2026-09-14
 tags: ["systems"]
 ---
 
-The IPL final is open. Fan A taps Book on seat 12A. Fan B taps Book on the same seat. Two requests hit my API. The row still says empty.
+The IPL final is open, and two fans tap Book on seat 12A. Both requests hit my API while the row still says empty.
 
 I used to think a lock was one move: grab 12A, write booked, let go. That is one kind. The same two taps need the others.
 
@@ -117,6 +117,6 @@ A Redis key is a hint. A lock on a replica is a picture. Two API boxes still hav
 
 I still lock in Redis and skip the version on the row. I still `FOR UPDATE` a replica. I still `SKIP LOCKED` when the fan asked for 12A.
 
-The same Redis-is-not-the-row mistake showed up when a homepage click found `item:42` missing. I wrote that [when a second GET sat on the pool](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). The shop that grew more API boxes around that pool is [the proxy post](/blog/the-api-should-see-mysql-not-the-topology/).
+The same Redis-is-not-the-row mistake showed up when a homepage click found the sneakers missing from cache. I wrote that [when a second GET sat on the pool](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). The shop that grew more API boxes around that pool is [the proxy post](/blog/the-api-should-see-mysql-not-the-topology/).
 
 If this is useful, wrong, or incomplete, write to me.

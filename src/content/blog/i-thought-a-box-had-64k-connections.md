@@ -5,7 +5,7 @@ pubDate: 2026-08-16
 tags: ["networking", "systems"]
 ---
 
-I used to think 65,535 was a hard ceiling on TCP. One machine, about 64,000 connections, and that was the end of the conversation.
+I used to think 65,535 was a hard ceiling on TCP: one machine, about 64,000 connections, and that was the end of the conversation.
 
 Then I read that a cricket-final chat was holding millions of connections on a single server, and the number felt like a lie. So I tried to prove it was one.
 

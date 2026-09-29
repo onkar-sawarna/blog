@@ -5,7 +5,7 @@ pubDate: 2026-09-11
 tags: ["systems"]
 ---
 
-The festival sale is on. A thousand people open the same phone, item 42, and tap Buy. I add more API boxes so the shop can take the load.
+The festival sale is on, and a thousand people open the same listing for a pair of size-8 white sneakers and tap Buy. I add more API boxes so the shop can take the load.
 
 Each box already keeps a few MySQL connections open and reuses them. I wrote that story when [a thousand clicks met four sockets](/blog/request-hedging-is-a-second-get-not-a-bigger-pool/). I thought more boxes would just mean more of those small pools, and the database would be fine.
 
@@ -17,7 +17,7 @@ I ran two hundred API processes. Each one kept ten connections to MySQL. If they
 
 MySQL has a limit, `max_connections`. Mine was 400. After 400 open clients, the next one is refused. The shop starts seeing "too many connections."
 
-Those two thousand clients were not two thousand different questions. Most of them wanted item 42. Each process still opened its own connections, and each new connection still pays the handshake: three packets to open, four to close.
+Those two thousand clients were not two thousand different questions. Most of them wanted those sneakers. Each process still opened its own connections, and each new connection still pays the handshake: three packets to open, four to close.
 
 <figure>
   <img src="/blog/proxysql-before.svg" alt="Two hundred API processes each hold a pool of ten MySQL connections. MySQL has max_connections of 400 and is out of clients." width="720" height="300" />
@@ -30,7 +30,7 @@ A load balancer that only forwards TCP would not have saved me. It never looks a
 
 I put ProxySQL in the middle.
 
-The API did not change. Same driver, same user, same password. ProxySQL answers the MySQL hello. The host in the config is the proxy, not the real database. Catalog still says `SELECT` for item 42. Checkout still says `INSERT` for `o1`. I did not add "if this is a read, go to the replica" in the application. The proxy reads the SQL and picks the server.
+The API did not change. Same driver, same user, same password. ProxySQL answers the MySQL hello. The host in the config is the proxy, not the real database. Catalog still says `SELECT` for the sneakers. Checkout still says `INSERT` for `o1`. I did not add "if this is a read, go to the replica" in the application. The proxy reads the SQL and picks the server.
 
 ProxySQL keeps its own pool already open to the real MySQL. One pool in front of the database, shared by every API box. MySQL now sees forty clients, not two thousand. A new API box does not open forty more.
 
@@ -61,7 +61,7 @@ Topology here just means the map: which machine takes writes (the primary), whic
 
 ## Splitting the shop into two services
 
-The shop used to be one program. Then I split it. Catalog serves item 42. Checkout writes order `o1`.
+The shop used to be one program. Then I split it. Catalog serves the sneakers. Checkout writes order `o1`.
 
 I did not put routing in those services. I defined rules on the proxy: this `SELECT` goes to the replica group, this `INSERT` goes to the primary. Catalog and checkout still talk to one MySQL host. They still run the same queries. The business logic did not change.
 
@@ -74,7 +74,7 @@ If each service owned the map instead, I would have copied the primary and the r
 
 ## One MySQL connection, many waiting APIs
 
-An API worker often keeps a connection open after it finishes item 42. If that connection is a real MySQL connection, it still counts against the 400 limit, even while it sits idle.
+An API worker often keeps a connection open after it finishes the sneakers. If that connection is a real MySQL connection, it still counts against the 400 limit, even while it sits idle.
 
 ProxySQL does not have to hold a real MySQL connection for an idle API. It reads the query, borrows one of its MySQL connections, sends the answer back, and can lend that same connection to someone else. Many API sessions share fewer MySQL connections. People call that multiplex. It only means: do not save a database connection for a client that is not asking a question.
 
@@ -89,15 +89,15 @@ A transaction is different. `BEGIN` means the next statements must run on the sa
 
 ## The phone is a read. Buy is a write.
 
-Item 42 is a read. Buy is a write. Those should not hit the same machine if I have a primary and a replica.
+The sneakers listing is a read. Buy is a write. Those should not hit the same machine if I have a primary and a replica.
 
 A TCP-only proxy cannot tell them apart. ProxySQL can, because it reads the SQL. A `SELECT` for the phone can go to a replica. An `INSERT` for `o1` can go to the primary.
 
 The lists it chooses from are named groups of servers. People call a group a hostgroup. A rule says: this kind of SQL goes to that group.
 
 <figure>
-  <object class="figure-svg" data="/blog/proxysql-route.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="API to ProxySQL. SELECT item 42 goes to a replica. INSERT order o1 goes to the primary.">
-    <img src="/blog/proxysql-route.svg" alt="API to ProxySQL. SELECT item 42 goes to a replica. INSERT order o1 goes to the primary." width="720" height="300" />
+  <object class="figure-svg" data="/blog/proxysql-route.svg" type="image/svg+xml" width="720" height="300" style="aspect-ratio: 720 / 300" aria-label="API to ProxySQL. SELECT sneakers goes to a replica. INSERT order o1 goes to the primary.">
+    <img src="/blog/proxysql-route.svg" alt="API to ProxySQL. SELECT sneakers goes to a replica. INSERT order o1 goes to the primary." width="720" height="300" />
   </object>
   <figcaption>Figure 7. A TCP load balancer cannot make this split. It never sees the query.</figcaption>
 </figure>
@@ -130,6 +130,6 @@ The app keeps one address. Routing lives on the proxy. MySQL should see a limite
 
 I still leave a transaction open while I call Redis. I still send every `SELECT` to a replica and then cannot find the order on the confirmation page. I still change a rule on one box and debug the other two.
 
-A Redis lock on `item:42` is the same split: the key is a hint, the MySQL row is the fact. I wrote that [when two passengers booked 12A](/blog/two-passengers-one-seat/).
+A Redis lock on `sneakers:8-white` is the same split: the key is a hint, the MySQL row is the fact. I wrote that [when two passengers booked 12A](/blog/two-passengers-one-seat/).
 
 If this is useful, wrong, or incomplete, write to me.

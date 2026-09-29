@@ -25,7 +25,7 @@
   <text x="387" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">checkout
     <animate attributeName="fill" values="#1A3D32;#B33A1A;#1A3D32;#1A3D32" keyTimes="0;0.2;0.35;1" dur="4s" repeatCount="indefinite"/>
   </text>
-  <text x="387" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">query 42
+  <text x="387" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">query sneakers
     <animate attributeName="fill" values="#1A3D32;#1A3D32;#B33A1A;#1A3D32;#1A3D32" keyTimes="0;0.3;0.45;0.6;1" dur="4s" repeatCount="indefinite"/>
   </text>
   <text x="387" y="144" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1A3D32">return

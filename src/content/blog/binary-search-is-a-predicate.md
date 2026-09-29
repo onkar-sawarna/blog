@@ -5,7 +5,7 @@ pubDate: 2026-08-22
 tags: ["dsa", "systems"]
 ---
 
-Baski has four piles of bananas: 3, 6, 7, and 11. There are 8 hours before someone comes to collect them.
+Baski has four piles of bananas, 3, 6, 7, and 11, and eight hours before someone comes to collect them.
 
 Baski picks an eating speed, some number of bananas per hour, and sticks with it. Each hour Baski chooses one pile and eats that many from it. If fewer than that remain, Baski eats what is left and the hour is still spent. An hour cannot be split across two piles. The question is the slowest speed that still clears every pile inside 8 hours.
 
