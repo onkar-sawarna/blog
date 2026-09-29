@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>DNS returns an IPv4 A record and an IPv6 AAAA record for the same shop.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <rect x="40" y="50" width="160" height="88" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="120" y="90" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">phone</text>
+  <text x="120" y="116" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">where is the shop</text>
+  <path d="M200 94 H268" stroke="#1A3D32" stroke-width="1.6"/>
+  <path d="M258 88 L270 94 L258 100" fill="none" stroke="#1A3D32" stroke-width="1.6"/>
+  <rect x="272" y="50" width="160" height="88" rx="8" fill="#FFFFFF" stroke="#1A3D32" stroke-width="2"/>
+  <text x="352" y="90" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">DNS</text>
+  <text x="352" y="116" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#5C5C59">two answers</text>
+  <path d="M352 138 V168" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M352 168 H200" stroke="#1A3D32" stroke-width="1.5"/>
+  <path d="M352 168 H504" stroke="#1A3D32" stroke-width="1.5"/>
+  <rect x="80" y="176" width="200" height="64" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="180" y="204" text-anchor="middle" font-family="ui-monospace, monospace" font-size="14" fill="#1A3D32">A  IPv4</text>
+  <text x="180" y="226" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">the path that works</text>
+  <rect x="440" y="176" width="200" height="64" rx="8" fill="#F8EFE9" stroke="#B33A1A" stroke-width="2"/>
+  <text x="540" y="204" text-anchor="middle" font-family="ui-monospace, monospace" font-size="14" fill="#B33A1A">AAAA  IPv6</text>
+  <text x="540" y="226" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#5C5C59">the path that is a hole</text>
+</svg>

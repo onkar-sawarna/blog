@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280" role="img">
+  <title>The phone spinner stays. The API log says the GET was fast.</title>
+  <rect width="720" height="280" fill="#F7F7F5"/>
+  <rect x="28" y="48" width="300" height="160" rx="8" fill="#FFFFFF" stroke="#B33A1A" stroke-width="2"/>
+  <text x="178" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#B33A1A">phone</text>
+  <text x="178" y="138" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">shop spinner</text>
+  <text x="178" y="172" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">feels slow every open</text>
+  <rect x="392" y="48" width="300" height="160" rx="8" fill="#E8EFEA" stroke="#1A3D32" stroke-width="2"/>
+  <text x="542" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#1A3D32">API log</text>
+  <text x="542" y="138" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">GET sneakers</text>
+  <text x="542" y="172" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" fill="#5C5C59">40ms once it arrives</text>
+  <text x="360" y="248" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#161616">I blamed the API. The wait was before the GET.</text>
+</svg>
